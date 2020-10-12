@@ -2,6 +2,10 @@ REM Folders creation
 md meteo_data_repo
 cd meteo_data_repo
 
+npm --version
+C:\"Program Files"\PostgreSQL\11\bin\postgres -V
+C:\"Program Files"\PostgreSQL\11\bin\psql -V
+
 REM Node Initializazion and libraries downloading
 npm init
 npm install express sequelize pg pg-hstore body-parser cors --save
