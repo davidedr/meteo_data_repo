@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const meteo_data = sequelize.define("meteo_data", {
+    const Meteo_data = sequelize.define("meteo_data", {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
         location_id: { type: Sequelize.INTEGER },
         timestamp: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
