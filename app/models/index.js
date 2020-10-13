@@ -1,4 +1,4 @@
-const dbConfig = require("../../config/db.config.js")
+const dbConfig = require("../config/db.config.js")
 const Sequelize = require("sequelize")
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
@@ -12,5 +12,6 @@ const db = {}
 db.Sequelize = Sequelize
 db.sequelize = sequelize
 db.meteo_data = require("./meteo_data.model.js")(sequelize, Sequelize)
-db.location = require("./location.model.js")(sequelize, Sequelize)
+db.locations = require("./location.model.js")(sequelize, Sequelize)
+
 module.exports = db

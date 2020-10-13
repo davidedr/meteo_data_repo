@@ -2,7 +2,7 @@
 // https://manuel-rauber.com/2016/01/08/using-geo-based-data-with-sequelizejs-utilizing-postgresql-and-ms-sql-server-in-node-js/
 
 module.exports = (sequelize, Sequelize) => {
-    const location = sequelize.define("location", {
+    const Location = sequelize.define("location", {
         id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
         name: { type: Sequelize.STRING, allowNull: false },
         latitude: { type: Sequelize.INTEGER, allowNull: true, defaultValue: null, validate: { min: -90, max: 90 } },
@@ -15,4 +15,6 @@ module.exports = (sequelize, Sequelize) => {
         country: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         note: { type: Sequelize.STRING, allowNull: true, defaultValue: null }
     })
+
+    return Location
 }

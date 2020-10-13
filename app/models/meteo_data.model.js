@@ -13,4 +13,6 @@ module.exports = (sequelize, Sequelize) => {
         uv_index: { type: Sequelize.DECIMAL(1), defaultValue: null, validate: { min: 0 } },
         heat_index_cels: { type: Sequelize.DECIMAL(1), defaultValue: null }
     })
+
+    return Meteo_data
 }

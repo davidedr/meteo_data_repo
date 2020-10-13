@@ -1,5 +1,5 @@
 const db = require("../models")
-const meteo_data = db.meteo_data
+const Meteo_data = db.meteo_data
 const Op = db.Sequelize.Op
 
 exports.create = (req, res) => {
@@ -27,7 +27,7 @@ exports.create = (req, res) => {
 
     }
 
-    meteo_data.create(meteo_data)
+    Meteo_data.create(meteo_data)
         .then(data => { res.send(data) })
         .catch(err => { res.status(500).send({ message: err.message || "Some error occurred while creating the Meteo_data record!" }) })
 }
@@ -35,7 +35,7 @@ exports.create = (req, res) => {
 exports.findAllByLocation = (req, res) => {
     const location_id = req.query.location_id
     var condition = location_id ? { location_id: { where: { location_id: location_id } } } : null
-    meteo_data.findAll({ where: condition })
+    Meteo_data.findAll({ where: condition })
         .then(data => { res.send(data) })
         .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Meteo_data records (location_id: ${location_id})!` }) })
 
