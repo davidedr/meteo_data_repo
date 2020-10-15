@@ -24,7 +24,6 @@ exports.create = (req, res) => {
         rel_humidity: req.body.rel_humidity,
         uv_index: req.body.uv_index,
         heat_index_cels: heat_index_cels.body.uv_index,
-
     }
 
     Meteo_data.create(meteo_data)
