@@ -3,10 +3,7 @@ const Meteo_data = db.meteo_data
 const Op = db.Sequelize.Op
 
 exports.create = (req, res) => {
-    if (!req.body.location_id) {
-        res.status(400).send({ message: "location_id cannot be empty!" })
-        return
-    }
+    console.log(req.body)
     if (!req.body.location_id) {
         res.status(400).send({ message: "location_id cannot be empty!" })
         return
@@ -23,7 +20,7 @@ exports.create = (req, res) => {
         temperature_cels: req.body.temperature_cels,
         rel_humidity: req.body.rel_humidity,
         uv_index: req.body.uv_index,
-        heat_index_cels: heat_index_cels.body.uv_index,
+        heat_index_cels: req.body.heat_index_cels,
     }
 
     Meteo_data.create(meteo_data)

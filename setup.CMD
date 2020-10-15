@@ -10,6 +10,9 @@ REM Node Initializazion and libraries downloading
 npm init
 npm install express sequelize pg pg-hstore body-parser cors --save
 
+REN Client
+npm install xmlhttprequest
+
 REM Remove any previus instance
 C:\"Program Files"\PostgreSQL\11\bin\dropdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo
 
