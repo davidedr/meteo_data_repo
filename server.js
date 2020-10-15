@@ -18,6 +18,7 @@ db.sequelize.sync({ force: true })
 app.get("/", (req, res) => { res.json({ message: "Welcome!" }) })
 
 require("./app/routes/meteo_data.routes")(app)
+require("./app/routes/location.routes")(app)
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => { console.log(`Server listening on port: ${PORT}`) })
 
@@ -42,9 +43,7 @@ function create_location() {
     id = db.locations.create(location)
         .then(console.log("Location created."))
         .catch(err => console.log(`Error creating Location!`))
-
-    id.sync.then(console.log(id))
-
+    console.log(id)
 }
 
 function create_meteo_data() {

@@ -28,7 +28,7 @@ exports.create = (req, res) => {
 
     Meteo_data.create(meteo_data)
         .then(data => { res.send(data) })
-        .catch(err => { res.status(500).send({ message: err.message || "Some error occurred while creating the Meteo_data record!" }) })
+        .catch(err => { res.status(500).send({ message: err.message || "Some error occurred while creating Meteo_data record!" }) })
 }
 
 exports.findAllByLocation = (req, res) => {
