@@ -1,1 +1,1 @@
-python simple_client.py
+python client\simple_client.py

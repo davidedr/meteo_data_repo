@@ -1,1 +1,1 @@
-node simple_client.js
+node client/simple_client.js
