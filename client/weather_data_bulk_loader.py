@@ -7,7 +7,7 @@ headers = {'Content-Type': 'application/json; charset=utf-8'}
 
 # weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity]
 
-cvs_file_name = 'C:\temp\meteo_data_repo\data\weather_hotelmarcopolo_caorle_v1.txt'
+cvs_file_name = 'C:\\temp\\meteo_data_repo\\data\\weather_hotelmarcopolo_caorle_v1.txt'
 fieldnames = ("timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed", "wind_direction", "pressure", "rain_today", "rain_rate", "temperature", "humidity")
 
 csv_reader = csv.reader(open(cvs_file_name), fieldnames, delimiter=";")

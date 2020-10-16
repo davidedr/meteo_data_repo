@@ -114,7 +114,7 @@ def scan(last_seen_timestamp, log=False):
 
   # Backup to CSV file
   weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index]
-  file_name="C:\temp\meteo_data_repo\data\weather_hotelmarcopolo_caorle_v2.txt"
+  file_name="C:\\temp\\meteo_data_repo\\data\\weather_hotelmarcopolo_caorle_v2.txt"
   from csv import writer
   with open(file_name, 'a+', newline='') as write_obj:
     # Create a writer object from csv module
