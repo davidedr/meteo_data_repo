@@ -1,3 +1,6 @@
+import requests
+import csv
+from datetime import datetime
 from lxml import html
 import requests
 import unicodedata
@@ -42,6 +45,7 @@ def scan(last_seen_timestamp, log=False):
   wind_speed_elems = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h1[2]/big/big/big/span/text()')
   wind_speed=wind_speed_elems[0]
   wind_speed=wind_speed.strip()
+  wind_speed=float(wind_speed)/1.852
   if (log):
     print("wind_speed")
     print(wind_speed)
@@ -69,13 +73,9 @@ def scan(last_seen_timestamp, log=False):
 
   rain_rate_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h2')
   rain_rate=rain_rate_ele[0].text
-  print(rain_rate)
   rain_rate=rain_rate[len('IntensitÃƒ'):]
-  print(rain_rate)
   rain_rate=rain_rate[:3]
-  print(rain_rate)
   rain_rate=rain_rate.strip()
-  print(rain_rate)
   if (log):
     print("rain_rate")
     print(rain_rate)
@@ -112,8 +112,9 @@ def scan(last_seen_timestamp, log=False):
     print("heat_index")
     print(heat_index)
 
+  # Backup to CSV file
   weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index]
-  file_name="C:/temp/weather.txt"
+  file_name="C:\temp\meteo_data_repo\data\weather_hotelmarcopolo_caorle_v2.txt"
   from csv import writer
   with open(file_name, 'a+', newline='') as write_obj:
     # Create a writer object from csv module
@@ -121,6 +122,72 @@ def scan(last_seen_timestamp, log=False):
     # Add contents of list as last row in the csv file
     csv_writer.writerow(weather)
 
+  # Insert into database
+  if wind_direction=="N":
+    wind_direction_deg=0
+  elif wind_direction=="NNE":
+    wind_direction_deg=22.5
+  elif wind_direction=="NE":
+    wind_direction_deg=45
+  elif wind_direction=="ENE":
+    wind_direction_deg=67.5
+  elif wind_direction=="E":
+    wind_direction_deg=90
+  elif wind_direction=="ESE":
+    wind_direction_deg=112.5
+  elif wind_direction=="SE":
+    wind_direction_deg=135
+  elif wind_direction=="SSE":
+    wind_direction_deg=157.5
+  elif wind_direction=="S":
+    wind_direction_deg=180
+  elif wind_direction=="SSO":
+    wind_direction_deg=202.5
+  elif wind_direction=="SO":
+    wind_direction_deg=225
+  elif wind_direction=="WSO":
+    wind_direction_deg=247.5
+  elif wind_direction=="O":
+    wind_direction_deg=270
+  elif wind_direction=="ONO":
+    wind_direction_deg=292.5
+  elif wind_direction=="NO":
+    wind_direction_deg=315
+  elif wind_direction=="NNO":
+    wind_direction_deg=337.5
+
+  # Convert to PGSQL format
+  timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
+  timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
+
+  # Guard against empty values
+  if temperature=="":
+    temperature_cels=None
+  else:
+    temperature_cels=float(temperature)
+  if humidity=="":
+    rel_humidity=None
+  else:
+    rel_humidity=float(humidity)/100
+
+  data_json = {
+    "location_id": 1,   
+    "timestamp": timestamp,
+    "wind_speed_knots": float(wind_speed),
+    "wind_direction_deg": wind_direction_deg,
+    "barometric_pressure_hPa": float(pressure),
+    "rain_today_mm": float(rain_today),
+    "rain_rate_mmph": float(rain_rate),
+    "temperature_cels": temperature_cels,
+    "rel_humidity": rel_humidity,
+    "uv_index": uv_index,
+    "heat_index_cels": heat_index
+  }
+
+  headers={'Content-Type': 'application/json; charset=utf-8'}
+  response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
+  print(f'{timestamp}, response {response}')
+  
   return timestamp_ele
 
 import time

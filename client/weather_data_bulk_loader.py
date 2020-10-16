@@ -7,18 +7,13 @@ headers = {'Content-Type': 'application/json; charset=utf-8'}
 
 # weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity]
 
-cvs_file_name = 'C:\\temp\\hotelmarcopolocaorle\\weather.txt'
-
-json_file_name = 'C:\\temp\\hotelmarcopolocaorle\\weather.json'
-json_file = open(json_file_name, 'w')
-
+cvs_file_name = 'C:\temp\meteo_data_repo\data\weather_hotelmarcopolo_caorle_v1.txt'
 fieldnames = ("timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed", "wind_direction", "pressure", "rain_today", "rain_rate", "temperature", "humidity")
 
 csv_reader = csv.reader(open(cvs_file_name), fieldnames, delimiter=";")
 csv_data=list(csv_reader)
-print(len(csv_data))
+line_no=0
 for ele in csv_data:
-  # print(ele)
   if ele[4]=="N":
     wind_direction_deg=0
   elif ele[4]=="NNE":
@@ -65,7 +60,7 @@ for ele in csv_data:
   data_json = {
     "location_id": 1,   
     "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000",
-    "wind_speed_knots": float(ele[3]),
+    "wind_speed_knots": float(ele[3])/1.852,
     "wind_direction_deg": wind_direction_deg,
     "barometric_pressure_hPa": float(ele[5]),
     "rain_today_mm": float(ele[6]),
@@ -76,5 +71,7 @@ for ele in csv_data:
 
   headers = {'Content-Type': 'application/json; charset=utf-8'}
   response = requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
-  print(f'response {response}')
+
+  line_no=line_no+1
+  print(f'Line no: {line_no}, response {response}')
 
