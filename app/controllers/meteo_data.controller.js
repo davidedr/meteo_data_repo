@@ -23,9 +23,14 @@ exports.create = (req, res) => {
         heat_index_cels: req.body.heat_index_cels,
     }
 
+    console.log(meteo_data)
+
     Meteo_data.create(meteo_data)
         .then(data => { res.send(data) })
-        .catch(err => { res.status(500).send({ message: err.message || "Some error occurred while creating Meteo_data record!" }) })
+        .catch(err => {
+            console.log(err.message)
+            res.status(500).send({ message: err.message || "Some error occurred while creating Meteo_data record!" })
+        })
 }
 
 exports.findAllByLocation = (req, res) => {

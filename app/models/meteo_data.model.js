@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
         location_id: { type: Sequelize.INTEGER },
         timestamp: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
         wind_speed_knots: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
-        wind_direction_deg: { type: Sequelize.INTEGER, defaultValue: null, validate: { min: 0, max: 359 } },
+        wind_direction_deg: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0, max: 359 } },
         barometric_pressure_hPa: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
         rain_today_mm: { type: Sequelize.INTEGER, defaultValue: null, validate: { min: 0 } },
         rain_rate_mmph: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
