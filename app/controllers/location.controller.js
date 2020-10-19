@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const name = req.param('name')
     console.log(name)
-    condition = null
+    condition = {}
     if (name)
         condition = {
             where: {
@@ -38,6 +38,7 @@ exports.findAll = (req, res) => {
                 }
             }
         }
+    console.log(condition)
     Locations.findAll(condition)
         .then(data => { res.send(data) })
         .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
