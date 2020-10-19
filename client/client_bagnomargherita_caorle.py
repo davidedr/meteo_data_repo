@@ -25,7 +25,7 @@ def add_location():
 
   headers={'Content-Type': 'application/json; charset=utf-8'}
   response=requests.post('http://localhost:8080/api/location', headers = headers, json = location_json)
-  print('Response: {response}')
+  print(f'Response: {response}')
 
 #
 #

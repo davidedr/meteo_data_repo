@@ -26,8 +26,30 @@ exports.create = (req, res) => {
         .catch(err => { res.status(500).send({ message: err.message || "Some error occurred while creating Location record!" }) })
 }
 
-exports.findAll = (req, res) => {
+exports.findByName = (req, res) => {
     Locations.findAll()
+        .then(data => { res.send(data) })
+        .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
+}
+
+exports.findAll = (req, res) => {
+    const name = req.query.name
+    var condition = name ? {
+        name: {
+            where: {
+                name: {
+                    [Op.like]: '%' + name + '%'
+                }
+            }
+        }
+    } : null
+    Locations.findAll({
+            where: {
+                name: {
+                    [Op.like]: '%feltre%'
+                }
+            }
+        })
         .then(data => { res.send(data) })
         .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
 
