@@ -11,7 +11,9 @@ module.exports = (sequelize, Sequelize) => {
         temperature_cels: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: -273.2, max: 273 } },
         rel_humidity: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0, max: 1 } },
         uv_index: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
-        heat_index_cels: { type: Sequelize.DECIMAL, defaultValue: null }
+        heat_index_cels: { type: Sequelize.DECIMAL, defaultValue: null },
+        wind_gust_knots: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
+        dew_point_cels: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: -273.2, max: 273 } },
     })
 
     return Meteo_data

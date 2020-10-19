@@ -113,8 +113,10 @@ def scan(last_seen_timestamp, log=False):
     print(heat_index)
 
   # Backup to CSV file
-  weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index]
-  file_name="C:\\temp\\meteo_data_repo\\data\\weather_hotelmarcopolo_caorle_v2.txt"
+  wind_gust=None
+  dew_point_cels=None
+  weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
+  file_name="C:\\temp\\meteo_data_repo\\data\\weather_hotelmarcopolo_caorle_v3.txt"
   from csv import writer
   with open(file_name, 'a+', newline='') as write_obj:
     # Create a writer object from csv module
@@ -123,6 +125,7 @@ def scan(last_seen_timestamp, log=False):
     csv_writer.writerow(weather)
 
   # Insert into database
+  wind_direction_deg=None
   if wind_direction=="N":
     wind_direction_deg=0
   elif wind_direction=="NNE":
@@ -145,7 +148,7 @@ def scan(last_seen_timestamp, log=False):
     wind_direction_deg=202.5
   elif wind_direction=="SO":
     wind_direction_deg=225
-  elif wind_direction=="WSO":
+  elif wind_direction=="OSO":
     wind_direction_deg=247.5
   elif wind_direction=="O":
     wind_direction_deg=270
@@ -155,19 +158,20 @@ def scan(last_seen_timestamp, log=False):
     wind_direction_deg=315
   elif wind_direction=="NNO":
     wind_direction_deg=337.5
+  else:
+    print("Unknown wind_direction: '{wind_direction}'!")
 
   # Convert to PGSQL format
   timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
   timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
 
   # Guard against empty values
-  if temperature=="":
-    temperature_cels=None
-  else:
+  temperature_cels=None
+  if temperature:
     temperature_cels=float(temperature)
-  if humidity=="":
-    rel_humidity=None
-  else:
+
+  rel_humidity=None
+  if humidity:
     rel_humidity=float(humidity)/100
 
   data_json = {

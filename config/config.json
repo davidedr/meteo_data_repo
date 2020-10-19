@@ -1,0 +1,26 @@
+{
+    "production": {
+        "username": "postgres",
+        "password": "postgres",
+        "database": "meteo_data_repo",
+        "host": "127.0.0.1",
+        "port": 5433,
+        "dialect": "postgres"
+    },
+    "development": {
+        "username": "postgres",
+        "password": "postgres",
+        "database": "meteo_data_repo_development",
+        "host": "127.0.0.1",
+        "port": 5433,
+        "dialect": "postgres"
+    },
+    "test": {
+        "username": "postgres",
+        "password": "postgres",
+        "database": "meteo_data_repo_test",
+        "host": "127.0.0.1",
+        "port": 5433,
+        "dialect": "postgres"
+    }
+}

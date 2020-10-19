@@ -13,8 +13,13 @@ npm install express sequelize pg pg-hstore body-parser cors --save
 REN Client
 npm install xmlhttprequest
 
+REM
+npm install sequelize-cli --save 
+
 REM Remove any previus instance
 C:\"Program Files"\PostgreSQL\11\bin\dropdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo
 
 REM Database creation
 C:\"Program Files"\PostgreSQL\11\bin\createdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo
+C:\"Program Files"\PostgreSQL\11\bin\createdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo_development
+C:\"Program Files"\PostgreSQL\11\bin\createdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo_test
