@@ -169,7 +169,8 @@ def scan(last_seen_timestamp, log=True):
     "rel_humidity": rel_humidity,
     "uv_index": uv_index,
     "heat_index_cels": heat_index,
-    "wind_gust": wind_gust
+    "wind_gust_knots": wind_gust,
+    "dew_point_cels": dew_point_cels
   }
 
   headers={'Content-Type': 'application/json; charset=utf-8'}
