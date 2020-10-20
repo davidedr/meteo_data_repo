@@ -1,0 +1,3 @@
+ALTER TABLE meteo_data ADD COLUMN wind_gust_knots NUMERIC DEFAULT NULL
+ALTER TABLE meteo_data ADD COLUMN dew_point_cels NUMERIC DEFAULT NULL
+ALTER TABLE "meteo_data" ALTER COLUMN  "rain_today_mm" TYPE NUMERIC

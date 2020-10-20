@@ -6,32 +6,15 @@ import requests
 import unicodedata
 
 #
-# Add location to database
 #
-def add_location():
-  location_json = {
-    "name": 'Bagno Margherita Caorle',
-    "latitude": 45.588340,
-    "longitude": 12.861544,
-    "address_complete": "Viale Lepanto, 13A, 30021 Porto Santa Margherita VE",
-    "street_1": "Viale Lepanto, 13A",
-    "street_2": "Porto Santa Margherita",
-    "zip": "30021",
-    "town": "Caorle",
-    "province": "VE",
-    "country": "IT",
-    "note": "Meteo station @ https://www.meteo-caorle.it/, Porto Santa Margherita, Spiaggia Est"
-  }
+#
+def scan(last_seen_timestamp, server, log=True):
 
-  headers={'Content-Type': 'application/json; charset=utf-8'}
-  response=requests.post('http://localhost:8080/api/location', headers = headers, json = location_json)
-  print(f'Response: {response}')
+  location_id=server["location_id"]
+  name=server["name"]
+  weather_station_url=server["url"]
 
-#
-#
-#
-def scan(last_seen_timestamp, log=True):
-  page = requests.get('https://www.meteo-caorle.it/')
+  page = requests.get(weather_station_url)
   tree = html.fromstring(page.content)
 
   timestamp_list = tree.xpath('/html/body/div[2]/table[2]/tbody/tr[1]/td[1]')
@@ -47,7 +30,7 @@ def scan(last_seen_timestamp, log=True):
   if (log):  
     print("timestamp_string")
     print(timestamp_string)
-
+  
   if last_seen_timestamp and last_seen_timestamp==timestamp_string:
     return last_seen_timestamp
 
@@ -136,7 +119,7 @@ def scan(last_seen_timestamp, log=True):
   # Backup to CSV file
   uv_index=None
   weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-  file_name="C:\\temp\\meteo_data_repo\\data\\weather_bagnomargherita_caorle_v3.txt"
+  file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
   from csv import writer
   with open(file_name, 'a+', newline='') as write_obj:
     # Create a writer object from csv module
@@ -161,7 +144,7 @@ def scan(last_seen_timestamp, log=True):
     rel_humidity=float(humidity)/100
 
   data_json = {
-    "location_id": 4,
+    "location_id": location_id,
     "timestamp": timestamp,
     "wind_speed_knots": float(wind_speed),
     "wind_direction_deg": wind_direction,
@@ -182,15 +165,84 @@ def scan(last_seen_timestamp, log=True):
   
   return timestamp_ele
 
-# add_location()
+#
+#
+#
+def add_server_locations(servers):
+  for server in servers:
+    if server["location_id"]!=4:
+      location_json=server["location"]
+      headers={'Content-Type': 'application/json; charset=utf-8'}
+      response=requests.post('http://localhost:8080/api/location', headers = headers, json = location_json)
+      print(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
+
+locations_json = [{
+    "name": 'Bagno Margherita Caorle',
+    "latitude": 45.588340,
+    "longitude": 12.861544,
+    "address_complete": "Viale Lepanto, 13A, 30021 Porto Santa Margherita VE",
+    "street_1": "Viale Lepanto, 13A",
+    "street_2": "Porto Santa Margherita",
+    "zip": "30021",
+    "town": "Caorle",
+    "province": "VE",
+    "country": "IT",
+    "note": "Meteo station @ https://www.meteo-caorle.it/, Porto Santa Margherita, Spiaggia Est, Caorle, Venezia"
+}, {
+    "name": 'San Giorgio, Venezia',
+    "latitude": 45.429939,
+    "longitude": 12.342716,
+    "address_complete": "30100 Venezia, Città Metropolitana di Venezia",
+    "street_1": "",
+    "street_2": "",
+    "zip": "30100",
+    "town": "Venezia",
+    "province": "Città Metropolitana di Venezia",
+    "country": "IT",
+    "note": "Meteo station @ https://www.meteo-venezia.net/compagnia01.php, Isola di San Giorgio Maggiore, Venezia"
+}, {
+    "name": 'Punta San Giuliano, Mestre-Venezia',
+    "latitude": 45.629892,
+    "longitude": 12.997956,
+    "address_complete": "Via S. Giuliano, 23, 30174 Venezia VE",
+    "street_1": "Via S. Giuliano, 23",
+    "street_2": "",
+    "zip": "30174",
+    "town": "Mestre",
+    "province": "VE",
+    "country": "IT",
+    "note": "Meteo station @ https://www.meteo-venezia.net/, Punta San Giuliano, Mestre-Venezia"
+},{
+    "name": 'Laguna Park Hotel, Bibione, Venezia',
+    "latitude": 45.466542,
+    "longitude": 12.282729,
+    "address_complete": "Via Passeggiata al Mare, 20, 30028 Bibione VE",
+    "street_1": "Via Passeggiata al Mare, 20",
+    "street_2": "",
+    "zip": "30028",
+    "town": "Bibione",
+    "province": "VE",
+    "country": "IT",
+    "note": "Meteo station @ https://www.bibione-meteo.it/, Bibione, Venezia"
+}]
+
+servers = [
+  { "location_id": 4, "location": locations_json[0], "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/" },
+  { "location_id": 8, "location": locations_json[1], "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php" },
+  { "location_id": 9, "location": locations_json[2], "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/" },
+  { "location_id": 10, "location": locations_json[3], "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/" }
+]
+
+#add_server_locations(servers)
 
 import time
-last_seen_timestamp=''
-last_seen_timestamp=scan(last_seen_timestamp)
-scan_no=0
-
 while True:
   time.sleep(50)
-  scan_no=scan_no+1
-  print("scan "+ str(scan_no)+"...")
-  last_seen_timestamp=scan(last_seen_timestamp)
+  for server in servers:
+    last_seen_timestamp=server.get("last_seen_timestamp", None)
+    scan_no=server.get("scan_no", 0)
+    scan_no=scan_no+1
+    print(f'Server: {server["location_id"]}, {server["name"]}, scan: {scan_no}...')
+    last_seen_timestamp=scan(last_seen_timestamp, server, False)
+    server["last_seen_timestamp"]=last_seen_timestamp
+    server["scan_no"]=scan_no
