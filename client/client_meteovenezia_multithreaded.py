@@ -226,7 +226,7 @@ servers = [
 #
 #
 def main_logger(server):
-  logging.info(f'Client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]} up and running.')
+  logging.info(f'Thread ident: {threading.get_ident()}, Client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]} up and running.')
   while True:
     last_seen_timestamp=server.get("last_seen_timestamp", None)
     scan_no=server.get("scan_no", 0)
@@ -245,7 +245,7 @@ import threading
 import time
 
 if __name__=="__main__":
-  format = "%(asctime)s: %(message)s"
+  format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
   logging.basicConfig(format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
   nclients=0
   for server in servers:
