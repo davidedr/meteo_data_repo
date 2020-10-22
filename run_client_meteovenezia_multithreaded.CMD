@@ -1,0 +1,1 @@
+python client\client_meteovenezia_multithreaded.py
