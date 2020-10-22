@@ -14,97 +14,163 @@ def scan(last_seen_timestamp, server, save=True, log=True):
   name=server["name"]
   weather_station_url=server["url"]
 
-  page = requests.get(weather_station_url)
-  tree = html.fromstring(page.content)
-
-  timestamp_list = tree.xpath('/html/body/div[2]/table[2]/tbody/tr[1]/td[1]')
-  timestamp_ele=timestamp_list[0].text
-  timestamp_ele_1=timestamp_ele[1:11]
-  timestamp_ele_2=timestamp_ele[14:20]
-
-  timestamp_string=timestamp_ele_1+" "+timestamp_ele_2
-  timestamp_obj=datetime.strptime(timestamp_string, "%d.%m.%Y %H:%M")
-
-  timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
-  if (log):  
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}')
-  
-  if last_seen_timestamp and last_seen_timestamp==timestamp_string:
+  try:
+    page = requests.get(weather_station_url)
+  except requests.exceptions.Timeout as err:
+    logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
+    logging.info(f'Server: {location_id}, {err}')
+    return last_seen_timestamp
+  except requests.exceptions.RequestException as err:
+    logging.info(f'Server: {location_id}, requests.exceptions.RequestException!') 
+    logging.info(f'Server: {location_id}, {err}')
+    return last_seen_timestamp
+  except Exception as err:
+    logging.info(f'Server: {location_id}, Exception!')
+    logging.info(f'Server: {location_id}, {err}')
     return last_seen_timestamp
 
-  timestamp_string_date=timestamp_obj.strftime("%d/%m/%Y")
-  if (log):
-    logging.info(f'Server: {location_id}, timestamp_string_date: {timestamp_string_date}')
+  timestamp_string=None
+  timestamp_string_date=None
+  timestamp_string_time=None
+  try: 
+    tree = html.fromstring(page.content)
+    timestamp_list = tree.xpath('/html/body/div[2]/table[2]/tbody/tr[1]/td[1]')
+    timestamp_ele=timestamp_list[0].text
+    timestamp_ele_1=timestamp_ele[1:11]
+    timestamp_ele_2=timestamp_ele[14:20]
 
-  timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
-  if (log):
-    logging.info(f'Server: {location_id}, timestamp_string_time: {timestamp_string_time}')
+    timestamp_string=timestamp_ele_1+" "+timestamp_ele_2
+    timestamp_obj=datetime.strptime(timestamp_string, "%d.%m.%Y %H:%M")
 
-  wind_speed_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[1]')
-  wind_speed=wind_speed_elem[0].text
-  wind_speed=float(wind_speed)
-  if (log):
-    logging.info(f'Server: {location_id}, wind_speed: {wind_speed}')
+    timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
+    if (log):  
+      logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}')
+    
+    if last_seen_timestamp and last_seen_timestamp==timestamp_string:
+      return last_seen_timestamp
 
-  wind_gust_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[3]')
-  wind_gust=wind_gust_elem[0].text.strip()
-  wind_gust=float(wind_gust)
-  if (log):
-    logging.info(f'Server: {location_id}, wind_gust: {wind_gust}')
+    timestamp_string_date=timestamp_obj.strftime("%d/%m/%Y")
+    if (log):
+      logging.info(f'Server: {location_id}, timestamp_string_date: {timestamp_string_date}')
 
-  wind_direction = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[2]')
-  wind_direction=wind_direction[0].text
-  wind_direction=wind_direction.split('°')[0].strip()
-  if (log):
-    logging.info(f'Server: {location_id}, wind_direction: {wind_direction}')
+    timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
+    if (log):
+      logging.info(f'Server: {location_id}, timestamp_string_time: {timestamp_string_time}')
 
-  pressure_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[11]/td[2]')
-  pressure=pressure_elem[0].text
-  pressure=pressure.split('hPa')[0].strip()
-  if (log):
-    logging.info(f'Server: {location_id}, pressure: {pressure}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  rain_today_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[3]')
-  rain_today=rain_today_ele[0].text
-  rain_today=rain_today.split(';')[0]
-  rain_today=rain_today[5:]
-  rain_today=rain_today[:-3].strip()
-  if (log):
-    logging.info(f'Server: {location_id}, rain_today: {rain_today}')
+  wind_speed=None
+  try:
+    wind_speed_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[1]')
+    wind_speed=wind_speed_elem[0].text
+    wind_speed=float(wind_speed)
+    if (log):
+      logging.info(f'Server: {location_id}, wind_speed: {wind_speed}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  rain_rate_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[2]')
-  rain_rate=rain_rate_ele[0].text
-  rain_rate=rain_rate.split('mm/h')[0].strip()
-  if (log):
-    logging.info(f'Server: {location_id}, rain_rate: {rain_rate}')
+  wind_gust=None
+  try:
+    wind_gust_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[3]')
+    wind_gust=wind_gust_elem[0].text.strip()
+    wind_gust=float(wind_gust)
+    if (log):
+      logging.info(f'Server: {location_id}, wind_gust: {wind_gust}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  temperature_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[7]/td[2]')
-  temperature=temperature_ele[0].text
-  temperature=temperature.split('°')[0].strip()
-  if (log):
-    logging.info(f'Server: {location_id}, temperature: {temperature}')
+  wind_direction=None
+  try:
+    wind_direction = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[2]')
+    wind_direction=wind_direction[0].text
+    wind_direction=wind_direction.split('°')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, wind_direction: {wind_direction}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  humidity_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[9]/td[2]')
-  humidity=humidity_ele[0].text
-  humidity=humidity[:len(humidity)-len(" %")].strip()
-  if (log):
-    logging.info(f'Server: {location_id}, humidity: {humidity}')
+  pressure=None
+  try:
+    pressure_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[11]/td[2]')
+    pressure=pressure_elem[0].text
+    pressure=pressure.split('hPa')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, pressure: {pressure}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  heat_index_cels_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[8]/td[2]')
-  heat_index=heat_index_cels_ele[0].text
-  heat_index=heat_index.split('°')[0]
-  if (log):
-    logging.info(f'Server: {location_id}, heat_index: {heat_index}')
+  rain_today=None
+  try:
+    rain_today_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[3]')
+    rain_today=rain_today_ele[0].text
+    rain_today=rain_today.split(';')[0]
+    rain_today=rain_today[5:]
+    rain_today=rain_today[:-3].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, rain_today: {rain_today}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  dew_point_cels_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[10]/td[2]')
-  dew_point_cels=dew_point_cels_ele[0].text
-  dew_point_cels=dew_point_cels.split('°')[0]
-  if (log):
-    logging.info(f'Server: {location_id}, dew_point_cels: {dew_point_cels}')
+  rain_rate=None
+  try:
+    rain_rate_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[2]')
+    rain_rate=rain_rate_ele[0].text
+    rain_rate=rain_rate.split('mm/h')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, rain_rate: {rain_rate}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
+
+  temperature=None
+  try:
+    temperature_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[7]/td[2]')
+    temperature=temperature_ele[0].text
+    temperature=temperature.split('°')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, temperature: {temperature}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
+
+  humidity=None
+  try:
+    humidity_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[9]/td[2]')
+    humidity=humidity_ele[0].text
+    humidity=humidity[:len(humidity)-len(" %")].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, humidity: {humidity}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
+
+  heat_index=None
+  try:
+    heat_index_cels_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[8]/td[2]')
+    heat_index=heat_index_cels_ele[0].text
+    heat_index=heat_index.split('°')[0]
+    if (log):
+      logging.info(f'Server: {location_id}, heat_index: {heat_index}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
+
+  dew_point_cels=None
+  try:
+    dew_point_cels_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[10]/td[2]')
+    dew_point_cels=dew_point_cels_ele[0].text
+    dew_point_cels=dew_point_cels.split('°')[0]
+    if (log):
+      logging.info(f'Server: {location_id}, dew_point_cels: {dew_point_cels}')
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
+
+  uv_index=None # Unsupported by these weather stations
+  if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index or wind_gust or dew_point_cels)):
+    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    return last_seen_timestamp
 
   # Backup to CSV file
   if (save):
-    uv_index=None
+    
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
     file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
     from csv import writer
