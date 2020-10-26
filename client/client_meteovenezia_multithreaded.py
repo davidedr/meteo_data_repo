@@ -8,7 +8,7 @@ import requests
 #
 #
 #
-def scan(last_seen_timestamp, server, save=True, log=True):
+def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 
   location_id=server["location_id"]
   name=server["name"]
@@ -280,10 +280,10 @@ locations_json = [{
 }]
 
 servers = [
-  { "location_id": 4, "location": locations_json[0], "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/" },
-  { "location_id": 8, "location": locations_json[1], "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php" },
-  { "location_id": 9, "location": locations_json[2], "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/" },
-  { "location_id": 10, "location": locations_json[3], "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/" }
+  { "location_id": 4, "location": locations_json[0], "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 8, "location": locations_json[1], "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike },
+  { "location_id": 9, "location": locations_json[2], "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 10, "location": locations_json[3], "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike }
 ]
 
 #add_server_locations(servers)
@@ -291,14 +291,14 @@ servers = [
 #
 #
 #
-def main_logger(server):
+def main_logger(server, scanner, save=False, log=False):
   logging.info(f'Thread ident: {threading.get_ident()}, Client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]} up and running.')
   while True:
     last_seen_timestamp=server.get("last_seen_timestamp", None)
     scan_no=server.get("scan_no", 0)
     scan_no=scan_no+1
     logging.info(f'Server: {server["location_id"]}, {server["name"]}, scan: {scan_no}...')
-    last_seen_timestamp=scan(last_seen_timestamp, server, True, False)
+    last_seen_timestamp=scan(last_seen_timestamp, server, save, log)
     server["last_seen_timestamp"]=last_seen_timestamp
     server["scan_no"]=scan_no
     time.sleep(50)
@@ -316,7 +316,7 @@ if __name__=="__main__":
   nclients=0
   for server in servers:
     logging.info(f'Starting client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]}...')
-    threading.Thread(target=main_logger, args=(server, )).start()
+    threading.Thread(target=main_logger, args=(server, server["scanner"], )).start()
     nclients=nclients+1
 
   logging.info(f'Client starting complete. Started: {nclients} clients.')
