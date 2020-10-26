@@ -18,108 +18,152 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
 
   tree = html.fromstring(page.content)
 
-  timestamp_list = tree.xpath('/html/body/span')
-  if (log):
-    print(type(timestamp_list))
-    for timestamp_ele in timestamp_list:
-      print(type(timestamp_ele))
-      print(timestamp_ele.text)
+  try:
+    timestamp_list = tree.xpath('/html/body/span')
+    if (log):
+      print(type(timestamp_list))
+      for timestamp_ele in timestamp_list:
+        print(type(timestamp_ele))
+        print(timestamp_ele.text)
 
-  timestamp_ele=timestamp_list[0].text
-  # if (last_seen_timestamp == timestamp_ele):
-  #   return timestamp_ele
+    timestamp_ele=timestamp_list[0].text
+    # if (last_seen_timestamp == timestamp_ele):
+    #   return timestamp_ele
 
-  timestamp_string=timestamp_ele[-len('Dati in real-time aggiornati alle: ')+4:]
-  from datetime import datetime
-  timestamp_obj=datetime.strptime(timestamp_string, "%a, %d %b %Y %H:%M:%S %z")
-  if (log):
-    print("timestamp_obj")
-    print(timestamp_obj)
+    timestamp_string=timestamp_ele[-len('Dati in real-time aggiornati alle: ')+4:]
+    from datetime import datetime
+    timestamp_obj=datetime.strptime(timestamp_string, "%a, %d %b %Y %H:%M:%S %z")
+    if (log):
+      print("timestamp_obj")
+      print(timestamp_obj)
 
-  timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
-  if (log):  
-    print("timestamp_string")
-    print(timestamp_string)
+    timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
+    if (log):  
+      print("timestamp_string")
+      print(timestamp_string)
 
-  timestamp_string_date=timestamp_obj.strftime("%d/%m/%Y")
-  if (log):  
-    print("timestamp_string_date")
-    print(timestamp_string_date)
+    timestamp_string_date=timestamp_obj.strftime("%d/%m/%Y")
+    if (log):  
+      print("timestamp_string_date")
+      print(timestamp_string_date)
 
-  timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
-  if (log):  
-    print("timestamp_string_time")
-    print(timestamp_string_time)
+    timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
+    if (log):  
+      print("timestamp_string_time")
+      print(timestamp_string_time)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  wind_speed_elems = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h1[2]/big/big/big/span/text()')
-  wind_speed=wind_speed_elems[0]
-  wind_speed=wind_speed.strip()
-  wind_speed=float(wind_speed)/1.852
-  if (log):
-    print("wind_speed")
-    print(wind_speed)
+  wind_speed=None
+  try:
+    wind_speed_elems = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h1[2]/big/big/big/span/text()')
+    wind_speed=wind_speed_elems[0]
+    wind_speed=wind_speed.strip()
+    wind_speed=float(wind_speed)/1.852
+    if (log):
+      print("wind_speed")
+      print(wind_speed)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  wind_direction = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h4/big/big/span/big/big/text()')
-  wind_direction=wind_direction[0]
-  if (log):
-    print("wind_direction")
-    print(wind_direction)
+  wind_direction=None
+  try:  
+    wind_direction = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h4/big/big/span/big/big/text()')
+    wind_direction=wind_direction[0]
+    if (log):
+      print("wind_direction")
+      print(wind_direction)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  pressure_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[3]/h1[2]/big/span')
-  pressure=pressure_ele[0].text
-  pressure=pressure.strip()
-  if (log):
-    print("pressure")
-    print(pressure)
+  pressure=None
+  try:
+    pressure_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[3]/h1[2]/big/span')
+    pressure=pressure_ele[0].text
+    pressure=pressure.strip()
+    if (log):
+      print("pressure")
+      print(pressure)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  rain_today_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h1[2]/big/span')
-  rain_today=rain_today_ele[0].text
-  rain_today=rain_today[:1]
-  rain_today=rain_today.strip()
-  if (log):
-    print("rain_today")
-    print(rain_today)
+  rain_today=None
+  try:
+    rain_today_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h1[2]/big/span')
+    rain_today=rain_today_ele[0].text
+    rain_today=rain_today[:1]
+    rain_today=rain_today.strip()
+    if (log):
+      print("rain_today")
+      print(rain_today)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  rain_rate_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h2')
-  rain_rate=rain_rate_ele[0].text
-  rain_rate=rain_rate[len('IntensitÃƒ'):]
-  rain_rate=rain_rate[:3]
-  rain_rate=rain_rate.strip()
-  if (log):
-    print("rain_rate")
-    print(rain_rate)
+  rain_rate=None
+  try:
+    rain_rate_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h2')
+    rain_rate=rain_rate_ele[0].text
+    rain_rate=rain_rate[len('IntensitÃƒ'):]
+    rain_rate=rain_rate[:3]
+    rain_rate=rain_rate.strip()
+    if (log):
+      print("rain_rate")
+      print(rain_rate)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  temperature_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h1[3]/big/big/big')
-  temperature=temperature_ele[0].text
-  temperature=temperature[:len(temperature)-len("Â°C")+1]
-  temperature=temperature.strip()
-  if (log):
-    print("temperature")
-    print(temperature)
+  temperature=None
+  try:
+    temperature_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h1[3]/big/big/big')
+    temperature=temperature_ele[0].text
+    temperature=temperature[:len(temperature)-len("Â°C")+1]
+    temperature=temperature.strip()
+    if (log):
+      print("temperature")
+      print(temperature)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  humidity_ele = tree.xpath('/html/body/table/tbody/tr[3]/td/h1[2]/big/span')
-  humidity=humidity_ele[0].text
-  humidity=humidity[:len(humidity)-len(" %")]
-  humidity=humidity.strip()
-  if (log):
-    print("humidity")
-    print(humidity)
+  humidity=None
+  try:
+    humidity_ele = tree.xpath('/html/body/table/tbody/tr[3]/td/h1[2]/big/span')
+    humidity=humidity_ele[0].text
+    humidity=humidity[:len(humidity)-len(" %")]
+    humidity=humidity.strip()
+    if (log):
+      print("humidity")
+      print(humidity)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  uv_index_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[1]/h1[2]/big/span')
-  uv_index=uv_index_ele[0].text
-  uv_index=uv_index.strip()
-  if (log):
-    print("uv_index")
-    print(uv_index)
+  uv_index=None
+  try:
+    uv_index_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[1]/h1[2]/big/span')
+    uv_index=uv_index_ele[0].text
+    uv_index=uv_index.strip()
+    if (log):
+      print("uv_index")
+      print(uv_index)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
 
-  heat_index_cels_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h3[4]/big/span')
-  heat_index=heat_index_cels_ele[0].text
-  heat_index=heat_index[len('Indice di calore: '):]
-  heat_index=heat_index[:len(heat_index)-len("°C")-1]
-  heat_index=heat_index.strip()
-  if (log):
-    print("heat_index")
-    print(heat_index)
+  heat_index=None
+  try:
+    heat_index_cels_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h3[4]/big/span')
+    heat_index=heat_index_cels_ele[0].text
+    heat_index=heat_index[len('Indice di calore: '):]
+    heat_index=heat_index[:len(heat_index)-len("°C")-1]
+    heat_index=heat_index.strip()
+    if (log):
+      print("heat_index")
+      print(heat_index)
+  except Exception as err:
+    logging.info(f'Server: {location_id}, {err}')
+
+  if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index)):
+    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    return last_seen_timestamp
 
   # Backup to CSV file
   if (save):  

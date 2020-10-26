@@ -31,7 +31,13 @@ def add_location():
 #
 #
 def scan(last_seen_timestamp, log=False):
-  page = requests.get('https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php')
+
+  try:
+    page = requests.get('https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php')
+  except requests.exceptions.Timeout as err:
+    logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
+    logging.info(f'Server: {location_id}, {err}')
+
   tree = html.fromstring(page.content)
 
   timestamp_list = tree.xpath('/html/body/span')

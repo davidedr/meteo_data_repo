@@ -6,16 +6,11 @@ module.exports = {
     up: async(queryInterface, Sequelize) => {
         return QueryInterface.sequelize.transaction(t => {
             return Promise.all([
-                queryInterface.addColumn('meteo_data', 'wind_gust_knots', {
+                queryInterface.addColumn('locations', 'locations', {
                     type: Sequelize.DECIMAL,
                     defaultValue: null,
                     validate: { min: 0 }
-                }, { transaction: t }),
-                queryInterface.addColumn('meteo_data', 'dew_point_cels', {
-                    type: Sequelize.DECIMAL,
-                    defaultValue: null,
-                    validate: { min: -273.2, max: 273 }
-                }, { transaction: t }),
+                }, { transaction: t })
             ])
         })
 
@@ -36,8 +31,7 @@ module.exports = {
          */
         return queryInterface.sequelize.transaction(t => {
             return Promise.all([
-                queryInterface.removeColumn('meteo_data', 'wind_gust_knots', { transaction: t }),
-                queryInterface.removeColumn('meteo_data', 'dew_point_cels', { transaction: t })
+                queryInterface.removeColumn('locations', 'locations', { transaction: t })
             ]);
         });
     }
