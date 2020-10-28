@@ -2,6 +2,9 @@ REM Folders creation
 md meteo_data_repo
 cd meteo_data_repo
 
+REM 
+pip install fake_useragent
+
 npm --version
 C:\"Program Files"\PostgreSQL\11\bin\postgres -V
 C:\"Program Files"\PostgreSQL\11\bin\psql -V
