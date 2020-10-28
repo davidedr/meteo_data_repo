@@ -1,10 +1,8 @@
 'use strict';
 
-const { QueryInterface } = require("sequelize/types");
-
 module.exports = {
     up: async(queryInterface, Sequelize) => {
-        return QueryInterface.sequelize.transaction(t => {
+        return queryInterface.sequelize.transaction(t => {
             return Promise.all([
                 queryInterface.addColumn('locations', 'height_asl_m', {
                     type: Sequelize.DECIMAL,
