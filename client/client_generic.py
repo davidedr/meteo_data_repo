@@ -393,7 +393,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
     return last_seen_timestamp
 
   # Backup to CSV file
@@ -634,7 +634,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
 
   if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
     return last_seen_timestamp
 
   # Backup to CSV file
@@ -1039,7 +1039,7 @@ servers = [
   { "location_id": 9, "location": locations_json[2], "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike },
   { "location_id": 10, "location": locations_json[3], "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike },
   { "location_id": 1, "location": locations_json[4], "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike },
-  { "location_id": 11, "location": locations_json[5], "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike },
+  #{ "location_id": 11, "location": locations_json[5], "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike },
   { "location_id": 12, "location": locations_json[6], "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike }
 ]
 
