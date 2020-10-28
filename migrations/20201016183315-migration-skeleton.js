@@ -6,7 +6,7 @@ module.exports = {
     up: async(queryInterface, Sequelize) => {
         return QueryInterface.sequelize.transaction(t => {
             return Promise.all([
-                queryInterface.addColumn('locations', 'locations', {
+                queryInterface.addColumn('locations', 'height_asl_m', {
                     type: Sequelize.DECIMAL,
                     defaultValue: null,
                     validate: { min: 0 }
@@ -31,7 +31,7 @@ module.exports = {
          */
         return queryInterface.sequelize.transaction(t => {
             return Promise.all([
-                queryInterface.removeColumn('locations', 'locations', { transaction: t })
+                queryInterface.removeColumn('locations', 'height_asl_m', { transaction: t })
             ]);
         });
     }

@@ -1072,8 +1072,7 @@ def add_server_location(server):
 #
 def add_server_locations(servers):
   for server in servers:
-    if server["location_id"]==12:
-      add_server_location(server)
+    add_server_location(server)
 
 #
 #
@@ -1088,9 +1087,8 @@ if __name__=="__main__":
   logging.basicConfig(format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
   nclients=0
   for server in servers:
-    if server["location_id"]==12:
-      logging.info(f'Starting client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]}...')
-      threading.Thread(target=main_logger, args=(server, server["scanner"], )).start()
-      nclients=nclients+1
+    logging.info(f'Starting client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]}...')
+    threading.Thread(target=main_logger, args=(server, server["scanner"], )).start()
+    nclients=nclients+1
 
   logging.info(f'Client starting complete. Started: {nclients} clients.')
