@@ -18,7 +18,8 @@ exports.create = (req, res) => {
         zip: req.body.zip,
         province: req.body.province,
         country: req.body.country,
-        note: req.body.note
+        note: req.body.note,
+        height_asl_m: req.body.height_asl_m
     }
 
     Locations.create(location)

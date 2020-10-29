@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
         province: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         country: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         note: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
-        height_sml_m: { type: Sequelize.DECIMAL, allowNull: true, defaultValue: null, validate: { min: 0 } }
+        height_asl_m: { type: Sequelize.DECIMAL, allowNull: true, defaultValue: null, validate: { min: 0 } }
     })
 
     return Location

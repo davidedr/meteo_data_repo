@@ -9,26 +9,26 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   location_id=server["location_id"]
   name=server["name"]
   weather_station_url=server["url"]
-  weather_station_url="http://www.meteosystem.com/dati/feltre/dati.php"
 
   user_agent = UserAgent().random 
-  logging.info(user_agent)
   headers = {'User-Agent': user_agent}
 
   try:
     page = requests.get(weather_station_url, headers=headers)
-  except requests.exceptions.Timeout as err:
-    logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.info(f'Server: {location_id}, {err}')
-
-  tree = html.fromstring(page.text)
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
+    return last_seen_timestamp
 
   try:
-    #date_list = tree.xpath("(//strong[contains(@class,'valor2')])[1]")
+    tree = html.fromstring(page.text)    
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+    return last_seen_timestamp
+
+  try:
     date_list = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > div.valori3 > strong:nth-child(1)")
     date_string=date_list[0].text.strip()
 
-    #time_list = tree.xpath("(//strong[contains(@class,'valor2')])[2]")
     time_list = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > div.valori3 > strong:nth-child(2)")
     time_string=time_list[0].text.strip()
 
@@ -48,8 +48,15 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     if (log):  
       print("timestamp_string_time: {timestamp_string_time}")
 
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting the timestamp: "{e}"!')
+    return last_seen_timestamp
+
+  if timestamp_string==last_seen_timestamp:
+    # Weather station is not updating data
+    logging.info(f'Server: {location_id},  {name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    # TODO Raise an alert
+    return last_seen_timestamp
 
   wind_speed=None
   try:
@@ -60,118 +67,13 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     if (log):
       print("wind_speed: {wind_speed}")
 
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting wind_speed: "{e}"!')
 
   wind_direction=None
   try:  
     wind_direction = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(18) > td:nth-child(3) > div > strong")
     wind_direction=wind_direction[0].text
-    if (log):
-      print("wind_direction: {wind_direction}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  pressure=None
-  try:
-    pressure_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
-    pressure=pressure_ele[0].text.split(' ')[0].strip()
-    if (log):
-      print("pressure: {pressure}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  rain_today=None
-  try:
-    rain_today_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
-    rain_today=rain_today_ele[0].text.split(' ')[0].strip()
-    if (log):
-      print("rain_today: {rain_today}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  rain_rate=None
-  try:
-    rain_rate_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
-    rain_rate=rain_rate_ele[0].text.split(' ')[0].strip()
-    if (log):
-      print("rain_rate: {rain_rate}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  temperature=None
-  try:
-    temperature_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(3) > td:nth-child(3) > div > strong")
-    temperature=temperature_ele[0].text.split("°")[0].strip()
-    if (log):
-      print("temperature: {temperature}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  humidity=None
-  try:
-    humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
-    humidity=humidity_ele[0].text.split("%")[0].strip()
-    if (log):
-      print("humidity: {humidity}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  heat_index=None
-  try:
-    heat_index_cels_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(6) > td:nth-child(3) > div > strong")
-    heat_index=heat_index_cels_ele[0].text.split("°")[0].strip()
-    if (log):
-      print("heat_index: {heat_index}")
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  wind_gust=None
-  try:
-    wind_gust_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(17) > td.sfondotagmax > div > strong")
-    wind_gust=wind_gust_ele[0].text.split(" ")[0].strip()
-    wind_gust=float(wind_gust)/1.852
-    if (log):
-      print("wind_gust: {wind_gust}")
-      
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  dew_point_cels=None
-  try:
-    dew_point_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(5) > td:nth-child(3) > div > strong')
-    dew_point_cels=dew_point_cels_ele[0].text.split('°')[0]
-    if (log):
-      logging.info(f'Server: {location_id}, dew_point_cels: {dew_point_cels}')
-
-  except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
-
-  if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index or wind_gust or dew_point_cels)):
-    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
-    return last_seen_timestamp
-
-  # Backup to CSV file
-  if (save):
-    uv_index=None
-    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
-    from csv import writer
-    with open(file_name, 'a+', newline='') as write_obj:
-      # Create a writer object from csv module
-      csv_writer = writer(write_obj, delimiter=";")
-      # Add contents of list as last row in the csv file
-      csv_writer.writerow(weather)
-
-    # Insert into database
     wind_direction_deg=None
     wind_direction=wind_direction.upper()
     if wind_direction=="N":
@@ -208,19 +110,218 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
       wind_direction_deg=337.5
     else:
       print("Unknown wind_direction: '{wind_direction}'!")
+      wind_direction_deg=None
+
+    if (log):
+      print("wind_direction_deg: {wind_direction_deg}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting wind_direction: "{e}"!')
+
+  pressure=None
+  try:
+    pressure_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
+    pressure=pressure_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("pressure: {pressure}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting pressure: "{e}"!')
+
+  rain_today=None
+  try:
+    rain_today_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
+    rain_today=rain_today_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("rain_today: {rain_today}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting rain_today: "{e}"!')
+
+  rain_rate=None
+  try:
+    rain_rate_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
+    rain_rate=rain_rate_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("rain_rate: {rain_rate}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting rain_rate: "{e}"!')
+
+  temperature_cels=None
+  try:
+    temperature_cels_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(3) > td:nth-child(3) > div > strong")
+    temperature_cels=temperature_cels_ele[0].text.split("°")[0].strip()
+    if (log):
+      print("temperature_cels: {temperature_cels}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting temperature_cels: "{e}"!')
+
+  rel_humidity=None
+  try:
+    rel_humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
+    rel_humidity=rel_humidity_ele[0].text.split("%")[0].strip()
+    if (log):
+      print("rel_humidity: {rel_humidity}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting rel_humidity: "{e}"!')
+
+  heat_index=None
+  try:
+    heat_index_cels_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(6) > td:nth-child(3) > div > strong")
+    heat_index=heat_index_cels_ele[0].text.split("°")[0].strip()
+    if (log):
+      print("heat_index: {heat_index}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting heat_index: "{e}"!')
+
+  wind_gust=None
+  try:
+    wind_gust_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(17) > td.sfondotagmax > div > strong")
+    wind_gust=wind_gust_ele[0].text.split(" ")[0].strip()
+    wind_gust=float(wind_gust)/1.852
+    if (log):
+      print("wind_gust: {wind_gust}")
+      
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting wind_gust: "{e}"!')
+
+  dew_point_cels=None
+  try:
+    dew_point_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(5) > td:nth-child(3) > div > strong')
+    dew_point_cels=dew_point_cels_ele[0].text.split('°')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, dew_point_cels: {dew_point_cels}')
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting dew_point_cels: "{e}"!')
+
+  wind_chill_cels=None
+  try:
+    wind_chill_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(8) > td:nth-child(3) > div > strong')
+    wind_chill_cels=wind_chill_cels_ele[0].text.split('°')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, wind_chill_cels: {wind_chill_cels}')
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting wind_chill_cels: "{e}"!')
+
+  ground_temperature_cels=None
+  try:
+    ground_temperature_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(11) > td:nth-child(3) > div > strong')
+    ground_temperature_cels=ground_temperature_cels_ele[0].text.split('°')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, ground_temperature_cels: {ground_temperature_cels}')
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting ground_temperature_cels: "{e}"!')
+
+  solar_irradiance_wpsm=None # Watts per square meter
+  try:
+    solar_irradiance_wpsm_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(13) > td:nth-child(3) > div > strong')
+    solar_irradiance_wpsm=solar_irradiance_wpsm_ele[0].text.split(' ')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting solar_irradiance_wpsm: "{e}"!')
+
+  rel_leaf_wetness=None
+  try:
+    leaf_wetness_index_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(14) > td:nth-child(3) > div > strong')
+    leaf_wetness_index=leaf_wetness_index_ele[0].text.strip() # Leaf wetness index: 0 (completely dry) to 15 (saturated).
+    rel_leaf_wetness=float(leaf_wetness_index)/15
+    if (log):
+      logging.info(f'Server: {location_id}, rel_leaf_wetness: {rel_leaf_wetness}')
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting rel_leaf_wetness: "{e}"!')
+
+  soil_moisture_cb=None # Centibars
+  try:
+    soil_moisture_cb_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(12) > td:nth-child(3) > div > strong')
+    soil_moisture_cb=soil_moisture_cb_ele[0].text.split(' ')[0].strip()
+    if (log):
+      logging.info(f'Server: {location_id}, soil_moisture_cb: {soil_moisture_cb}')
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception getting soil_moisture_cb: "{e}"!')
+
+  rain_this_month_mm=None
+  try:
+    rain_this_month_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(22) > td.sfondotagmin > div > strong")
+    rain_this_month_mm=rain_this_month_mm_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("rain_this_month_mm: {rain_this_month_mm}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception rain_this_month_mm: "{e}"!')
+
+  rain_this_year_mm=None
+  try:
+    rain_this_year_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(23) > td.sfondotagmin > div > strong")
+    rain_this_year_mm=rain_this_year_mm_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("rain_this_year_mm: {rain_this_year_mm}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception rain_this_year_mm: "{e}"!')
+
+  evapotranspiration_today_mm=None
+  try:
+    evapotranspiration_today_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmax > div > strong")
+    evapotranspiration_today_mm=evapotranspiration_today_mm_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("evapotranspiration_today_mm: {evapotranspiration_today_mm}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception evapotranspiration_today_mm: "{e}"!')
+
+  evapotranspiration_this_month_mm=None
+  try:
+    evapotranspiration_this_month_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(22) > td.sfondotagmax > div > strong")
+    evapotranspiration_this_month_mm=evapotranspiration_this_month_mm_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception evapotranspiration_this_month_mm: "{e}"!')
+
+  evapotranspiration_this_year_mm=None
+  try:
+    evapotranspiration_this_year_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(23) > td.sfondotagmax > div > strong ")
+    evapotranspiration_this_year_mm=evapotranspiration_this_year_mm_ele[0].text.split(' ')[0].strip()
+    if (log):
+      print("evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}")
+
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, exception evapotranspiration_this_year_mm: "{e}"!')
+
+  uv_index=None
+  if not(timestamp_string and (wind_speed or wind_direction_deg or pressure or rain_today or rain_rate or temperature_cels or rel_humidity or uv_index or heat_index or wind_gust or dew_point_cels)):
+    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction_deg: {wind_direction_deg}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    return last_seen_timestamp
+
+  # Backup to CSV file
+  if (save):
+    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction_deg, pressure, rain_today, rain_rate, temperature_cels, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
+    file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
+    from csv import writer
+    with open(file_name, 'a+', newline='') as write_obj:
+      # Create a writer object from csv module
+      csv_writer = writer(write_obj, delimiter=";")
+      # Add contents of list as last row in the csv file
+      csv_writer.writerow(weather)
+
+    # Insert into database
 
     # Convert to PGSQL format
     timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
     timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
-
-    # Guard against empty values
-    temperature_cels=None
-    if temperature:
-      temperature_cels=float(temperature)
-
-    rel_humidity=None
-    if humidity:
-      rel_humidity=float(humidity)/100
 
     data_json = {
       "location_id": location_id,   
@@ -242,7 +343,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
     logging.info(f'Server: {location_id}, {name}, {timestamp}, response {response}')
 
-  return timestamp_ele
+  return timestamp_string
 
 def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   location_id=server["location_id"]
@@ -355,14 +456,12 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as err:
     logging.info(f'Server: {location_id}, {err}')
 
-  humidity=None
+  rel_humidity=None
   try:
-    humidity_ele = tree.xpath('/html/body/table/tbody/tr[3]/td/h1[2]/big/span')
-    humidity=humidity_ele[0].text
-    humidity=humidity[:len(humidity)-len(" %")]
-    humidity=humidity.strip()
+    rel_humidity_ele = tree.xpath('/html/body/table/tbody/tr[3]/td/h1[2]/big/span')
+    rel_humidity=rel_humidity_ele[0].text[:len(humidity)-len(" %")].strip()
     if (log):
-      print("humidity: {humidity}")
+      print("rel_humidity: {rel_humidity}")
 
   except Exception as err:
     logging.info(f'Server: {location_id}, {err}')
@@ -391,16 +490,16 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as err:
     logging.info(f'Server: {location_id}, {err}')
 
-  if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index)):
+  if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or rel_humidity or uv_index or heat_index)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
     return last_seen_timestamp
 
   # Backup to CSV file
   if (save):  
     wind_gust=None
     dew_point_cels=None
-    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
+    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, rel_humidity, uv_index, heat_index, wind_gust, dew_point_cels]
     file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
@@ -956,7 +1055,8 @@ locations_json = [{
     "town": "Caorle",
     "province": "VE",
     "country": "IT",
-    "note": "Meteo station @ https://www.meteo-caorle.it/, Porto Santa Margherita, Spiaggia Est, Caorle, Venezia"
+    "note": "Meteo station @ https://www.meteo-caorle.it/, Porto Santa Margherita, Spiaggia Est, Caorle, Venezia",
+    "height_asl_m": 0
 }, {
     "name": 'San Giorgio, Venezia',
     "latitude": 45.429939,
@@ -968,7 +1068,8 @@ locations_json = [{
     "town": "Venezia",
     "province": "Città Metropolitana di Venezia",
     "country": "IT",
-    "note": "Meteo station @ https://www.meteo-venezia.net/compagnia01.php, Isola di San Giorgio Maggiore, Venezia"
+    "note": "Meteo station @ https://www.meteo-venezia.net/compagnia01.php, Isola di San Giorgio Maggiore, Venezia",
+    "height_asl_m": 0
 }, {
     "name": 'Punta San Giuliano, Mestre-Venezia',
     "latitude": 45.629892,
@@ -980,7 +1081,8 @@ locations_json = [{
     "town": "Mestre",
     "province": "VE",
     "country": "IT",
-    "note": "Meteo station @ https://www.meteo-venezia.net/, Punta San Giuliano, Mestre-Venezia"
+    "note": "Meteo station @ https://www.meteo-venezia.net/, Punta San Giuliano, Mestre-Venezia",
+    "height_asl_m": 0
 },{
     "name": 'Laguna Park Hotel, Bibione, Venezia',
     "latitude": 45.466542,
@@ -992,7 +1094,8 @@ locations_json = [{
     "town": "Bibione",
     "province": "VE",
     "country": "IT",
-    "note": "Meteo station @ https://www.bibione-meteo.it/, Bibione, Venezia"
+    "note": "Meteo station @ https://www.bibione-meteo.it/, Bibione, Venezia",
+    "height_asl_m": 0
 },{
     "name": 'Hotel "Marco Polo", Caorle',
     "latitude": 45.5978224,
@@ -1004,50 +1107,52 @@ locations_json = [{
     "town": "Caorle",
     "province": "VE",
     "country": "IT",
-    "note": "Meteo station @ https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php"
+    "note": "Meteo station @ https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php",
+    "height_asl_m": 0
 },{
     "name": 'Meteo Network stazione meteo di Feltre',
     "latitude": 46.016,
     "longitude": 11.895,
     "address_complete": None,
     "street_1": None,
-    "height_asl_m": 267,
     "street_2": None,
     "zip": "32032",
     "town": "Feltre",
     "province": "BL",
     "country": "IT",
-    "note": "Meteo station @ http://my.meteonetwork.it/station/vnt336/, Model: MTX, Type: Semi-Urbana, Ubicazione: Campo aperto"
+    "note": "Meteo station @ http://my.meteonetwork.it/station/vnt336/, Model: MTX, Type: Semi-Urbana, Ubicazione: Campo aperto",
+    "height_asl_m": 267
 },{
     "name": 'Osservatorio meteorologico di I.I.S. Agrario “Antonio della Lucia” di Feltre (BL) ',
     "latitude": 46.036,
     "longitude": 11.937,
     "address_complete": "Via Vellai, 41, 32032 Vellai BL",
     "street_1": "Via Vellai,",
-    "height_asl_m": 330,
     "street_2": None,
     "zip": "32032",
     "town": "Feltre",
     "province": "BL",
     "country": "IT",
-    "note": "Meteo station @ http://www.meteosystem.com/dati/feltre/dati.php, Model: Davis Vantage Pro 2"
+    "note": "Meteo station @ http://www.meteosystem.com/dati/feltre/dati.php, Model: Davis Vantage Pro 2",
+    "height_asl_m": 330
 }]
 
 servers = [
-  { "location_id": 4, "location": locations_json[0], "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/", "scanner": scan_meteovenezia_alike },
-  { "location_id": 8, "location": locations_json[1], "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike },
-  { "location_id": 9, "location": locations_json[2], "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike },
-  { "location_id": 10, "location": locations_json[3], "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike },
-  { "location_id": 1, "location": locations_json[4], "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike },
-  #{ "location_id": 11, "location": locations_json[5], "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike },
-  { "location_id": 12, "location": locations_json[6], "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike }
+  { "location_id": 1,  "location": locations_json[4], "to_be_started": False, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike },
+  { "location_id": 4,  "location": locations_json[0], "to_be_started": False, "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 8,  "location": locations_json[1], "to_be_started": False, "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike },
+  { "location_id": 9,  "location": locations_json[2], "to_be_started": False, "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 10, "location": locations_json[3], "to_be_started": False, "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 11, "location": locations_json[5], "to_be_started": False, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike },
+  { "location_id": 12, "location": locations_json[6], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike }
 ]
 
 #
 #
 #
-def main_logger(server, scanner, save=True, log=False):
+def main_logger(server, save=True, log=False):
   logging.info(f'Thread ident: {threading.get_ident()}, Client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]} up and running.')
+  scanner=server["scanner"]
   while True:
     last_seen_timestamp=server.get("last_seen_timestamp", None)
     scan_no=server.get("scan_no", 0)
@@ -1084,11 +1189,16 @@ import time
 if __name__=="__main__":
   #add_server_locations(servers)
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
-  logging.basicConfig(format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+  logging.basicConfig(filename="C:/temp/meteo_data_repo/app/log/meteo_data_repo2.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
   nclients=0
   for server in servers:
+    to_be_started=server["to_be_started"]
+    if not to_be_started:
+      logging.info(f'Server: {server["location_id"]}, {server["name"]}, url: {server["url"]} starting DISABLED.')
+      pass
+
     logging.info(f'Starting client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]}...')
-    threading.Thread(target=main_logger, args=(server, server["scanner"], )).start()
+    threading.Thread(target=main_logger, args=(server, )).start()
     nclients=nclients+1
 
-  logging.info(f'Client starting complete. Started: {nclients} clients.')
+  logging.info(f'Clients starting complete. Started: {nclients} clients.')
