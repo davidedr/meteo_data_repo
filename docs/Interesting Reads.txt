@@ -5,3 +5,5 @@ https://realpython.com/intro-to-python-threading/
 https://www.loggly.com/blog/exceptional-logging-of-exceptions-in-python/
 
 https://www.davisinstruments.com/blog/
+
+https://bezkoder.com/sequelize-associate-one-to-many/

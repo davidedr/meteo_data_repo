@@ -308,7 +308,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
 
   # Backup to CSV file
   if (save):
-    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction_deg, pressure, rain_today, rain_rate, temperature_cels, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
+    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction_deg, pressure, rain_today, rain_rate, temperature_cels, rel_humidity, uv_index, heat_index, wind_gust, dew_point_cels]
     file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
@@ -318,6 +318,8 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
       csv_writer.writerow(weather)
 
     # Insert into database
+    if rel_humidity:
+      rel_humidity=float(rel_humidity)/100
 
     # Convert to PGSQL format
     timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
@@ -345,6 +347,9 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
 
   return timestamp_string
 
+#
+#
+#
 def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   location_id=server["location_id"]
   name=server["name"]
@@ -459,7 +464,8 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   rel_humidity=None
   try:
     rel_humidity_ele = tree.xpath('/html/body/table/tbody/tr[3]/td/h1[2]/big/span')
-    rel_humidity=rel_humidity_ele[0].text[:len(humidity)-len(" %")].strip()
+    rel_humidity=rel_humidity_ele[0].text
+    rel_humidity=rel_humidity[:len(rel_humidity)-len(" %")].strip()
     if (log):
       print("rel_humidity: {rel_humidity}")
 
@@ -556,7 +562,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
     rel_humidity=None
     if humidity:
-      rel_humidity=float(humidity)/100
+      rel_humidity=float(rel_humidity)/100
 
     data_json = {
       "location_id": location_id,   
@@ -595,6 +601,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
 
   tree = html.fromstring(page.content)
 
+  timestamp_string=None
   try:
     timestamp_list = tree.xpath('/html/body/span')
     if (log):
@@ -607,7 +614,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     # if (last_seen_timestamp == timestamp_ele):
     #   return timestamp_ele
 
-    timestamp_string=timestamp_ele[-len('Dati in real-time aggiornati alle: ')+4:]
+    timestamp_string=timestamp_ele[-len('Dati in real-time aggiornati alle: ')+4:].strip()
     from datetime import datetime
     timestamp_obj=datetime.strptime(timestamp_string, "%a, %d %b %Y %H:%M:%S %z")
     timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
@@ -624,6 +631,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
 
   except Exception as err:
     logging.info(f'Server: {location_id}, {err}')
+    return last_seen_timestamp
 
   wind_speed=None
   try:
@@ -849,9 +857,11 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   try: 
     tree = html.fromstring(page.content)
     timestamp_list = tree.xpath('/html/body/div[2]/table[2]/tbody/tr[1]/td[1]')
-    timestamp_ele=timestamp_list[0].text
-    timestamp_ele_1=timestamp_ele[1:11]
-    timestamp_ele_2=timestamp_ele[14:20]
+    timestamp_ele=timestamp_list[0].text.split('\xa0\xa0\xa0')
+    timestamp_ele_1=timestamp_ele[0]
+    timestamp_ele_2=timestamp_ele[1]
+    #timestamp_ele_1=timestamp_ele[1:11]
+    #timestamp_ele_2=timestamp_ele[14:20]
 
     timestamp_string=timestamp_ele_1+" "+timestamp_ele_2
     timestamp_obj=datetime.strptime(timestamp_string, "%d.%m.%Y %H:%M")
@@ -1138,11 +1148,11 @@ locations_json = [{
 }]
 
 servers = [
-  { "location_id": 1,  "location": locations_json[4], "to_be_started": False, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike },
-  { "location_id": 4,  "location": locations_json[0], "to_be_started": False, "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/", "scanner": scan_meteovenezia_alike },
-  { "location_id": 8,  "location": locations_json[1], "to_be_started": False, "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike },
-  { "location_id": 9,  "location": locations_json[2], "to_be_started": False, "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike },
-  { "location_id": 10, "location": locations_json[3], "to_be_started": False, "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 1,  "location": locations_json[4], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike },
+  { "location_id": 4,  "location": locations_json[0], "to_be_started": True, "name": "bagnomargherita_caorle", "url": "https://www.meteo-caorle.it/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 8,  "location": locations_json[1], "to_be_started": True, "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike },
+  { "location_id": 9,  "location": locations_json[2], "to_be_started": True, "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike },
+  { "location_id": 10, "location": locations_json[3], "to_be_started": True, "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike },
   { "location_id": 11, "location": locations_json[5], "to_be_started": False, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike },
   { "location_id": 12, "location": locations_json[6], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike }
 ]
@@ -1189,13 +1199,13 @@ import time
 if __name__=="__main__":
   #add_server_locations(servers)
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
-  logging.basicConfig(filename="C:/temp/meteo_data_repo/app/log/meteo_data_repo2.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+  logging.basicConfig(filename="C:/temp/meteo_data_repo/app/log/meteo_data_repo3.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
   nclients=0
   for server in servers:
     to_be_started=server["to_be_started"]
-    if not to_be_started:
+    if to_be_started==False:
       logging.info(f'Server: {server["location_id"]}, {server["name"]}, url: {server["url"]} starting DISABLED.')
-      pass
+      continue
 
     logging.info(f'Starting client for server: {server["location_id"]}, {server["name"]}, url: {server["url"]}...')
     threading.Thread(target=main_logger, args=(server, )).start()
