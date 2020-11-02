@@ -5,14 +5,8 @@ from lxml import html
 import requests
 from fake_useragent import UserAgent
 
-#
-#
-#
-def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
-  location_id=server["location_id"]
-  name=server["name"]
-  weather_station_url=server["url"]
-
+def get_tree(weather_station_url, location_id):
+  
   user_agent = UserAgent().random 
   headers = {'User-Agent': user_agent}
 
@@ -20,12 +14,27 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     page = requests.get(weather_station_url, headers=headers)
   except Exception as e:
     logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
-    return last_seen_timestamp
+    return None
 
   try:
     tree = html.fromstring(page.text)    
   except Exception as e:
     logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+    return None
+
+  return tree
+
+#
+#
+#
+def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
+
+  location_id=server["location_id"]
+  name=server["name"]
+  weather_station_url=server["url"]
+
+  tree = get_tree(weather_station_url, location_id)
+  if tree is None:
     return last_seen_timestamp
 
   try:
@@ -358,19 +367,8 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   name=server["name"]
   weather_station_url=server["url"]
 
-  user_agent = UserAgent().random 
-  headers = {'User-Agent': user_agent}
-
-  try:
-    page = requests.get(weather_station_url, headers=headers)
-  except Exception as e:
-    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
-    return last_seen_timestamp
-
-  try:
-    tree = html.fromstring(page.text)    
-  except Exception as e:
-    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+  tree = get_tree(weather_station_url, location_id)
+  if tree is None:
     return last_seen_timestamp
 
   try:
@@ -601,19 +599,8 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   name=server["name"]
   weather_station_url=server["url"]
 
-  user_agent = UserAgent().random 
-  headers = {'User-Agent': user_agent}
-
-  try:
-    page = requests.get(weather_station_url, headers=headers)
-  except Exception as e:
-    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
-    return last_seen_timestamp
-
-  try:
-    tree = html.fromstring(page.text)    
-  except Exception as e:
-    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+  tree = get_tree(weather_station_url, location_id)
+  if tree is None:
     return last_seen_timestamp
 
   timestamp_string=None
@@ -848,19 +835,8 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   name=server["name"]
   weather_station_url=server["url"]
 
-  user_agent = UserAgent().random 
-  headers = {'User-Agent': user_agent}
-
-  try:
-    page = requests.get(weather_station_url, headers=headers)
-  except Exception as e:
-    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
-    return last_seen_timestamp
-
-  try:
-    tree = html.fromstring(page.text)    
-  except Exception as e:
-    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+  tree = get_tree(weather_station_url, location_id)
+  if tree is None:
     return last_seen_timestamp
 
   timestamp_string=None
