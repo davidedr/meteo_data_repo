@@ -685,8 +685,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   try:
     rain_today_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h1[2]/big/span')
     rain_today=rain_today_ele[0].text
-    rain_today=rain_today[:1]
-    rain_today=rain_today.strip()
+    rain_today=rain_today.split()[0].strip()
     if (log):
       print("rain_today: {rain_today}")
 
@@ -697,9 +696,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   try:
     rain_rate_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h2')
     rain_rate=rain_rate_ele[0].text
-    rain_rate=rain_rate[len('IntensitÃƒ'):]
-    rain_rate=rain_rate[:3]
-    rain_rate=rain_rate.strip()
+    rain_rate=rain_rate.split(" ")[1].strip()
     if (log):
       print("rain_rate: {rain_rate}")
 
@@ -1017,7 +1014,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   # Backup to CSV file
   if (save):
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
+    file_name=f"data\\weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
