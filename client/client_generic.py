@@ -5,6 +5,9 @@ from lxml import html
 import requests
 from fake_useragent import UserAgent
 
+#
+#
+#
 def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   location_id=server["location_id"]
   name=server["name"]
@@ -360,7 +363,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     page = requests.get(weather_station_url, headers=headers)
   except requests.exceptions.Timeout as err:
     logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   logging.info(page)
   tree = html.fromstring(page.content)
@@ -389,7 +392,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("timestamp_string_time: {timestamp_string_time}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   wind_speed=None
   try:
@@ -401,7 +404,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("wind_speed: {wind_speed}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   wind_direction=None
   try:  
@@ -411,7 +414,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("wind_direction: {wind_direction}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   pressure=None
   try:
@@ -422,7 +425,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("pressure: {pressure}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rain_today=None
   try:
@@ -434,7 +437,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("rain_today: {rain_today}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rain_rate=None
   try:
@@ -447,7 +450,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("rain_rate: {rain_rate}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   temperature=None
   try:
@@ -459,7 +462,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("temperature: {temperature}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rel_humidity=None
   try:
@@ -470,7 +473,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("rel_humidity: {rel_humidity}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   uv_index=None
   try:
@@ -481,7 +484,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("uv_index: {uv_index}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   heat_index=None
   try:
@@ -494,7 +497,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
       print("heat_index: {heat_index}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or rel_humidity or uv_index or heat_index)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
@@ -597,7 +600,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     page = requests.get(weather_station_url)
   except requests.exceptions.Timeout as err:
     logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   tree = html.fromstring(page.content)
 
@@ -630,7 +633,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("timestamp_string_time: {timestamp_string_time}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
     return last_seen_timestamp
 
   wind_speed=None
@@ -643,7 +646,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("wind_speed: {wind_speed}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   wind_direction=None
   try:  
@@ -653,7 +656,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("wind_direction: {wind_direction}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   pressure=None
   try:
@@ -664,7 +667,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("pressure: {pressure}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rain_today=None
   try:
@@ -676,7 +679,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("rain_today: {rain_today}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rain_rate=None
   try:
@@ -689,7 +692,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("rain_rate: {rain_rate}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   temperature=None
   try:
@@ -701,7 +704,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("temperature: {temperature}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   humidity=None
   try:
@@ -713,7 +716,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("humidity: {humidity}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   uv_index=None
   try:
@@ -724,7 +727,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("uv_index: {uv_index}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   heat_index=None
   try:
@@ -737,7 +740,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
       print("heat_index: {heat_index}")
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
@@ -840,15 +843,15 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     page = requests.get(weather_station_url)
   except requests.exceptions.Timeout as err:
     logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
     return last_seen_timestamp
   except requests.exceptions.RequestException as err:
     logging.info(f'Server: {location_id}, requests.exceptions.RequestException!') 
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
     return last_seen_timestamp
   except Exception as err:
     logging.info(f'Server: {location_id}, Exception!')
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
     return last_seen_timestamp
 
   timestamp_string=None
@@ -860,8 +863,6 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     timestamp_ele=timestamp_list[0].text.split('\xa0\xa0\xa0')
     timestamp_ele_1=timestamp_ele[0]
     timestamp_ele_2=timestamp_ele[1]
-    #timestamp_ele_1=timestamp_ele[1:11]
-    #timestamp_ele_2=timestamp_ele[14:20]
 
     timestamp_string=timestamp_ele_1+" "+timestamp_ele_2
     timestamp_obj=datetime.strptime(timestamp_string, "%d.%m.%Y %H:%M")
@@ -882,7 +883,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, timestamp_string_time: {timestamp_string_time}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   wind_speed=None
   try:
@@ -893,7 +894,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, wind_speed: {wind_speed}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   wind_gust=None
   try:
@@ -904,7 +905,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, wind_gust: {wind_gust}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   wind_direction=None
   try:
@@ -915,7 +916,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, wind_direction: {wind_direction}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   pressure=None
   try:
@@ -926,7 +927,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, pressure: {pressure}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rain_today=None
   try:
@@ -939,7 +940,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, rain_today: {rain_today}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   rain_rate=None
   try:
@@ -950,7 +951,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, rain_rate: {rain_rate}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   temperature=None
   try:
@@ -961,7 +962,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, temperature: {temperature}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   humidity=None
   try:
@@ -972,7 +973,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, humidity: {humidity}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   heat_index=None
   try:
@@ -983,7 +984,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, heat_index: {heat_index}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   dew_point_cels=None
   try:
@@ -994,7 +995,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       logging.info(f'Server: {location_id}, dew_point_cels: {dew_point_cels}')
 
   except Exception as err:
-    logging.info(f'Server: {location_id}, {err}')
+    logging.exception(f'Server: {location_id}, {err}')
 
   uv_index=None # Unsupported by these weather stations
   if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index or wind_gust or dew_point_cels)):
@@ -1199,7 +1200,7 @@ import time
 if __name__=="__main__":
   #add_server_locations(servers)
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
-  logging.basicConfig(filename="C:/temp/meteo_data_repo/app/log/meteo_data_repo3.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+  logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
   nclients=0
   for server in servers:
     to_be_started=server["to_be_started"]
