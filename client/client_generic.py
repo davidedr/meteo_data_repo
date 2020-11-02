@@ -358,15 +358,20 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   name=server["name"]
   weather_station_url=server["url"]
 
-  try:
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    page = requests.get(weather_station_url, headers=headers)
-  except requests.exceptions.Timeout as err:
-    logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.exception(f'Server: {location_id}, {err}')
+  user_agent = UserAgent().random 
+  headers = {'User-Agent': user_agent}
 
-  logging.info(page)
-  tree = html.fromstring(page.content)
+  try:
+    page = requests.get(weather_station_url, headers=headers)
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
+    return last_seen_timestamp
+
+  try:
+    tree = html.fromstring(page.text)    
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+    return last_seen_timestamp
 
   try:
     timestamp_list = tree.xpath('/html/body/div[3]/div[1]/div/h3[1]')
@@ -596,13 +601,20 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   name=server["name"]
   weather_station_url=server["url"]
 
-  try:
-    page = requests.get(weather_station_url)
-  except requests.exceptions.Timeout as err:
-    logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.exception(f'Server: {location_id}, {err}')
+  user_agent = UserAgent().random 
+  headers = {'User-Agent': user_agent}
 
-  tree = html.fromstring(page.content)
+  try:
+    page = requests.get(weather_station_url, headers=headers)
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
+    return last_seen_timestamp
+
+  try:
+    tree = html.fromstring(page.text)    
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+    return last_seen_timestamp
 
   timestamp_string=None
   try:
@@ -839,26 +851,25 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   name=server["name"]
   weather_station_url=server["url"]
 
+  user_agent = UserAgent().random 
+  headers = {'User-Agent': user_agent}
+
   try:
-    page = requests.get(weather_station_url)
-  except requests.exceptions.Timeout as err:
-    logging.info(f'Server: {location_id}, requests.exceptions.Timeout!')
-    logging.exception(f'Server: {location_id}, {err}')
+    page = requests.get(weather_station_url, headers=headers)
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
     return last_seen_timestamp
-  except requests.exceptions.RequestException as err:
-    logging.info(f'Server: {location_id}, requests.exceptions.RequestException!') 
-    logging.exception(f'Server: {location_id}, {err}')
-    return last_seen_timestamp
-  except Exception as err:
-    logging.info(f'Server: {location_id}, Exception!')
-    logging.exception(f'Server: {location_id}, {err}')
+
+  try:
+    tree = html.fromstring(page.text)    
+  except Exception as e:
+    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
     return last_seen_timestamp
 
   timestamp_string=None
   timestamp_string_date=None
   timestamp_string_time=None
   try: 
-    tree = html.fromstring(page.content)
     timestamp_list = tree.xpath('/html/body/div[2]/table[2]/tbody/tr[1]/td[1]')
     timestamp_ele=timestamp_list[0].text.split('\xa0\xa0\xa0')
     timestamp_ele_1=timestamp_ele[0]
