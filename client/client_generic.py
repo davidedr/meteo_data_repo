@@ -5,6 +5,9 @@ from lxml import html
 import requests
 from fake_useragent import UserAgent
 
+#
+#
+#
 def get_tree(weather_station_url, location_id):
   
   user_agent = UserAgent().random 
@@ -321,7 +324,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   # Backup to CSV file
   if (save):
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction_deg, pressure, rain_today, rain_rate, temperature_cels, rel_humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
+    file_name=f"data/weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
@@ -339,7 +342,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
 
     data_json = {
       "location_id": location_id,   
-      "timestamp": timestamp,
+      "timestamp_ws": timestamp,
       "wind_speed_knots": float(wind_speed),
       "wind_direction_deg": wind_direction_deg,
       "barometric_pressure_hPa": float(pressure),
@@ -512,7 +515,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     wind_gust=None
     dew_point_cels=None
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, rel_humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
+    file_name=f"data/weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
@@ -572,7 +575,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
     data_json = {
       "location_id": location_id,   
-      "timestamp": timestamp,
+      "timestamp_ws": timestamp,
       "wind_speed_knots": float(wind_speed),
       "wind_direction_deg": wind_direction_deg,
       "barometric_pressure_hPa": float(pressure),
@@ -748,7 +751,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     wind_gust=None
     dew_point_cels=None
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"C:\\temp\\meteo_data_repo\\data\\weather_{name}_v3.txt"
+    file_name=f"data/weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
@@ -808,7 +811,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
 
     data_json = {
       "location_id": location_id,
-      "timestamp": timestamp,
+      "timestamp_ws": timestamp,
       "wind_speed_knots": float(wind_speed),
       "wind_direction_deg": wind_direction_deg,
       "barometric_pressure_hPa": float(pressure),
@@ -990,7 +993,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   # Backup to CSV file
   if (save):
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"data\\weather_{name}_v3.txt"
+    file_name=f"data/weather_{name}_v3.txt"
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
@@ -1016,7 +1019,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 
     data_json = {
       "location_id": location_id,
-      "timestamp": timestamp,
+      "timestamp_ws": timestamp,
       "wind_speed_knots": float(wind_speed),
       "wind_direction_deg": wind_direction,
       "barometric_pressure_hPa": float(pressure),

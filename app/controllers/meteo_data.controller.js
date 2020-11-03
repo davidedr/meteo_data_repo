@@ -11,7 +11,7 @@ exports.create = (req, res) => {
 
     const meteo_data = {
         location_id: req.body.location_id,
-        timestamp: req.body.timestamp,
+        timestamp_ws: req.body.timestamp_ws,
         wind_speed_knots: req.body.wind_speed_knots,
         wind_direction_deg: req.body.wind_direction_deg,
         barometric_pressure_hPa: req.body.barometric_pressure_hPa,
