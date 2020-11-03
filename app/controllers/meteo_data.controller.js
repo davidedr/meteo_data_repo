@@ -22,7 +22,17 @@ exports.create = (req, res) => {
         uv_index: req.body.uv_index,
         heat_index_cels: req.body.heat_index_cels,
         wind_gust_knots: req.body.wind_gust_knots,
-        dew_point_cels: req.body.dew_point_cels
+        dew_point_cels: req.body.dew_point_cels,
+        wind_chill_cels: req.body.wind_chill_cels,
+        ground_temperature_cels: req.body.ground_temperature_cels,
+        solar_irradiance_wpsm: req.body.solar_irradiance_wpsm,
+        rel_leaf_wetness: req.body.rel_leaf_wetness,
+        soil_moisture_cb: req.body.soil_moisture_cb,
+        rain_this_month_mm: req.body.rain_this_month_mm,
+        rain_this_year_mm: req.body.rain_this_year_mm,
+        evapotranspiration_today_mm: req.body.evapotranspiration_today_mm,
+        evapotranspiration_this_month_mm: req.body.evapotranspiration_this_month_mm,
+        evapotranspiration_this_year_mm: req.body.evapotranspiration_this_year_mm
     }
 
     console.log(meteo_data)

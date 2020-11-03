@@ -14,6 +14,16 @@ module.exports = (sequelize, Sequelize) => {
         heat_index_cels: { type: Sequelize.DECIMAL, defaultValue: null },
         wind_gust_knots: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
         dew_point_cels: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: -273.2, max: 273 } },
+        wind_chill_cels: { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } },
+        ground_temperature_cels: { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } },
+        solar_irradiance_wpsm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        rel_leaf_wetness: { type: Sequelize.DECIMAL, validate: { min: 0, max: 1 } },
+        soil_moisture_cb: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        rain_this_month_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        rain_this_year_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        evapotranspiration_today_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        evapotranspiration_this_month_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        evapotranspiration_this_year_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } }
     })
 
     return Meteo_data

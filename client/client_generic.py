@@ -73,23 +73,22 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     # TODO Raise an alert
     return last_seen_timestamp
 
-  wind_speed=None
+  wind_speed_knots_elems=None
   try:
-    wind_speed_elems = tree.xpath("/html/body/div/div[4]/table/tr/td[2]/table[1]/tr[2]/td/table/tr[17]/td[3]/div/strong")
-    wind_speed=wind_speed_elems[0].text.strip()
-    wind_speed=wind_speed.split(" ")[0].strip()
-    wind_speed=float(wind_speed)/1.852
+    wind_speed_knots_elems = tree.xpath("/html/body/div/div[4]/table/tr/td[2]/table[1]/tr[2]/td/table/tr[17]/td[3]/div/strong")
+    wind_speed_knots=wind_speed_knots_elems[0].text.strip()
+    wind_speed_knots=wind_speed_knots.split(" ")[0].strip()
+    wind_speed_knots=float(wind_speed_knots)/1.852
     if (log):
-      print("wind_speed: {wind_speed}")
+      print("wind_speed_knots_elems : {wind_speed_knots_elems}")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting wind_speed: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting wind_speed_knots: "{e}"!')
 
-  wind_direction=None
+  wind_direction_deg=None
   try:  
-    wind_direction = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(18) > td:nth-child(3) > div > strong")
-    wind_direction=wind_direction[0].text
-    wind_direction_deg=None
+    wind_direction_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(18) > td:nth-child(3) > div > strong")
+    wind_direction=wind_direction_ele[0].text
     wind_direction=wind_direction.upper()
     if wind_direction=="N":
       wind_direction_deg=0
@@ -131,37 +130,37 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
       print("wind_direction_deg: {wind_direction_deg}")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting wind_direction: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting wind_direction_deg: "{e}"!')
 
-  pressure=None
+  barometric_pressure_hPa=None
   try:
-    pressure_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
-    pressure=pressure_ele[0].text.split(' ')[0].strip()
+    barometric_pressure_hPa_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
+    barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text.split(' ')[0].strip()
     if (log):
-      print("pressure: {pressure}")
+      print("barometric_pressure_hPa: {barometric_pressure_hPa}")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting pressure: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting barometric_pressure_hPa: "{e}"!')
 
-  rain_today=None
+  rain_today_mm=None
   try:
-    rain_today_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
-    rain_today=rain_today_ele[0].text.split(' ')[0].strip()
+    rain_today_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
+    rain_today_mm=rain_today_mm_ele[0].text.split(' ')[0].strip()
     if (log):
-      print("rain_today: {rain_today}")
+      print("rain_today_mm: {rain_today_mm}")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting rain_today: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting rain_today_mm: "{e}"!')
 
-  rain_rate=None
+  rain_rate_mmph=None
   try:
-    rain_rate_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
-    rain_rate=rain_rate_ele[0].text.split(' ')[0].strip()
+    rain_rate_mmph_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
+    rain_rate_mmph=rain_rate_mmph_ele[0].text.split(' ')[0].strip()
     if (log):
-      print("rain_rate: {rain_rate}")
+      print("rain_rate_mmph: {rain_rate_mmph}")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting rain_rate: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
@@ -177,32 +176,33 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   try:
     rel_humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
     rel_humidity=rel_humidity_ele[0].text.split("%")[0].strip()
+    rel_humidity=float(rel_humidity)/100
     if (log):
       print("rel_humidity: {rel_humidity}")
 
   except Exception as e:
     logging.exception(f'Server: {location_id}, exception getting rel_humidity: "{e}"!')
 
-  heat_index=None
+  heat_index_cels=None
   try:
     heat_index_cels_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(6) > td:nth-child(3) > div > strong")
-    heat_index=heat_index_cels_ele[0].text.split("°")[0].strip()
+    heat_index_cels=heat_index_cels_ele[0].text.split("°")[0].strip()
     if (log):
-      print("heat_index: {heat_index}")
+      print("heat_index_cels: {heat_index_cels}")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting heat_index: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting heat_index_cels: "{e}"!')
 
-  wind_gust=None
+  wind_gust_knots=None
   try:
-    wind_gust_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(17) > td.sfondotagmax > div > strong")
-    wind_gust=wind_gust_ele[0].text.split(" ")[0].strip()
-    wind_gust=float(wind_gust)/1.852
+    wind_gust_kmh_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(17) > td.sfondotagmax > div > strong")
+    wind_gust_kmh=wind_gust_kmh_ele[0].text.split(" ")[0].strip()
+    wind_gust_knots=float(wind_gust_kmh)/1.852
     if (log):
-      print("wind_gust: {wind_gust}")
+      print("wind_gust_knots: {wind_gust_knots}")
       
   except Exception as e:
-    logging.exception(f'Server: {location_id}, exception getting wind_gust: "{e}"!')
+    logging.exception(f'Server: {location_id}, exception getting wind_gust_knots: "{e}"!')
 
   dew_point_cels=None
   try:
@@ -316,25 +316,28 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     logging.exception(f'Server: {location_id}, exception evapotranspiration_this_year_mm: "{e}"!')
 
   uv_index=None
-  if not(timestamp_string and (wind_speed or wind_direction_deg or pressure or rain_today or rain_rate or temperature_cels or rel_humidity or uv_index or heat_index or wind_gust or dew_point_cels)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels or wind_gust_knots or dew_point_cels or wind_chill_cels or ground_temperature_cels or solar_irradiance_wpsm or rel_leaf_wetness or soil_moisture_cb or rain_this_month_mm or rain_this_year_mm or evapotranspiration_today_mm or evapotranspiration_this_month_mm or evapotranspiration_this_year_mm)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction_deg: {wind_direction_deg}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
     return last_seen_timestamp
 
   # Backup to CSV file
+  csv_file_header=["timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed_knots", "wind_direction_deg", "barometric_pressure_hPa", "rain_today_mm", "rain_rate_mmph", "temperature_cels", "rel_humidity", "uv_index", "heat_index_cels", "wind_gust_knots", "dew_point_cels", "wind_chill_cels", "ground_temperature_cels", "solar_irradiance_wpsm", "rel_leaf_wetness", "soil_moisture_cb", "rain_this_month_mm", "rain_this_year_mm", "evapotranspiration_today_mm", "evapotranspiration_this_month_mm", "evapotranspiration_this_year_mm"]
   if (save):
-    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction_deg, pressure, rain_today, rain_rate, temperature_cels, rel_humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"data/weather_{name}_v3.txt"
+    file_name=f"data/weather_{name}_v5.txt"
+    import os
     from csv import writer
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
       csv_writer = writer(write_obj, delimiter=";")
+      if os.stat(file_name).st_size == 0:
+        csv_writer.writerow(csv_file_header)
+
       # Add contents of list as last row in the csv file
+      weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed_knots, wind_direction_deg, barometric_pressure_hPa, rain_today_mm, rain_rate_mmph, temperature_cels, rel_humidity, uv_index, heat_index_cels, wind_gust_knots, dew_point_cels, wind_chill_cels, ground_temperature_cels, solar_irradiance_wpsm, rel_leaf_wetness, soil_moisture_cb, rain_this_month_mm, rain_this_year_mm, evapotranspiration_today_mm, evapotranspiration_this_month_mm, evapotranspiration_this_year_mm]
       csv_writer.writerow(weather)
 
     # Insert into database
-    if rel_humidity:
-      rel_humidity=float(rel_humidity)/100
 
     # Convert to PGSQL format
     timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
@@ -343,17 +346,27 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     data_json = {
       "location_id": location_id,   
       "timestamp_ws": timestamp,
-      "wind_speed_knots": float(wind_speed),
+      "wind_speed_knots": wind_speed_knots,
       "wind_direction_deg": wind_direction_deg,
-      "barometric_pressure_hPa": float(pressure),
-      "rain_today_mm": float(rain_today),
-      "rain_rate_mmph": float(rain_rate),
+      "barometric_pressure_hPa": float(barometric_pressure_hPa),
+      "rain_today_mm": float(rain_today_mm),
+      "rain_rate_mmph": float(rain_rate_mmph),
       "temperature_cels": temperature_cels,
       "rel_humidity": rel_humidity,
       "uv_index": uv_index,
-      "heat_index_cels": heat_index,
-      "wind_gust_knots": wind_gust,
-      "dew_point_cels": dew_point_cels
+      "heat_index_cels": heat_index_cels,
+      "wind_gust_knots": wind_gust_knots,
+      "dew_point_cels": dew_point_cels,
+      "wind_chill_cels": wind_chill_cels,
+      "ground_temperature_cels": ground_temperature_cels,
+      "solar_irradiance_wpsm": solar_irradiance_wpsm,
+      "rel_leaf_wetness": rel_leaf_wetness,
+      "soil_moisture_cb": soil_moisture_cb,
+      "rain_this_month_mm": rain_this_month_mm,
+      "rain_this_year_mm": rain_this_year_mm,
+      "evapotranspiration_today_mm": evapotranspiration_today_mm,
+      "evapotranspiration_this_month_mm": evapotranspiration_this_month_mm,
+      "evapotranspiration_this_year_mm": evapotranspiration_this_year_mm
     }
 
     headers={'Content-Type': 'application/json; charset=utf-8'}
