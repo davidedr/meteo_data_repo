@@ -135,7 +135,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   barometric_pressure_hPa=None
   try:
     barometric_pressure_hPa_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
-    barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text.split(' ')[0].strip()
+    barometric_pressure_hPa=float(barometric_pressure_hPa_ele[0].text.split(' ')[0].strip())
     if (log):
       print("barometric_pressure_hPa: {barometric_pressure_hPa}")
 
@@ -145,7 +145,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   rain_today_mm=None
   try:
     rain_today_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
-    rain_today_mm=rain_today_mm_ele[0].text.split(' ')[0].strip()
+    rain_today_mm=float(rain_today_mm_ele[0].text.split(' ')[0].strip())
     if (log):
       print("rain_today_mm: {rain_today_mm}")
 
@@ -155,7 +155,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   rain_rate_mmph=None
   try:
     rain_rate_mmph_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
-    rain_rate_mmph=rain_rate_mmph_ele[0].text.split(' ')[0].strip()
+    rain_rate_mmph=float(rain_rate_mmph_ele[0].text.split(' ')[0].strip())
     if (log):
       print("rain_rate_mmph: {rain_rate_mmph}")
 
@@ -321,59 +321,134 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
     return last_seen_timestamp
 
-  # Backup to CSV file
+  #
+  meteo_data_dict={}
+  meteo_data_dict["timestamp_string"]=timestamp_string
+  meteo_data_dict["timestamp_string_date"]=timestamp_string_date
+  meteo_data_dict["timestamp_string_time"]=timestamp_string_time
+  meteo_data_dict["wind_speed_knots"]=wind_speed_knots
+  meteo_data_dict["wind_direction_deg"]=wind_direction_deg
+  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["rain_today_mm"]=rain_today_mm
+  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["temperature_cels"]=temperature_cels
+  meteo_data_dict["rel_humidity"]=rel_humidity
+  # uv_index: not handled by this weather station
+  #meteo_data_dict["uv_index"]=uv_index
+  meteo_data_dict["heat_index_cels"]=heat_index_cels
+  meteo_data_dict["wind_gust_knots"]=wind_gust_knots
+  meteo_data_dict["dew_point_cels"]=dew_point_cels
+  meteo_data_dict["wind_chill_cels"]=wind_chill_cels
+  meteo_data_dict["ground_temperature_cels"]=ground_temperature_cels
+  meteo_data_dict["solar_irradiance_wpsm"]=solar_irradiance_wpsm
+  meteo_data_dict["rel_leaf_wetness"]=rel_leaf_wetness
+  meteo_data_dict["soil_moisture_cb"]=soil_moisture_cb
+  meteo_data_dict["rain_this_month_mm"]=rain_this_month_mm
+  meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
+  meteo_data_dict["evapotranspiration_today_mm"]=evapotranspiration_today_mm
+  meteo_data_dict["evapotranspiration_this_month_mm"]=evapotranspiration_this_month_mm
+  meteo_data_dict["evapotranspiration_this_year_mm"]=evapotranspiration_this_year_mm
+    
+  save_v6(location_id, name, meteo_data_dict)
+  return timestamp_string
+
+#
+#
+#
+def save_v6(location_id, server_name, meteo_data_dict, save=True):
+
+  if not save:
+    logging.info(f'Server: {location_id}, {server_name}: Save disabled!')
+    return
+
+  timestamp_string=meteo_data_dict.get("timestamp_string")
+  timestamp_string_date=meteo_data_dict.get("timestamp_string_date")
+  timestamp_string_time=meteo_data_dict.get("timestamp_string_time")
+  wind_speed_knots=meteo_data_dict.get("wind_speed_knots")
+  wind_direction_deg=meteo_data_dict.get("wind_direction_deg")
+  barometric_pressure_hPa=meteo_data_dict.get("barometric_pressure_hPa")
+  rain_today_mm=meteo_data_dict.get("rain_today_mm")
+  rain_rate_mmph=meteo_data_dict.get("rain_rate_mmph")
+  temperature_cels=meteo_data_dict.get("temperature_cels")
+  rel_humidity=meteo_data_dict.get("rel_humidity")
+  uv_index=meteo_data_dict.get("uv_index")
+  heat_index_cels=meteo_data_dict.get("heat_index_cels")
+  wind_gust_knots=meteo_data_dict.get("wind_gust_knots")
+  dew_point_cels=meteo_data_dict.get("dew_point_cels")
+  wind_chill_cels=meteo_data_dict.get("wind_chill_cels")
+  ground_temperature_cels=meteo_data_dict.get("ground_temperature_cels")
+  solar_irradiance_wpsm=meteo_data_dict.get("solar_irradiance_wpsm")
+  rel_leaf_wetness=meteo_data_dict.get("rel_leaf_wetness")
+  soil_moisture_cb=meteo_data_dict.get("soil_moisture_cb")
+  rain_this_month_mm=meteo_data_dict.get("rain_this_month_mm")
+  rain_this_year_mm=meteo_data_dict.get("rain_this_year_mm")
+  evapotranspiration_today_mm=meteo_data_dict.get("evapotranspiration_today_mm")
+  evapotranspiration_this_month_mm=meteo_data_dict.get("evapotranspiration_this_month_mm")
+  evapotranspiration_this_year_mm=meteo_data_dict.get("evapotranspiration_this_year_mm")
+  
+  #
+  # Saving to csv backup file and database server
+  #
+
+  # Header
   csv_file_header=["timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed_knots", "wind_direction_deg", "barometric_pressure_hPa", "rain_today_mm", "rain_rate_mmph", "temperature_cels", "rel_humidity", "uv_index", "heat_index_cels", "wind_gust_knots", "dew_point_cels", "wind_chill_cels", "ground_temperature_cels", "solar_irradiance_wpsm", "rel_leaf_wetness", "soil_moisture_cb", "rain_this_month_mm", "rain_this_year_mm", "evapotranspiration_today_mm", "evapotranspiration_this_month_mm", "evapotranspiration_this_year_mm"]
-  if (save):
-    file_name=f"data/weather_{name}_v5.txt"
-    import os
-    from csv import writer
+
+  file_name=f"data/weather_{location_id}_{server_name}_v6.txt"
+  import os
+  from csv import writer
+  try:
     with open(file_name, 'a+', newline='') as write_obj:
-      # Create a writer object from csv module
       csv_writer = writer(write_obj, delimiter=";")
       if os.stat(file_name).st_size == 0:
         csv_writer.writerow(csv_file_header)
 
-      # Add contents of list as last row in the csv file
       weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed_knots, wind_direction_deg, barometric_pressure_hPa, rain_today_mm, rain_rate_mmph, temperature_cels, rel_humidity, uv_index, heat_index_cels, wind_gust_knots, dew_point_cels, wind_chill_cels, ground_temperature_cels, solar_irradiance_wpsm, rel_leaf_wetness, soil_moisture_cb, rain_this_month_mm, rain_this_year_mm, evapotranspiration_today_mm, evapotranspiration_this_month_mm, evapotranspiration_this_year_mm]
       csv_writer.writerow(weather)
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, {server_name}: exception: {e} saving to csv file: {file_name}!')
 
-    # Insert into database
+  # Insert into database
 
-    # Convert to PGSQL format
-    timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
-    timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
+  # Convert to PGSQL format
+  timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
+  timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
 
-    data_json = {
-      "location_id": location_id,   
-      "timestamp_ws": timestamp,
-      "wind_speed_knots": wind_speed_knots,
-      "wind_direction_deg": wind_direction_deg,
-      "barometric_pressure_hPa": float(barometric_pressure_hPa),
-      "rain_today_mm": float(rain_today_mm),
-      "rain_rate_mmph": float(rain_rate_mmph),
-      "temperature_cels": temperature_cels,
-      "rel_humidity": rel_humidity,
-      "uv_index": uv_index,
-      "heat_index_cels": heat_index_cels,
-      "wind_gust_knots": wind_gust_knots,
-      "dew_point_cels": dew_point_cels,
-      "wind_chill_cels": wind_chill_cels,
-      "ground_temperature_cels": ground_temperature_cels,
-      "solar_irradiance_wpsm": solar_irradiance_wpsm,
-      "rel_leaf_wetness": rel_leaf_wetness,
-      "soil_moisture_cb": soil_moisture_cb,
-      "rain_this_month_mm": rain_this_month_mm,
-      "rain_this_year_mm": rain_this_year_mm,
-      "evapotranspiration_today_mm": evapotranspiration_today_mm,
-      "evapotranspiration_this_month_mm": evapotranspiration_this_month_mm,
-      "evapotranspiration_this_year_mm": evapotranspiration_this_year_mm
-    }
+  data_json = {
+    "location_id": location_id,   
+    "timestamp_ws": timestamp,
+    "wind_speed_knots": wind_speed_knots,
+    "wind_direction_deg": wind_direction_deg,
+    "barometric_pressure_hPa": barometric_pressure_hPa,
+    "rain_today_mm": rain_today_mm,
+    "rain_rate_mmph": rain_rate_mmph,
+    "temperature_cels": temperature_cels,
+    "rel_humidity": rel_humidity,
+    "uv_index": uv_index,
+    "heat_index_cels": heat_index_cels,
+    "wind_gust_knots": wind_gust_knots,
+    "dew_point_cels": dew_point_cels,
+    "wind_chill_cels": wind_chill_cels,
+    "ground_temperature_cels": ground_temperature_cels,
+    "solar_irradiance_wpsm": solar_irradiance_wpsm,
+    "rel_leaf_wetness": rel_leaf_wetness,
+    "soil_moisture_cb": soil_moisture_cb,
+    "rain_this_month_mm": rain_this_month_mm,
+    "rain_this_year_mm": rain_this_year_mm,
+    "evapotranspiration_today_mm": evapotranspiration_today_mm,
+    "evapotranspiration_this_month_mm": evapotranspiration_this_month_mm,
+    "evapotranspiration_this_year_mm": evapotranspiration_this_year_mm
+  }
 
-    headers={'Content-Type': 'application/json; charset=utf-8'}
-    response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
-    logging.info(f'Server: {location_id}, {name}, {timestamp}, response {response}')
+  headers={'Content-Type': 'application/json; charset=utf-8'}
+  try:
+    rest_server='http://localhost:8080/api/meteo_data'
+    response=requests.post(rest_server, headers = headers, json = data_json)
+  except Exception as e:
+    logging.exception(f'Server: {location_id}, {server_name}: exception: {e} POSTing to: {rest_server}!')
 
-  return timestamp_string
+  logging.info(f'Server: {location_id}, {server_name}, {timestamp}, response {response}')
+
+  return
 
 #
 #
