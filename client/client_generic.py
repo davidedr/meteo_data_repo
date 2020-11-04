@@ -543,7 +543,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     wind_gust=None
     dew_point_cels=None
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, rel_humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"data/weather_{name}_v3.txt"
+    file_name=f"data/weather_{server_name}_v3.txt"
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
       csv_writer = writer(write_obj, delimiter=";")
@@ -615,7 +615,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
     headers={'Content-Type': 'application/json; charset=utf-8'}
     response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
-    logging.info(f'Server: {location_id}, {name}, {timestamp}, response {response}')
+    logging.info(f'Server: {location_id}, {server_name}, {timestamp}, response {response}')
   
   return timestamp_ele
 
@@ -930,7 +930,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   # Backup to CSV file
   if (save):
     weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"data/weather_{name}_v3.txt"
+    file_name=f"data/weather_{server_name}_v3.txt"
     with open(file_name, 'a+', newline='') as write_obj:
       # Create a writer object from csv module
       csv_writer = writer(write_obj, delimiter=";")
@@ -971,7 +971,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 
     headers={'Content-Type': 'application/json; charset=utf-8'}
     response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
-    logging.info(f'Server: {location_id}, {name}, {timestamp}, response {response}')
+    logging.info(f'Server: {location_id}, {server_name}, {timestamp}, response {response}')
   
   return timestamp_ele
 
@@ -1120,6 +1120,11 @@ if __name__=="__main__":
   #add_server_locations(servers)
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
   logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+
+  logging.info('##')
+  logging.info("## 'Meteo data repo' data collector cients launcher")
+  logging.info('##')
+  logging.info('Starting clients...')
   nclients=0
   for server in servers:
     to_be_started=server["to_be_started"]
