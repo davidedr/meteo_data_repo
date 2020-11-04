@@ -35,8 +35,6 @@ exports.create = (req, res) => {
         evapotranspiration_this_year_mm: req.body.evapotranspiration_this_year_mm
     }
 
-    console.log(meteo_data)
-
     Meteo_data.create(meteo_data)
         .then(data => { res.send(data) })
         .catch(err => {

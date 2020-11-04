@@ -429,8 +429,6 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   try:
     timestamp_list = tree.xpath('/html/body/div[3]/div[1]/div/h3[1]')
     timestamp_ele=timestamp_list[0].text
-    # if (last_seen_timestamp == timestamp_ele):
-    #   return timestamp_ele
 
     time_string=timestamp_ele[len('Dati in diretta (aggiornati alle '):len('Dati in diretta (aggiornati alle ')+5]
     date_string=timestamp_ele[43:43+10]
@@ -442,6 +440,12 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   except Exception as e:
     logging.exception(f'Server: {location_id}, {server_name}, exception getting timestamp: "{e}"!')
+
+  if timestamp_string==last_seen_timestamp:
+    # Weather station is not updating data
+    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    # TODO Raise an alert
+    return last_seen_timestamp
 
   wind_speed=None
   try:
@@ -647,6 +651,12 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     logging.exception(f'Server: {location_id}, {server_name}, exception getting timestamp: "{e}"!')
     return last_seen_timestamp
 
+  if timestamp_string==last_seen_timestamp:
+    # Weather station is not updating data
+    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    # TODO Raise an alert
+    return last_seen_timestamp
+
   wind_speed_knots=None
   try:
     wind_speed_kmh_elems = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h1[2]/big/big/big/span/text()')
@@ -825,6 +835,12 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 
   except Exception as e:
     logging.exception(f'Server: {location_id}, {server_name}, exception getting timestamp: "{e}"!')
+
+  if timestamp_string==last_seen_timestamp:
+    # Weather station is not updating data
+    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    # TODO Raise an alert
+    return last_seen_timestamp
 
   wind_speed_knots=None
   try:
@@ -1094,7 +1110,7 @@ if __name__=="__main__":
   logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
 
   logging.info('##')
-  logging.info("## 'Meteo data repo' data collector cients launcher")
+  logging.info("## 'Meteo data repo' data collector cLients launcher")
   logging.info('##')
   logging.info('Starting clients...')
   nclients=0
