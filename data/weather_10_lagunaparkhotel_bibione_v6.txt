@@ -1,0 +1,5 @@
+timestamp_string;timestamp_string_date;timestamp_string_time;wind_speed_knots;wind_direction_deg;barometric_pressure_hPa;rain_today_mm;rain_rate_mmph;temperature_cels;rel_humidity;uv_index;heat_index_cels;wind_gust_knots;dew_point_cels;wind_chill_cels;ground_temperature_cels;solar_irradiance_wpsm;rel_leaf_wetness;soil_moisture_cb;rain_this_month_mm;rain_this_year_mm;evapotranspiration_today_mm;evapotranspiration_this_month_mm;evapotranspiration_this_year_mm
+04/11/2020 19:12:00;04/11/2020;19:12:00;8.7;22;1019.6;0.0;0.0;16.1;0.75;;15.8;14.0;11.7;;;;;;;;;;
+04/11/2020 19:13:00;04/11/2020;19:13:00;8.7;10;1019.6;0.0;0.0;16.1;0.75;;14.8;14.0;11.7;;;;;;;;;;
+04/11/2020 19:14:00;04/11/2020;19:14:00;8.7;5;1019.6;0.0;0.0;16.1;0.75;;15.1;13.0;11.7;;;;;;;;;;
+04/11/2020 19:15:00;04/11/2020;19:15:00;8.7;12;1019.6;0.0;0.0;16.0;0.74;;15.2;13.0;11.4;;;;;;;;;;

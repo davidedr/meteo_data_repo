@@ -617,7 +617,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
     logging.info(f'Server: {location_id}, {server_name}, {timestamp}, response {response}')
   
-  return timestamp_ele
+  return timestamp_string
 
 #
 #
@@ -826,85 +826,86 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  wind_speed=None
+  wind_speed_knots=None
   try:
-    wind_speed_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[1]')
-    wind_speed=wind_speed_elem[0].text
-    wind_speed=float(wind_speed)
+    wind_speed_knots_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[1]')
+    wind_speed_knots=wind_speed_knots_elem[0].text
+    wind_speed_knots=float(wind_speed_knots)
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  wind_gust=None
+  wind_gust_knots=None
   try:
-    wind_gust_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[3]')
-    wind_gust=wind_gust_elem[0].text.strip()
-    wind_gust=float(wind_gust)
+    wind_gust_knots_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[3]')
+    wind_gust_knots=wind_gust_knots_elem[0].text.strip()
+    wind_gust_knots=float(wind_gust_knots)
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  wind_direction=None
+  wind_direction_deg=None
   try:
-    wind_direction = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[2]')
-    wind_direction=wind_direction[0].text
-    wind_direction=wind_direction.split('°')[0].strip()
+    wind_direction_deg_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[2]')
+    wind_direction_deg=wind_direction_deg_ele[0].text
+    wind_direction_deg=wind_direction_deg.split('°')[0].strip()
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  pressure=None
+  barometric_pressure_hPa=None
   try:
-    pressure_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[11]/td[2]')
-    pressure=pressure_elem[0].text
-    pressure=pressure.split('hPa')[0].strip()
+    barometric_pressure_hPa_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[11]/td[2]')
+    barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text
+    barometric_pressure_hPa=barometric_pressure_hPa.split('hPa')[0].strip()
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  rain_today=None
+  rain_today_mm=None
   try:
-    rain_today_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[3]')
-    rain_today=rain_today_ele[0].text
-    rain_today=rain_today.split(';')[0]
-    rain_today=rain_today[5:]
-    rain_today=rain_today[:-3].strip()
+    rain_today_mm_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[3]')
+    rain_today_mm=rain_today_mm_ele[0].text
+    rain_today_mm=rain_today_mm.split(';')[0]
+    rain_today_mm=rain_today_mm[5:]
+    rain_today_mm=rain_today_mm[:-3].strip()
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  rain_rate=None
+  rain_rate_mmph=None
   try:
-    rain_rate_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[2]')
-    rain_rate=rain_rate_ele[0].text
-    rain_rate=rain_rate.split('mm/h')[0].strip()
+    rain_rate_mmph_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[12]/td[2]')
+    rain_rate_mmph=rain_rate_mmph_ele[0].text
+    rain_rate_mmph=rain_rate_mmph.split('mm/h')[0].strip()
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  temperature=None
+  temperature_cels=None
   try:
-    temperature_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[7]/td[2]')
-    temperature=temperature_ele[0].text
-    temperature=temperature.split('°')[0].strip()
+    temperature_cels_ele=tree.xpath('/html/body/div/table[2]/tbody/tr[7]/td[2]')
+    temperature_cels=temperature_cels_ele[0].text
+    temperature_cels=temperature_cels.split('°')[0].strip()
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  humidity=None
+  rel_humidity=None
   try:
     humidity_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[9]/td[2]')
     humidity=humidity_ele[0].text
     humidity=humidity[:len(humidity)-len(" %")].strip()
+    rel_humidity=float(humidity)/100
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
 
-  heat_index=None
+  heat_index_cels=None
   try:
     heat_index_cels_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[8]/td[2]')
-    heat_index=heat_index_cels_ele[0].text
-    heat_index=heat_index.split('°')[0]
+    heat_index_cels=heat_index_cels_ele[0].text
+    heat_index_cels=heat_index_cels.split('°')[0]
 
   except Exception as err:
     logging.exception(f'Server: {location_id}, {err}')
@@ -919,61 +920,32 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     logging.exception(f'Server: {location_id}, {err}')
 
   if log:
-    logging.info(f'Server: {location_id}, {server_name}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'Server: {location_id}, {server_name}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
 
   uv_index=None # Unsupported by these weather stations
-  if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or humidity or uv_index or heat_index or wind_gust or dew_point_cels)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels or wind_gust_knots or dew_point_cels)):
     logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, humidity: {humidity}, uv_index: {uv_index}, heat_index: {heat_index}, wind_gust: {wind_gust}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
     return last_seen_timestamp
 
-  # Backup to CSV file
-  if (save):
-    weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed, wind_direction, pressure, rain_today, rain_rate, temperature, humidity, uv_index, heat_index, wind_gust, dew_point_cels]
-    file_name=f"data/weather_{server_name}_v3.txt"
-    with open(file_name, 'a+', newline='') as write_obj:
-      # Create a writer object from csv module
-      csv_writer = writer(write_obj, delimiter=";")
-      # Add contents of list as last row in the csv file
-      csv_writer.writerow(weather)
+  meteo_data_dict={}
+  meteo_data_dict["timestamp_string"]=timestamp_string
+  meteo_data_dict["timestamp_string_date"]=timestamp_string_date
+  meteo_data_dict["timestamp_string_time"]=timestamp_string_time
+  meteo_data_dict["wind_speed_knots"]=wind_speed_knots
+  meteo_data_dict["wind_direction_deg"]=wind_direction_deg
+  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["rain_today_mm"]=rain_today_mm
+  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["temperature_cels"]=temperature_cels
+  meteo_data_dict["rel_humidity"]=rel_humidity
+  meteo_data_dict["uv_index"]=uv_index
+  meteo_data_dict["heat_index_cels"]=heat_index_cels
+  meteo_data_dict["wind_gust_knots"]=wind_gust_knots
+  meteo_data_dict["dew_point_cels"]=dew_point_cels
 
-    # Insert into database
-
-    # Convert to PGSQL format
-    timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
-    timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
-
-    # Guard against empty values
-    if temperature=="":
-      temperature_cels=None
-    else:
-      temperature_cels=float(temperature)
-    if humidity=="":
-      rel_humidity=None
-    else:
-      rel_humidity=float(humidity)/100
-
-    data_json = {
-      "location_id": location_id,
-      "timestamp_ws": timestamp,
-      "wind_speed_knots": float(wind_speed),
-      "wind_direction_deg": wind_direction,
-      "barometric_pressure_hPa": float(pressure),
-      "rain_today_mm": float(rain_today),
-      "rain_rate_mmph": float(rain_rate),
-      "temperature_cels": temperature_cels,
-      "rel_humidity": rel_humidity,
-      "uv_index": uv_index,
-      "heat_index_cels": heat_index,
-      "wind_gust_knots": wind_gust,
-      "dew_point_cels": dew_point_cels
-    }
-
-    headers={'Content-Type': 'application/json; charset=utf-8'}
-    response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
-    logging.info(f'Server: {location_id}, {server_name}, {timestamp}, response {response}')
-  
-  return timestamp_ele
+  save_v6(location_id, server_name, meteo_data_dict)
+  return timestamp_string
 
 #
 #
