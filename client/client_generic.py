@@ -650,7 +650,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
-  wind_speed_knots=None
+  wind_direction_deg=None
   try:
     wind_direction_ele=tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h4/big/big/span/big/big/text()')
     wind_direction=wind_direction_ele[0]
