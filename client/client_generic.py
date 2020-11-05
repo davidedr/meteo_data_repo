@@ -11,11 +11,20 @@ import threading
 import time
 
 #
+# Return an humen-readable server identification string
+#
+def get_identification_string(location_id, server_name=None):
+  if server_name:
+    return f'Server: {location_id}, {server_name}'
+  else:
+    return f'Server: {location_id}'
+
+#
 # Get the web page and convert it to a DOM tree
 #
 
 # TODO: move to kind of an "abstract class"
-def get_tree(weather_station_url, location_id):
+def get_tree(weather_station_url, location_id, server_name=None):
   
   user_agent = UserAgent().random 
   headers = {'User-Agent': user_agent}
@@ -23,13 +32,13 @@ def get_tree(weather_station_url, location_id):
   try:
     page = requests.get(weather_station_url, headers=headers)
   except Exception as e:
-    logging.exception(f'Server: {location_id} exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
     return None
 
   try:
     tree = html.fromstring(page.text)    
   except Exception as e:
-    logging.exception(f'Server: {location_id} exception in html.fromstring, {e}!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception in html.fromstring, {e}!')
     return None
 
   return tree
@@ -42,7 +51,7 @@ def get_tree(weather_station_url, location_id):
 def save_v6(location_id, server_name, meteo_data_dict, save=True):
 
   if not save:
-    logging.info(f'Server: {location_id}, {server_name}: Save disabled!')
+    logging.info(f'{get_identification_string(location_id, server_name)}: Save disabled!')
     return
 
   timestamp_string=meteo_data_dict.get("timestamp_string")
@@ -89,7 +98,7 @@ def save_v6(location_id, server_name, meteo_data_dict, save=True):
       weather=[timestamp_string, timestamp_string_date, timestamp_string_time, wind_speed_knots, wind_direction_deg, barometric_pressure_hPa, rain_today_mm, rain_rate_mmph, temperature_cels, rel_humidity, uv_index, heat_index_cels, wind_gust_knots, dew_point_cels, wind_chill_cels, ground_temperature_cels, solar_irradiance_wpsm, rel_leaf_wetness, soil_moisture_cb, rain_this_month_mm, rain_this_year_mm, evapotranspiration_today_mm, evapotranspiration_this_month_mm, evapotranspiration_this_year_mm]
       csv_writer.writerow(weather)
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}: exception: {e} saving to csv file: {file_name}!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} saving to csv file: {file_name}!')
     save_to_csv_ok=False
 
   # Insert into database
@@ -129,11 +138,11 @@ def save_v6(location_id, server_name, meteo_data_dict, save=True):
     rest_server='http://localhost:8080/api/meteo_data'
     response=requests.post(rest_server, headers = headers, json = data_json)
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}: exception: {e} POSTing to: {rest_server}!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} POSTing to: {rest_server}!')
     save_to_rest_ok=False
 
   if save_to_csv_ok and save_to_rest_ok:
-    logging.info(f'Server: {location_id}, {server_name}, {timestamp}, saving to CSV and REST api (response {response}) ok.')
+    logging.info(f'{get_identification_string(location_id, server_name)}, {timestamp}, saving to CSV and REST api (response {response}) ok.')
 
   return
 
@@ -146,7 +155,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree = get_tree(weather_station_url, location_id)
+  tree = get_tree(weather_station_url, location_id, server_name)
   if tree is None:
     return last_seen_timestamp
 
@@ -164,12 +173,12 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting the timestamp: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting the timestamp: "{e}"!')
     return last_seen_timestamp
 
   if timestamp_string==last_seen_timestamp:
     # Weather station is not updating data
-    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
     # TODO Raise an alert
     return last_seen_timestamp
 
@@ -181,7 +190,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     wind_speed_knots=float(wind_speed_knots)/1.852
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_speed_knots: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
   wind_direction_deg=None
   try:  
@@ -221,11 +230,11 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     elif wind_direction=="NNW":
       wind_direction_deg=337.5
     else:
-      logging.info(f'Server: {location_id}, {server_name}, Unknown wind_direction: {wind_direction}!')
+      logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: {wind_direction}!')
       wind_direction_deg=None
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_direction_deg: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
   barometric_pressure_hPa=None
   try:
@@ -233,7 +242,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     barometric_pressure_hPa=float(barometric_pressure_hPa_ele[0].text.split(' ')[0].strip())
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -241,7 +250,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     rain_today_mm=float(rain_today_mm_ele[0].text.split(' ')[0].strip())
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_today_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmph=None
   try:
@@ -249,7 +258,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     rain_rate_mmph=float(rain_rate_mmph_ele[0].text.split(' ')[0].strip())
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
@@ -257,7 +266,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     temperature_cels=temperature_cels_ele[0].text.split("°")[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting temperature_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
   rel_humidity=None
   try:
@@ -266,7 +275,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     rel_humidity=float(rel_humidity)/100
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rel_humidity: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   heat_index_cels=None
   try:
@@ -274,7 +283,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     heat_index_cels=heat_index_cels_ele[0].text.split("°")[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting heat_index_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
   wind_gust_knots=None
   try:
@@ -283,7 +292,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     wind_gust_knots=float(wind_gust_kmh)/1.852
       
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_gust_knots: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
   dew_point_cels=None
   try:
@@ -291,7 +300,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     dew_point_cels=dew_point_cels_ele[0].text.split('°')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting dew_point_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
   wind_chill_cels=None
   try:
@@ -299,7 +308,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     wind_chill_cels=wind_chill_cels_ele[0].text.split('°')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_chill_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_chill_cels: "{e}"!')
 
   ground_temperature_cels=None
   try:
@@ -307,7 +316,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     ground_temperature_cels=ground_temperature_cels_ele[0].text.split('°')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting ground_temperature_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting ground_temperature_cels: "{e}"!')
 
   solar_irradiance_wpsm=None # Watts per square meter
   try:
@@ -315,7 +324,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     solar_irradiance_wpsm=solar_irradiance_wpsm_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting solar_irradiance_wpsm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting solar_irradiance_wpsm: "{e}"!')
 
   rel_leaf_wetness=None
   try:
@@ -324,7 +333,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     rel_leaf_wetness=float(leaf_wetness_index)/15
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rel_leaf_wetness: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_leaf_wetness: "{e}"!')
 
   soil_moisture_cb=None # Centibars
   try:
@@ -332,7 +341,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     soil_moisture_cb=soil_moisture_cb_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting soil_moisture_cb: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting soil_moisture_cb: "{e}"!')
 
   rain_this_month_mm=None
   try:
@@ -340,7 +349,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     rain_this_month_mm=rain_this_month_mm_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception rain_this_month_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception rain_this_month_mm: "{e}"!')
 
   rain_this_year_mm=None
   try:
@@ -348,7 +357,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     rain_this_year_mm=rain_this_year_mm_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception rain_this_year_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception rain_this_year_mm: "{e}"!')
 
   evapotranspiration_today_mm=None
   try:
@@ -356,7 +365,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     evapotranspiration_today_mm=evapotranspiration_today_mm_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception evapotranspiration_today_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception evapotranspiration_today_mm: "{e}"!')
 
   evapotranspiration_this_month_mm=None
   try:
@@ -364,7 +373,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     evapotranspiration_this_month_mm=evapotranspiration_this_month_mm_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception evapotranspiration_this_month_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception evapotranspiration_this_month_mm: "{e}"!')
 
   evapotranspiration_this_year_mm=None
   try:
@@ -372,16 +381,16 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     evapotranspiration_this_year_mm=evapotranspiration_this_year_mm_ele[0].text.split(' ')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception evapotranspiration_this_year_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception evapotranspiration_this_year_mm: "{e}"!')
 
   if (log):
-    logging.info(f'Server: {location_id}, {server_name}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
 
   # UV-index is not supported by this wather station
   uv_index=None 
   if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels or wind_gust_knots or dew_point_cels or wind_chill_cels or ground_temperature_cels or solar_irradiance_wpsm or rel_leaf_wetness or soil_moisture_cb or rain_this_month_mm or rain_this_year_mm or evapotranspiration_today_mm or evapotranspiration_this_month_mm or evapotranspiration_this_year_mm)):
-    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
     return last_seen_timestamp
 
   meteo_data_dict={}
@@ -439,11 +448,11 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting timestamp: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
 
   if timestamp_string==last_seen_timestamp:
     # Weather station is not updating data
-    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
     # TODO Raise an alert
     return last_seen_timestamp
 
@@ -455,7 +464,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     wind_speed=float(wind_speed)/1.852
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_speed: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed: "{e}"!')
 
   wind_direction=None
   try:  
@@ -463,7 +472,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     wind_direction=wind_direction[0]
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_direction: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction: "{e}"!')
 
   pressure=None
   try:
@@ -472,7 +481,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     pressure=pressure.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting pressure: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting pressure: "{e}"!')
 
   rain_today=None
   try:
@@ -482,7 +491,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     rain_today=rain_today.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_today: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today: "{e}"!')
 
   rain_rate=None
   try:
@@ -493,7 +502,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     rain_rate=rain_rate.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_rate: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate: "{e}"!')
 
   temperature=None
   try:
@@ -503,7 +512,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     temperature=temperature.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting temperature: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature: "{e}"!')
 
   rel_humidity=None
   try:
@@ -512,7 +521,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     rel_humidity=rel_humidity[:len(rel_humidity)-len(" %")].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rel_humidity: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   uv_index=None
   try:
@@ -521,7 +530,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     uv_index=uv_index.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting uv_index: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting uv_index: "{e}"!')
 
   heat_index=None
   try:
@@ -532,14 +541,14 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     heat_index=heat_index.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting heat_index: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index: "{e}"!')
 
   if log:
-    logging.info(f'Server: {location_id}, {server_name}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
 
   if not(timestamp_string and (wind_speed or wind_direction or pressure or rain_today or rain_rate or temperature or rel_humidity or uv_index or heat_index)):
-    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed}, wind_direction: {wind_direction}, pressure: {pressure}, rain_today: {rain_today}, rain_rate: {rain_rate},  temperature: {temperature}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index: {heat_index}')
     return last_seen_timestamp
 
   # Backup to CSV file
@@ -589,7 +598,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     elif wind_direction=="NNO":
       wind_direction_deg=337.5
     else:
-      logging.info(f'Server: {location_id}, {server_name}, Unknown wind_direction: "{wind_direction}"!')
+      logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
     # Convert to PGSQL format
     timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
@@ -619,7 +628,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
     headers={'Content-Type': 'application/json; charset=utf-8'}
     response=requests.post('http://localhost:8080/api/meteo_data', headers = headers, json = data_json)
-    logging.info(f'Server: {location_id}, {server_name}, {timestamp}, response {response}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, {timestamp}, response {response}')
   
   return timestamp_string
 
@@ -648,12 +657,12 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting timestamp: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
     return last_seen_timestamp
 
   if timestamp_string==last_seen_timestamp:
     # Weather station is not updating data
-    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
     # TODO Raise an alert
     return last_seen_timestamp
 
@@ -664,7 +673,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     wind_speed_knots=float(wind_speed_kmh)/1.852
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_speed_knots: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
   wind_direction_deg=None
   try:  
@@ -703,10 +712,10 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     elif wind_direction=="NNO":
       wind_direction_deg=337.5
     else:
-      logging.info(f'Server: {location_id}, {server_name}, Unknown wind_direction: "{wind_direction}"!')
+      logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_direction_deg: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
   barometric_pressure_hPa=None
   try:
@@ -714,7 +723,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -723,7 +732,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     rain_today_mm=rain_today_mm.split()[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_today_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmph=None
   try:
@@ -732,7 +741,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     rain_rate_mmph=rain_rate_mmph.split(" ")[1].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
@@ -742,7 +751,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     temperature_cels=temperature_cels.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting temperature_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
   rel_humidity=None
   try:
@@ -753,7 +762,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     rel_humidity=float(humidity)/100
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rel_humidity: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   uv_index=None
   try:
@@ -762,7 +771,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     uv_index=uv_index.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting uv_index: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting uv_index: "{e}"!')
 
   heat_index_cels=None
   try:
@@ -773,14 +782,14 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     heat_index_cels=heat_index.strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting heat_index_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
   if log:
-    logging.info(f'Server: {location_id}, {server_name}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')    
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')    
 
   if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
-    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
     return last_seen_timestamp
 
   #
@@ -834,11 +843,11 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting timestamp: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
 
   if timestamp_string==last_seen_timestamp:
     # Weather station is not updating data
-    logging.info(f'Server: {location_id},  {server_name}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
     # TODO Raise an alert
     return last_seen_timestamp
 
@@ -849,7 +858,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     wind_speed_knots=float(wind_speed_knots)
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_speed_knots: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
   wind_gust_knots=None
   try:
@@ -858,7 +867,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     wind_gust_knots=float(wind_gust_knots)
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_gust_knots: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
   wind_direction_deg=None
   try:
@@ -867,7 +876,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     wind_direction_deg=wind_direction_deg.split('°')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting wind_direction_deg: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
   barometric_pressure_hPa=None
   try:
@@ -876,7 +885,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     barometric_pressure_hPa=barometric_pressure_hPa.split('hPa')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -887,7 +896,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     rain_today_mm=rain_today_mm[:-3].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_today_mm: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmph=None
   try:
@@ -896,7 +905,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     rain_rate_mmph=rain_rate_mmph.split('mm/h')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
@@ -905,7 +914,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     temperature_cels=temperature_cels.split('°')[0].strip()
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting temperature_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
   rel_humidity=None
   try:
@@ -915,7 +924,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     rel_humidity=float(humidity)/100
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting rel_humidity: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   heat_index_cels=None
   try:
@@ -924,7 +933,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     heat_index_cels=heat_index_cels.split('°')[0]
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting heat_index_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
   dew_point_cels=None
   try:
@@ -933,15 +942,15 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     dew_point_cels=dew_point_cels.split('°')[0]
 
   except Exception as e:
-    logging.exception(f'Server: {location_id}, {server_name}, exception getting dew_point_cels: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
   if log:
-    logging.info(f'Server: {location_id}, {server_name}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
 
   uv_index=None # Unsupported by these weather stations
   if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels or wind_gust_knots or dew_point_cels)):
-    logging.info(f'Server: {location_id}, Not enough scraped data. Skip saving data...')
-    logging.info(f'Server: {location_id}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
     return last_seen_timestamp
 
   meteo_data_dict={}
