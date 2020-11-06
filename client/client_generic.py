@@ -935,7 +935,9 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
 
   location_id=server["location_id"]
   server_name=server["name"]
-  weather_station_url=server["url"]["1"]
+  weather_station_url=server["url"]
+  if isinstance(weather_station_url, dict):
+    weather_station_url=weather_station_url.get("1")
 
   tree, page_text = get_tree(weather_station_url, location_id)
   if tree is None:
@@ -1049,44 +1051,49 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
   #
   # From another site
   #
-  weather_station_url=server["url"]["2"]
-  tree, _ = get_tree(weather_station_url, location_id)
   wind_speed_knots=wind_gust_knots=wind_direction_deg=None
-  if tree is not None:
+  weather_station_url=server["url"]
+  if isinstance(weather_station_url, dict):
+    weather_station_url=weather_station_url.get("2")
+  else:
+    weather_station_url=None
+  if weather_station_url is not None:
+    tree, _ = get_tree(weather_station_url, location_id)
+    if tree is not None:
 
-    wind_speed_knots=None
-    try:
-      not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
-      if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-        wind_speed_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
-        wind_speed_kmh=wind_speed_kmh_elem[0].text.strip().split(" ")[0].strip()
-        wind_speed_knots=float(wind_speed_kmh)/1.852
+      wind_speed_knots=None
+      try:
+        not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+        if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
+          wind_speed_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+          wind_speed_kmh=wind_speed_kmh_elem[0].text.strip().split(" ")[0].strip()
+          wind_speed_knots=float(wind_speed_kmh)/1.852
 
-    except Exception as e:
-      logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
+      except Exception as e:
+        logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
-    wind_gust_knots=None
-    try:
-      not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
-      if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-        wind_gust_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[2]')
-        wind_gust_kmh=wind_gust_kmh_elem[0].text.strip().split(" ")[1].strip()
-        if wind_gust_kmh:
-          wind_gust_knots=float(wind_gust_kmh)/1.852
+      wind_gust_knots=None
+      try:
+        not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+        if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
+          wind_gust_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[2]')
+          wind_gust_kmh=wind_gust_kmh_elem[0].text.strip().split(" ")[1].strip()
+          if wind_gust_kmh:
+            wind_gust_knots=float(wind_gust_kmh)/1.852
 
-    except Exception as e:
-      logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
+      except Exception as e:
+        logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
-    wind_direction_deg=None
-    try:  
-      wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[3]/strong')
-      wind_direction=wind_direction_ele[0].text.strip()
-      wind_direction_deg=convert_wind_direction_to_deg(wind_direction)
-      if not wind_direction_deg:
-        logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
+      wind_direction_deg=None
+      try:  
+        wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[3]/strong')
+        wind_direction=wind_direction_ele[0].text.strip()
+        wind_direction_deg=convert_wind_direction_to_deg(wind_direction)
+        if not wind_direction_deg:
+          logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
-    except Exception as e:
-      logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
+      except Exception as e:
+        logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
   if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month or rain_this_year or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
     logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
