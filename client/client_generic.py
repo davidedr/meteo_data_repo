@@ -85,7 +85,7 @@ def get_tree(weather_station_url, location_id, server_name=None):
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception in html.fromstring, {e}!')
     return None
 
-  return tree
+  return (tree, page.text)
 
 #
 # Save data to CSV file and REST API server
@@ -201,7 +201,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree = get_tree(weather_station_url, location_id, server_name)
+  tree, _ =get_tree(weather_station_url, location_id)
   if tree is None:
     return last_seen_timestamp
 
@@ -445,7 +445,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree = get_tree(weather_station_url, location_id)
+  tree, _ = get_tree(weather_station_url, location_id)
   if tree is None:
     return last_seen_timestamp
 
@@ -616,7 +616,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree = get_tree(weather_station_url, location_id)
+  tree, _ =get_tree(weather_station_url, location_id)
   if tree is None:
     return last_seen_timestamp
 
@@ -763,7 +763,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree = get_tree(weather_station_url, location_id)
+  tree, _ =get_tree(weather_station_url, location_id)
   if tree is None:
     return last_seen_timestamp
 
@@ -920,6 +920,202 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 #
 #
 #
+def log_xpath_elem(tree, path="//font"):
+  elems=tree.xpath(path)
+  i=0
+  logging.info(f'Found: {len(elems)} in tree for xpath:"{path}".')
+  for ele in elems:
+    logging.info(f'{i}, {ele.text}')
+    i=i+1
+
+#
+#
+#
+def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
+
+  location_id=server["location_id"]
+  server_name=server["name"]
+  weather_station_url=server["url"]["1"]
+
+  tree, page_text = get_tree(weather_station_url, location_id)
+  if tree is None:
+    return last_seen_timestamp
+
+  timestamp_string=None
+  timestamp_string_date=None
+  timestamp_string_time=None
+  month_converter={ "Gennaio": "01", "Febbraio": "02", "Marzo": "03", "Aprile": "04", "Maggio": "05", "Giugno": "06", \
+     "Luglio": "07", "Agosto": "08", "Settembre": "09", "Ottobre": "10", "Novembre": "11", "Dicembre": "12"}
+  try: 
+    timestamp_string = tree.xpath("//font[contains(text(),'ULTIMO RILEVAMENTO')]")[0].text.split(" ")
+    timestamp_hour=timestamp_string[4]
+    timestamp_day=timestamp_string[7]
+    timestamp_month=timestamp_string[8]
+    timestamp_year=timestamp_string[9]
+
+    timestamp_string=f'{timestamp_day}.{month_converter.get(timestamp_month)}.{timestamp_year} {timestamp_hour}'
+    timestamp_obj=datetime.strptime(timestamp_string, "%d.%m.%Y %H:%M")
+
+    timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
+    if last_seen_timestamp and last_seen_timestamp==timestamp_string:
+      return last_seen_timestamp
+
+    timestamp_string_date=timestamp_obj.strftime("%d/%m/%Y")
+    timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
+
+  if timestamp_string==last_seen_timestamp:
+    # Weather station is not updating data
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    # TODO Raise an alert
+    return last_seen_timestamp
+
+  barometric_pressure_hPa=None
+  try:
+    barometric_pressure_hPa_ele = tree.xpath("//font[contains(text(),'hPa')]")
+    barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text
+    barometric_pressure_hPa=barometric_pressure_hPa.split('hPa')[0].strip()
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+
+  rain_today_mm=None
+  try:
+    rain_today_mm=tree.xpath("//font")[43].text.split(" ")[0].strip()
+    rain_today_mm=float(rain_today_mm)
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
+
+  rain_rate_mmph=None
+  try:
+    rain_rate_mmph=tree.xpath("//tr/td")[21].text.split(" ")[0]
+    rain_rate_mmph=float(rain_rate_mmph)
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
+
+  rain_this_month=None
+  try:
+    rain_this_month=tree.xpath("//tr/td")[25].text.split(" ")[0]
+    rain_this_month=float(rain_this_month)
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_this_month: "{e}"!')
+
+  rain_this_year=None
+  try:
+    rain_this_year=tree.xpath("//tr/td")[27].text.split(" ")[0]
+    rain_this_year=float(rain_this_year)
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_this_year: "{e}"!')
+
+  rel_humidity=None
+  try:
+    humidity=tree.xpath("//tr/td")[37].text.split("%")[0].strip()
+    rel_humidity=float(humidity)/100
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
+
+  temperature_cels=None
+  try:
+    temperature_cels_ele=tree.xpath('//b')
+    temperature_cels=temperature_cels_ele[4].text.split("°")[0]
+    temperature_cels=float(temperature_cels)
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
+
+  heat_index_cels=None
+  try:
+    # Extreme problems, extreme solutions
+    heat_index_cels=page_text.split("temperatura apparente")[1].split("&")[0].strip()
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
+
+  dew_point_cels=None
+  try:
+    dew_point_cels=tree.xpath("//font")[56].text.split("°")[0]
+    dew_point_cels=float(dew_point_cels)
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
+
+  #
+  # From another site
+  #
+  weather_station_url=server["url"]["2"]
+  tree, _ = get_tree(weather_station_url, location_id)
+  wind_speed_knots=wind_gust_knots=wind_direction_deg=None
+  if tree is not None:
+
+    wind_speed_knots=None
+    try:
+      not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+      if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
+        wind_speed_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+        wind_speed_kmh=wind_speed_kmh_elem[0].text.strip().split(" ")[0].strip()
+        wind_speed_knots=float(wind_speed_kmh)/1.852
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
+
+    wind_gust_knots=None
+    try:
+      not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+      if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
+        wind_gust_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[2]')
+        wind_gust_kmh=wind_gust_kmh_elem[0].text.strip().split(" ")[1].strip()
+        if wind_gust_kmh:
+          wind_gust_knots=float(wind_gust_kmh)/1.852
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
+
+    wind_direction_deg=None
+    try:  
+      wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[3]/strong')
+      wind_direction=wind_direction_ele[0].text.strip()
+      wind_direction_deg=convert_wind_direction_to_deg(wind_direction)
+      if not wind_direction_deg:
+        logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
+
+  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month or rain_this_year or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
+    logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month: {rain_this_month}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
+    return last_seen_timestamp
+
+  meteo_data_dict={}
+  meteo_data_dict["timestamp_string"]=timestamp_string
+  meteo_data_dict["timestamp_string_date"]=timestamp_string_date
+  meteo_data_dict["timestamp_string_time"]=timestamp_string_time
+  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["rain_today_mm"]=rain_today_mm
+  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["rain_this_month"]=rain_this_month
+  meteo_data_dict["rain_this_year"]=rain_this_year
+  meteo_data_dict["rel_humidity"]=rel_humidity
+  meteo_data_dict["temperature_cels"]=temperature_cels
+  meteo_data_dict["heat_index_cels"]=heat_index_cels
+  meteo_data_dict["dew_point_cels"]=dew_point_cels
+  meteo_data_dict["wind_speed_knots"]=wind_speed_knots
+  meteo_data_dict["wind_gust_knots"]=wind_gust_knots
+  meteo_data_dict["wind_direction_deg"]=wind_direction_deg
+
+  save_v6(location_id, server_name, meteo_data_dict)
+  return timestamp_string
+
+#
+#
+#
 locations_json = [{
     "name": 'Bagno Margherita Caorle',
     "latitude": 45.588340,
@@ -999,7 +1195,7 @@ locations_json = [{
     "note": "Meteo station @ http://my.meteonetwork.it/station/vnt336/, Model: MTX, Type: Semi-Urbana, Ubicazione: Campo aperto",
     "height_asl_m": 267
 },{
-    "name": 'Osservatorio meteorologico di I.I.S. Agrario “Antonio della Lucia” di Feltre (BL) ',
+    "name": 'Osservatorio meteorologico di I.I.S. Agrario “Antonio della Lucia” di Feltre (BL)',
     "latitude": 46.036,
     "longitude": 11.937,
     "address_complete": "Via Vellai, 41, 32032 Vellai BL",
@@ -1011,6 +1207,32 @@ locations_json = [{
     "country": "IT",
     "note": "Meteo station @ http://www.meteosystem.com/dati/feltre/dati.php, Model: Davis Vantage Pro 2",
     "height_asl_m": 330
+},{
+    "name": 'LaCrosse WS2300 di Pellencin Giorgio, Cellarda Sud, Feltre (BL)',
+    "latitude": 46.011,
+    "longitude": 11.966,
+    "address_complete": "Cellarda Sud, 32032 Feltre (BL)",
+    "street_1": "Cellarda Sud",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Sud, @ http://www.celarda.altervista.org/index.htm, Model: LaCrosse WS2300",
+    "height_asl_m": 225
+},{
+    "name": 'LaCrosse WS2300 di Pellencin Giorgio, Cellarda Nord, Feltre (BL)',
+    "latitude": 46.011,
+    "longitude": 11.966,
+    "address_complete": "Cellarda Nord, 32032 Feltre (BL)",
+    "street_1": "Cellarda Nord",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Nord, @ http://www.meteocelarda.altervista.org/index.htm, Model: LaCrosse WS2300",
+    "height_asl_m": 225
 }]
 
 # "scan_time_interval" in seconds
@@ -1020,11 +1242,13 @@ servers = [
   { "location_id":  8, "location": locations_json[1], "to_be_started": True, "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike, "scan_time_interval": 55 },
   { "location_id":  9, "location": locations_json[2], "to_be_started": True, "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike, "scan_time_interval": 55 },
   { "location_id": 10, "location": locations_json[3], "to_be_started": True, "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike, "scan_time_interval":55 },
-  { "location_id": 11, "location": locations_json[5], "to_be_started": True, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike, "scan_time_interval": 60*58 }, # Wait for an hour
-  { "location_id": 12, "location": locations_json[6], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike, "scan_time_interval": 55 }
+  { "location_id": 11, "location": locations_json[5], "to_be_started": True, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike, "scan_time_interval": 60*30 }, # Wait for half an hour
+  { "location_id": 12, "location": locations_json[6], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike, "scan_time_interval": 55 },
+  { "location_id": 15, "location": locations_json[7], "to_be_started": True, "name": "cellarda_sud_feltre", "url": {"1": "http://www.celarda.altervista.org/index.htm", "2": "http://my.meteonetwork.it/station/vnt374/" }, "scanner": scan_cellarda_ws_alike, "scan_time_interval": 60*5 },
+  { "location_id": 16, "location": locations_json[8], "to_be_started": False, "name": "cellarda_nord_feltre", "url": "http://www.celarda.altervista.org/index.htm", "scanner": scan_cellarda_ws_alike, "scan_time_interval": 60*5 } # Wait five minutes
 ]
 
-SCAN_TIME_INTERVAL_DEFAULT=50
+SCAN_TIME_INTERVAL_DEFAULT=50 # Sec
 
 #
 #
@@ -1051,7 +1275,7 @@ def main_logger(server, save=True, log=False):
 def add_server_location(server):
     location_json=server["location"]
     headers={'Content-Type': 'application/json; charset=utf-8'}
-    response=requests.post('http://localhost:8080/api/location', headers = headers, json = location_json)
+    response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
     logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
 
 #
@@ -1059,7 +1283,9 @@ def add_server_location(server):
 #
 def add_server_locations(servers):
   for server in servers:
-    add_server_location(server)
+    location_id=server["location_id"]
+    if location_id==13 or location_id==14:
+      add_server_location(server)
 
 #
 #
@@ -1067,7 +1293,7 @@ def add_server_locations(servers):
 if __name__=="__main__":
   #add_server_locations(servers)
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
-  logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S")
+  logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.NOTSET, datefmt="%Y-%m-%d %H:%M:%S")
 
   logging.info('##')
   logging.info("## 'Meteo data repo' data collector clients launcher")
