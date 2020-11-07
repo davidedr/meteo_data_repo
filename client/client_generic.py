@@ -13,6 +13,17 @@ import time
 #
 #
 #
+def log_xpath_elem(tree, path="//font"):
+  elems=tree.xpath(path)
+  i=0
+  logging.info(f'Found: {len(elems)} in tree for xpath:"{path}".')
+  for ele in elems:
+    logging.info(f'{i}, {ele.text}')
+    i=i+1
+
+#
+#
+#
 def convert_wind_direction_to_deg(wind_direction):
 
   wind_direction_deg=None
@@ -76,14 +87,14 @@ def get_tree(weather_station_url, location_id, server_name=None):
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')
-    return None
+    return None, None
 
   try:
     tree = html.fromstring(page.text)    
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception in html.fromstring, {e}!')
-    return None
+    return None, None
 
   return (tree, page.text)
 
@@ -920,17 +931,6 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 #
 #
 #
-def log_xpath_elem(tree, path="//font"):
-  elems=tree.xpath(path)
-  i=0
-  logging.info(f'Found: {len(elems)} in tree for xpath:"{path}".')
-  for ele in elems:
-    logging.info(f'{i}, {ele.text}')
-    i=i+1
-
-#
-#
-#
 def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
 
   location_id=server["location_id"]
@@ -1248,7 +1248,6 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
 
   wind_gust_knots=None
   try:
-    log_xpath_elem(tree, "//font")
     wind_gust_kmh=page_text.split('Massima forza </font><FONT SIZE=+0> (ultima ora)</td><td><font color="#009900">')[1].split(" ")[0]
     if wind_gust_kmh:
       wind_gust_knots=float(wind_gust_kmh)/1.852
@@ -1266,9 +1265,9 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
-  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month or rain_this_year or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
+  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
     logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month: {rain_this_month}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
     return last_seen_timestamp
 
   meteo_data_dict={}
