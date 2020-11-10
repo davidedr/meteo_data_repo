@@ -23,8 +23,8 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   try: 
     timestamp_list = tree.xpath('/html/body/div[2]/table[2]/tbody/tr[1]/td[1]')
     timestamp_ele=timestamp_list[0].text.split('\xa0\xa0\xa0')
-    timestamp_ele_1=timestamp_ele[0]
-    timestamp_ele_2=timestamp_ele[1]
+    timestamp_ele_1=timestamp_ele[0].strip()
+    timestamp_ele_2=timestamp_ele[1].strip()
 
     timestamp_string=timestamp_ele_1+" "+timestamp_ele_2
     timestamp_obj=datetime.strptime(timestamp_string, "%d.%m.%Y %H:%M")

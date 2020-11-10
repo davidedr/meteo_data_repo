@@ -1,17 +1,15 @@
-import csv
 from datetime import datetime
-from lxml import html
-import requests
 
 import logging
 import threading
 import time
 
-from utility import log_xpath_elem, convert_wind_direction_to_deg, get_identification_string, get_tree, save_v6
+from utility import log_xpath_elem, convert_wind_direction_to_deg, get_identification_string, get_tree, save_v6, add_server_location
 from scanner_meteosystem_alike_ws import scan_meteosystem_alike
 from scanner_meteovenezia_alike_ws import scan_meteovenezia_alike
 from scanner_hotelmarcopolo_caorle_alike_ws import scan_hotelmarcopolo_caorle_alike
-from scanner_meteonetwork_alike_ws import scan_meteonetwork_alike
+from scanner_meteonetwork_vnt336_alike_ws import scan_meteonetwork_vnt336_alike
+from scanner_meteonetwork_vnt432_alike_ws import scan_meteonetwork_vnt432_alike
 from scanner_cellarda_ws_alike_ws import scan_cellarda_ws_alike
 from scanner_cellarda_nord_ws_alike_ws import scan_cellarda_nord_ws_alike
 
@@ -135,6 +133,32 @@ locations_json = [{
     "country": "IT",
     "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Nord, @ http://www.meteocelarda.altervista.org/index.htm, Model: LaCrosse WS2300",
     "height_asl_m": 225
+}, {
+    "name": 'Viale Fusinato, Feltre (BL)',
+    "latitude": 46.024,
+    "longitude": 11.912,
+    "address_complete": "Viale Fusinato, 32032 Feltre (BL)",
+    "street_1": "Viale Fusinato",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Nord, @ http://my.meteonetwork.it/station/vnt432/, Model: Davis Vantage pro 2 plus wireless",
+    "height_asl_m": 280
+}, {
+    "name": 'Viale Fusinato, Feltre (BL)',
+    "latitude": 46.024,
+    "longitude": 11.912,
+    "address_complete": "Viale Fusinato, 32032 Feltre (BL)",
+    "street_1": "Viale Fusinato",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Nord, @ http://my.meteonetwork.it/station/vnt432/, Model: Ventus w835",
+    "height_asl_m": 280
 }]
 
 # "scan_time_interval" in seconds
@@ -144,10 +168,11 @@ servers = [
   { "location_id":  8, "location": locations_json[1], "to_be_started": True, "name": "sangiorgio_venezia", "url": "https://www.meteo-venezia.net/compagnia01.php", "scanner": scan_meteovenezia_alike, "scan_time_interval": 55 },
   { "location_id":  9, "location": locations_json[2], "to_be_started": True, "name": "puntasangiuliano_mestre", "url": "https://www.meteo-venezia.net/", "scanner": scan_meteovenezia_alike, "scan_time_interval": 55 },
   { "location_id": 10, "location": locations_json[3], "to_be_started": True, "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike, "scan_time_interval":55 },
-  { "location_id": 11, "location": locations_json[5], "to_be_started": True, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_alike, "scan_time_interval": 60*30 }, # Wait for half an hour
+  { "location_id": 11, "location": locations_json[5], "to_be_started": True, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 60*30 }, # Wait for half an hour
   { "location_id": 12, "location": locations_json[6], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike, "scan_time_interval": 55 },
   { "location_id": 15, "location": locations_json[7], "to_be_started": True, "name": "cellarda_sud_feltre", "url": {"1": "http://www.celarda.altervista.org/index.htm", "2": "http://my.meteonetwork.it/station/vnt374/" }, "scanner": scan_cellarda_ws_alike, "scan_time_interval": 60*5 },
-  { "location_id": 16, "location": locations_json[8], "to_be_started": True, "name": "cellarda_nord_feltre", "url": "http://www.meteocelarda.altervista.org/index.htm", "scanner": scan_cellarda_nord_ws_alike, "scan_time_interval": 60*5 } # Wait five minutes
+  { "location_id": 16, "location": locations_json[8], "to_be_started": True, "name": "cellarda_nord_feltre", "url": "http://www.meteocelarda.altervista.org/index.htm", "scanner": scan_cellarda_nord_ws_alike, "scan_time_interval": 60*5 }, # Wait five minutes
+  { "location_id": 17, "location": locations_json[9], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 } # Wait for half an hour  
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT=50 # Sec
@@ -174,19 +199,10 @@ def main_logger(server, save=True, log=False):
 #
 #
 #
-def add_server_location(server):
-    location_json=server["location"]
-    headers={'Content-Type': 'application/json; charset=utf-8'}
-    response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
-    logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
-
-#
-#
-#
 def add_server_locations(servers):
   for server in servers:
     location_id=server["location_id"]
-    if location_id==13 or location_id==14:
+    if location_id==17:
       add_server_location(server)
 
 #

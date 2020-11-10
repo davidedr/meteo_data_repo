@@ -7,7 +7,7 @@ from utility import log_xpath_elem, convert_wind_direction_to_deg, get_identific
 #
 #
 #
-def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
+def scan_meteonetwork_vnt432_alike(last_seen_timestamp, server, save=True, log=True):
 
   location_id=server["location_id"]
   server_name=server["name"]
@@ -40,9 +40,9 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   temperature_cels=None
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[1]/td[2]/span')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[1]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      temperature_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[1]/td[2]/span/text()')
+      temperature_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[1]/td[2]/span/text()')
       temperature_cels=temperature_cels_ele[0].strip().split("°")[0].strip()
       temperature_cels=temperature_cels.replace(" ","")
       temperature_cels=float(temperature_cels)
@@ -52,9 +52,9 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   rel_humidity=None
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[2]/td[2]/span')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[2]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      rel_humidity_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[2]/td[2]/span/text()')
+      rel_humidity_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[2]/td[2]/span/text()')
       rel_humidity=rel_humidity_ele[0].strip().split("%")[0].strip()
       rel_humidity=float(rel_humidity)/100
 
@@ -63,31 +63,31 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   barometric_pressure_hPa=None
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[3]/td[2]/span')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[3]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      barometric_pressure_hPa_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[3]/td[2]/span/text()')
+      barometric_pressure_hPa_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[3]/td[2]/span/text()')
       barometric_pressure_hPa=barometric_pressure_hPa_ele[0].strip().split(" ")[0].strip()
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting pressure: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   wind_speed_knots=None
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[4]/td[2]/span[1]')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      wind_speed_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
-      wind_speed_kmh=wind_speed_kmh_elem[0].text.strip().split(" ")[0].strip()
+      wind_speed_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[4]/td[2]/span[1]/text()')
+      wind_speed_kmh=wind_speed_kmh_elem[0].strip().split(" ")[0].strip()
       wind_speed_knots=float(wind_speed_kmh)/1.852
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed: "{e}"!')
+    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
   wind_gust_knots=None
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[1]')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[4]/td[2]/span[2]')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      wind_gust_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[2]/span[2]')
-      wind_gust_kmh=wind_gust_kmh_elem[0].text.strip().split("Raffica")[0].strip()
+      wind_gust_kmh_elem=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[4]/td[2]/span[2]')
+      wind_gust_kmh=wind_gust_kmh_elem[0].text.strip().split("Raffica")[1].strip()
       wind_gust_kmh=wind_gust_kmh.split("km/h")[0].strip()
       if wind_gust_kmh:
         wind_gust_knots=float(wind_gust_kmh)/1.852
@@ -96,8 +96,8 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
   wind_direction_deg=None
-  try:  
-    wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[3]/strong')
+  try:
+    wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[4]/td[3]/strong')
     wind_direction=wind_direction_ele[0].text.strip()
     wind_direction_deg=convert_wind_direction_to_deg(wind_direction)
     if not wind_direction_deg:
@@ -108,9 +108,9 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   rain_today_mm=None
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[5]/td[2]/span')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[5]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      rain_today_mm_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[5]/td[2]/span/text()')
+      rain_today_mm_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[5]/td[2]/span/text()')
       rain_today_mm=str(rain_today_mm_ele[0]).strip().split(" ")[0].strip()
       rain_today_mm=float(rain_today_mm)
 
@@ -119,8 +119,9 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   dew_point_cels=None
   try:
-    dew_point_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[6]/td[2]/text()')
-    dew_point_cels=dew_point_cels_ele[0].split("°")[0].strip()
+    dew_point_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[6]/td[2]/text()')
+    dew_point_cels=dew_point_cels_ele[0].strip().split("°")[0].strip()
+    dew_point_cels=dew_point_cels.replace(" ","")
     dew_point_cels=float(dew_point_cels)
 
   except Exception as e:
@@ -129,7 +130,7 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
   heat_index=None
   try:
     # Heat index is computed
-    heat_index_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[7]/td[2]/text()')
+    heat_index_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[7]/td[2]/text()')
     heat_index_cels=heat_index_cels_ele[0].split("°")[0].strip()
     if not heat_index_cels:
       heat_index_cels=0
@@ -140,9 +141,9 @@ def scan_meteonetwork_alike(last_seen_timestamp, server, save=True, log=True):
 
   solar_irradiance_wpsm=None # Watts per square meter
   try:
-    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[8]/td[2]/span')
+    not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[8]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      solar_irradiance_wpsm_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[8]/td[2]/span/text()')
+      solar_irradiance_wpsm_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[8]/td[2]/span/text()')
       solar_irradiance_wpsm=solar_irradiance_wpsm_ele[0].strip().split(" ")[0].strip()
       solar_irradiance_wpsm=float(solar_irradiance_wpsm)
 

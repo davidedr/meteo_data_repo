@@ -42,7 +42,8 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   try:
     wind_speed_kmh_elems = tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h1[2]/big/big/big/span/text()')
     wind_speed_kmh=wind_speed_kmh_elems[0].strip()
-    wind_speed_knots=float(wind_speed_kmh)/1.852
+    if wind_speed_kmh:
+      wind_speed_knots=float(wind_speed_kmh)/1.852
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
@@ -60,36 +61,44 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
 
   barometric_pressure_hPa=None
   try:
-    barometric_pressure_hPa_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[3]/h1[2]/big/span')
-    barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text.strip()
+    barometric_pressure_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[3]/h1[2]/big/span')
+    barometric_pressure=barometric_pressure_ele[0].text.strip()
+    if barometric_pressure:
+      barometric_pressure_hPa=float(barometric_pressure)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
-    rain_today_mm_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h1[2]/big/span')
-    rain_today_mm=rain_today_mm_ele[0].text
-    rain_today_mm=rain_today_mm.split()[0].strip()
+    rain_today_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h1[2]/big/span')
+    rain_today=rain_today_ele[0].text
+    rain_today=rain_today.split()[0].strip()
+    if rain_today:
+      rain_today_mm=float(rain_today)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmph=None
   try:
-    rain_rate_mmph_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h2')
-    rain_rate_mmph=rain_rate_mmph_ele[0].text
-    rain_rate_mmph=rain_rate_mmph.split(" ")[1].strip()
+    rain_rate_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[2]/h2')
+    rain_rate=rain_rate_ele[0].text
+    rain_rate=rain_rate.split(" ")[1].strip()
+    if rain_rate:
+      rain_rate_mmph=float(rain_rate)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
-    temperature_cels_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h1[3]/big/big/big')
-    temperature_cels=temperature_cels_ele[0].text
-    temperature_cels=temperature_cels[:len(temperature_cels)-len("Â°C")+1]
-    temperature_cels=temperature_cels.strip()
+    temperature_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h1[3]/big/big/big')
+    temperature=temperature_ele[0].text
+    temperature=temperature[:len(temperature)-len("Â°C")+1]
+    temperature=temperature.strip()
+    if temperature:
+      temperature_cels=float(temperature)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
@@ -100,7 +109,8 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     humidity=humidity_ele[0].text
     humidity=humidity.split(" %")[0]
     humidity=humidity.strip()
-    rel_humidity=float(humidity)/100
+    if humidity:
+      rel_humidity=float(humidity)/100
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
@@ -110,17 +120,20 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     uv_index_ele = tree.xpath('/html/body/table/tbody/tr[4]/td[1]/h1[2]/big/span')
     uv_index=uv_index_ele[0].text
     uv_index=uv_index.strip()
+    uv_index=float(uv_index)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting uv_index: "{e}"!')
 
   heat_index_cels=None
   try:
-    heat_index_cels_ele = tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h3[4]/big/span')
-    heat_index=heat_index_cels_ele[0].text
+    heat_index_ele=tree.xpath('/html/body/table/tbody/tr[2]/td[1]/h3[4]/big/span')
+    heat_index=heat_index_ele[0].text
     heat_index=heat_index[len('Indice di calore: '):]
     heat_index=heat_index[:len(heat_index)-len("°C")-1]
-    heat_index_cels=heat_index.strip()
+    heat_index=heat_index.strip()
+    if heat_index:
+      heat_index_cels=float(heat_index)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')

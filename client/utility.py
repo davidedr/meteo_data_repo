@@ -9,6 +9,15 @@ from csv import writer
 #
 #
 #
+def add_server_location(server):
+    location_json=server["location"]
+    headers={'Content-Type': 'application/json; charset=utf-8'}
+    response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
+    logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
+
+#
+#
+#
 def log_xpath_elem(tree, path="//font"):
   elems=tree.xpath(path)
   i=0
