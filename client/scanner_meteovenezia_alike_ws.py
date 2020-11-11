@@ -2,7 +2,9 @@ from datetime import datetime
 import logging
 import utility
 
-from utility import log_xpath_elem, convert_wind_direction_to_deg, get_identification_string, get_tree, save_v6
+from utility import log_xpath_elem, get_identification_string, get_tree, save_v6
+import client_generic
+
 
 #
 # Scanner for MeteoVenezia weather stations alike stations
@@ -48,7 +50,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   wind_speed_knots=None
   try:
     wind_speed_elem = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[1]')
-    wind_speed=wind_speed_elem[0].text
+    wind_speed=wind_speed_elem[0].text.strip()
     if wind_speed:
       wind_speed_knots=float(wind_speed)
 
@@ -68,7 +70,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   wind_direction_deg=None
   try:
     wind_direction_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[3]/td[2]')
-    wind_direction=wind_direction_ele[0].text
+    wind_direction=wind_direction_ele[0].text.strip()
     wind_direction=wind_direction.split('°')[0].strip()
     if wind_direction:
       wind_direction_deg=float(wind_direction)
@@ -78,7 +80,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
 
   barometric_pressure_hPa=None
   try:
-    barometric_pressure_hPa_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[11]/td[2]')
+    barometric_pressure_ele = tree.xpath('/html/body/div/table[2]/tbody/tr[11]/td[2]')
     barometric_pressure=barometric_pressure_ele[0].text
     barometric_pressure=barometric_pressure.split('hPa')[0].strip()
     if barometric_pressure:
@@ -95,7 +97,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     rain_today=rain_today[5:]
     rain_today=rain_today[:-3].strip()
     if rain_today:
-      rain_today_mm=float(rain_today_mm)
+      rain_today_mm=float(rain_today)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
@@ -139,7 +141,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     heat_index=heat_index_ele[0].text
     heat_index=heat_index.split('°')[0]
     if heat_index:
-      heat_index_cels=float(heat_index_cels)
+      heat_index_cels=float(heat_index)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
@@ -155,14 +157,12 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
-  uv_index=None
   if log:
-    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
 
-  uv_index=None # Unsupported by these weather stations
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels or wind_gust_knots or dew_point_cels)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or heat_index_cels or wind_gust_knots or dew_point_cels)):
     logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
     return last_seen_timestamp
 
   meteo_data_dict={}
@@ -176,10 +176,21 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
   meteo_data_dict["temperature_cels"]=temperature_cels
   meteo_data_dict["rel_humidity"]=rel_humidity
-  meteo_data_dict["uv_index"]=uv_index
   meteo_data_dict["heat_index_cels"]=heat_index_cels
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["dew_point_cels"]=dew_point_cels
 
   save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string
+
+
+if __name__=="__main__":
+  server=client_generic.servers[4]
+
+  log_format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
+  log_dateformat="%Y-%m-%d %H:%M:%S"
+  log_filename=f'app/log/meteo_data_repo_{server["location_id"]}_{server["name"]}_test.log'
+  logging.basicConfig(filename=log_filename, format=log_format, level=logging.NOTSET, datefmt=log_dateformat)
+
+  server["scanner"](None, server, save=True, log=True)
+

@@ -4,6 +4,8 @@ import utility
 
 from utility import log_xpath_elem, convert_wind_direction_to_deg, get_identification_string, get_tree, save_v6
 
+import client_generic
+
 #
 #
 #
@@ -35,7 +37,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
     path="//div"
     elems=tree.xpath(path)
     i=0
-    print(f'Found: {len(elems)} in tree for xpath:"{path}".')
+    logging.info(f'Found: {len(elems)} in tree for xpath: "{path}".')
     for ele in elems:
       print(f'{i}, {ele.text}')
       i=i+1
@@ -187,21 +189,12 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   return timestamp_string
 
 if __name__=="__main__":
-  locations_json={
-    "name": 'Stazione meteo amatoriale di Feltre - BL',
-    "latitude": None,
-    "longitude": None,
-    "address_complete": None,
-    "street_1": None,
-    "street_2": None,
-    "zip": "32032",
-    "town": "Feltre",
-    "province": "BL",
-    "country": "IT",
-    "note": "Stazione meteo amatoriale di Feltre - BL, @ http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php, Model: Ventus w835",
-    "height_asl_m": 280
-  }
+  server=client_generic.servers[10]
 
-  server={ "location_id": 17, "location": locations_json, "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 55 }  
-  scan_stazione_amatoriale_feltre_alike(None, server, save=True, log=True)
+  log_format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
+  log_dateformat="%Y-%m-%d %H:%M:%S"
+  log_filename=f'app/log/meteo_data_repo_{server["location_id"]}_{server["name"]}_test.log'
+  logging.basicConfig(filename=log_filename, format=log_format, level=logging.NOTSET, datefmt=log_dateformat)
+
+  server["scanner"](None, server, save=True, log=True)
 
