@@ -1,10 +1,7 @@
 from datetime import datetime
 import logging
+
 import utility
-
-from utility import log_xpath_elem, get_identification_string, get_tree, save_v6
-import client_generic
-
 
 #
 # Scanner for MeteoVenezia weather stations alike stations
@@ -15,7 +12,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree, _ =get_tree(weather_station_url, location_id)
+  tree, _ =utility.get_tree(weather_station_url, location_id)
   if tree is None:
     return last_seen_timestamp
 
@@ -39,11 +36,11 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
     timestamp_string_time=timestamp_obj.strftime("%H:%M:%S")
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
 
   if timestamp_string==last_seen_timestamp:
     # Weather station is not updating data
-    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, last_seen_timestamp: {last_seen_timestamp}, skip saving!')
     # TODO Raise an alert
     return last_seen_timestamp
 
@@ -55,7 +52,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       wind_speed_knots=float(wind_speed)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
   wind_gust_knots=None
   try:
@@ -65,7 +62,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       wind_gust_knots=float(wind_gust)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
   wind_direction_deg=None
   try:
@@ -76,7 +73,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       wind_direction_deg=float(wind_direction)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
   barometric_pressure_hPa=None
   try:
@@ -87,7 +84,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       barometric_pressure_hPa=float(barometric_pressure)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -100,7 +97,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       rain_today_mm=float(rain_today)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmph=None
   try:
@@ -111,7 +108,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       rain_rate_mmph=float(rain_rate)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
@@ -122,7 +119,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       temperature_cels=float(temperature)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
   rel_humidity=None
   try:
@@ -133,7 +130,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       rel_humidity=float(humidity)/100
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   heat_index_cels=None
   try:
@@ -144,7 +141,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       heat_index_cels=float(heat_index)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
   dew_point_cels=None
   try:
@@ -155,14 +152,14 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
       dew_point_cels=float(dew_point)
 
   except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
   if log:
-    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
 
   if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or heat_index_cels or wind_gust_knots or dew_point_cels)):
-    logging.info(f'{get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
     return last_seen_timestamp
 
   meteo_data_dict={}
@@ -180,17 +177,8 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["dew_point_cels"]=dew_point_cels
 
-  save_v6(location_id, server_name, meteo_data_dict)
+  utility.save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
-
 if __name__=="__main__":
-  server=client_generic.servers[4]
-
-  log_format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
-  log_dateformat="%Y-%m-%d %H:%M:%S"
-  log_filename=f'app/log/meteo_data_repo_{server["location_id"]}_{server["name"]}_test.log'
-  logging.basicConfig(filename=log_filename, format=log_format, level=logging.NOTSET, datefmt=log_dateformat)
-
-  server["scanner"](None, server, save=True, log=True)
-
+  utility.test_starter(10) # Location id

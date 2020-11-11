@@ -6,6 +6,8 @@ from lxml import html
 import os
 from csv import writer
 
+import definitions
+
 #
 #
 #
@@ -14,6 +16,36 @@ def add_server_location(server):
     headers={'Content-Type': 'application/json; charset=utf-8'}
     response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
     logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
+
+#
+# Return an human-readable server identification string
+#
+def get_identification_string(location_id, server_name=None):
+  if server_name:
+    return f'Server: {location_id}, {server_name}'
+  else:
+    return f'Server: {location_id}'
+
+#
+#
+#
+def test_starter(location_id, log_level=logging.NOTSET):
+  found_server=None
+  for server in definitions.servers:
+    if server["location_id"]==location_id:
+      found_server=server
+  if not found_server:
+    return
+
+  server=found_server
+  log_format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
+  log_dateformat="%Y-%m-%d %H:%M:%S"
+  log_filename=f'app/log/meteo_data_repo_{location_id}_{server["name"]}_test.log'
+  logging.basicConfig(filename=log_filename, format=log_format, level=log_level, datefmt=log_dateformat)
+
+  logging.info(f'Starting scanner {get_identification_string(location_id, server["name"])}...')
+  server["scanner"](None, server, save=True, log=True)
+  logging.info("Scanner ends.")
 
 #
 #
@@ -67,15 +99,6 @@ def convert_wind_direction_to_deg(wind_direction):
     wind_direction_deg=337.5
 
   return wind_direction_deg
-
-#
-# Return an humen-readable server identification string
-#
-def get_identification_string(location_id, server_name=None):
-  if server_name:
-    return f'Server: {location_id}, {server_name}'
-  else:
-    return f'Server: {location_id}'
 
 #
 # Get the web page and convert it to a DOM tree
@@ -197,7 +220,7 @@ def save_v6(location_id, server_name, meteo_data_dict, save=True):
   headers={'Content-Type': 'application/json; charset=utf-8'}
   try:
     rest_server='http://localhost:8080/api/meteo_data'
-    response=requests.post(rest_server, headers = headers, json = data_json)
+    response=requests.post(rest_server, headers=headers, json=data_json)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} POSTing to: {rest_server}!')
