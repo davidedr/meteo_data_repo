@@ -6,28 +6,6 @@ import requests
 import unicodedata
 
 #
-# Add location to database
-#
-def add_location():
-  location_json = {
-    "name": 'Hotel "Marco Polo" Caorle',
-    "latitude": 45.5978224,
-    "longitude": 12.8839359,
-    "address_complete": "Via della Serenissima, 22, 30021 Caorle VE",
-    "street_1": "Via della Serenissima, 22",
-    "street_2": None,
-    "zip": "30021",
-    "town": "Caorle",
-    "province": "VE",
-    "country": "IT",
-    "note": "Meteo station @ https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php"
-  }
-
-  headers={'Content-Type': 'application/json; charset=utf-8'}
-  response=requests.post('http://localhost:8080/api/location', headers = headers, json = location_json)
-  print(f'Response: {response}')
-
-#
 #
 #
 def scan(last_seen_timestamp, log=False):

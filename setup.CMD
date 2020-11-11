@@ -26,3 +26,13 @@ REM Database creation
 C:\"Program Files"\PostgreSQL\11\bin\createdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo
 C:\"Program Files"\PostgreSQL\11\bin\createdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo_development
 C:\"Program Files"\PostgreSQL\11\bin\createdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo_test
+
+REM
+REM Download and install PhantomJS
+REM from https://bitbucket.org/ariya/phantomjs/downloads/
+REM 
+
+REM
+REM Download and install Selenium
+REM
+pip install -U selenium

@@ -12,6 +12,7 @@ from scanner_meteonetwork_vnt336_alike_ws import scan_meteonetwork_vnt336_alike
 from scanner_meteonetwork_vnt432_alike_ws import scan_meteonetwork_vnt432_alike
 from scanner_cellarda_ws_alike_ws import scan_cellarda_ws_alike
 from scanner_cellarda_nord_ws_alike_ws import scan_cellarda_nord_ws_alike
+from scan_stazione_amatoriale_feltre_alike import scan_stazione_amatoriale_feltre_alike
 
 #
 #
@@ -147,17 +148,17 @@ locations_json = [{
     "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Nord, @ http://my.meteonetwork.it/station/vnt432/, Model: Davis Vantage pro 2 plus wireless",
     "height_asl_m": 280
 }, {
-    "name": 'Viale Fusinato, Feltre (BL)',
-    "latitude": 46.024,
-    "longitude": 11.912,
-    "address_complete": "Viale Fusinato, 32032 Feltre (BL)",
-    "street_1": "Viale Fusinato",
+    "name": 'Stazione meteo amatoriale di Feltre - BL',
+    "latitude": None,
+    "longitude": None,
+    "address_complete": None,
+    "street_1": None,
     "street_2": None,
     "zip": "32032",
     "town": "Feltre",
     "province": "BL",
     "country": "IT",
-    "note": "Stazione Meteo di Pellencin Giorgio, Cellarda Nord, @ http://my.meteonetwork.it/station/vnt432/, Model: Ventus w835",
+    "note": "Stazione meteo amatoriale di Feltre - BL, @ http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php, Model: Ventus w835",
     "height_asl_m": 280
 }]
 
@@ -172,7 +173,8 @@ servers = [
   { "location_id": 12, "location": locations_json[6], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike, "scan_time_interval": 55 },
   { "location_id": 15, "location": locations_json[7], "to_be_started": True, "name": "cellarda_sud_feltre", "url": {"1": "http://www.celarda.altervista.org/index.htm", "2": "http://my.meteonetwork.it/station/vnt374/" }, "scanner": scan_cellarda_ws_alike, "scan_time_interval": 60*5 },
   { "location_id": 16, "location": locations_json[8], "to_be_started": True, "name": "cellarda_nord_feltre", "url": "http://www.meteocelarda.altervista.org/index.htm", "scanner": scan_cellarda_nord_ws_alike, "scan_time_interval": 60*5 }, # Wait five minutes
-  { "location_id": 17, "location": locations_json[9], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 } # Wait for half an hour  
+  { "location_id": 17, "location": locations_json[9], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 }, # Wait for half an hour  
+  { "location_id": 17, "location": locations_json[9], "to_be_started": False, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 55 } # Wait for half an hour  
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT=50 # Sec

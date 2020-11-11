@@ -56,7 +56,7 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
     barometric_pressure=barometric_pressure_ele[0].text
     barometric_pressure=barometric_pressure.split('hPa')[0].strip()
     if barometric_pressure:
-      barometric_pressure_hPa=float(barometric_pressure_hPa)
+      barometric_pressure_hPa=float(barometric_pressure)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
