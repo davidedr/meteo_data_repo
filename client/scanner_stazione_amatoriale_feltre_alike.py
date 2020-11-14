@@ -29,7 +29,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
     user_agent = UserAgent().random 
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent']=user_agent
 
-    browser = webdriver.PhantomJS(PHANTOMJS_PATH)
+    browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log')
     browser.get(weather_station_url)
     soup = BeautifulSoup(browser.page_source, "html.parser")
 
