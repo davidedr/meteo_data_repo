@@ -6,6 +6,7 @@ from scanner_meteonetwork_vnt432_alike_ws import scan_meteonetwork_vnt432_alike
 from scanner_cellarda_ws_alike_ws import scan_cellarda_ws_alike
 from scanner_cellarda_nord_ws_alike_ws import scan_cellarda_nord_ws_alike
 from scanner_stazione_amatoriale_feltre_alike import scan_stazione_amatoriale_feltre_alike
+from scanner_feltre_meteo_alike import scan_feltre_meteo_alike
 
 #
 #
@@ -177,6 +178,21 @@ locations_json[18]={
     "height_asl_m": 250
 }
 
+locations_json[19]={
+    "name": 'Feltre meteo',
+    "latitude": 46.06472,
+    "longitude": 11.90472,
+    "address_complete": None,
+    "street_1": None,
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo amatoriale di Feltre, http://www.feltremeteo.it/weather/index.php, Model: Oregon Scientific WMR180 + UV",
+    "height_asl_m": 240
+}
+
 # "scan_time_interval" in seconds
 servers = [
   { "location_id":  1, "location": locations_json[ 1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike, "scan_time_interval": 55 }, # Wait for 50 secs
@@ -189,7 +205,8 @@ servers = [
   { "location_id": 15, "location": locations_json[15], "to_be_started": True, "name": "cellarda_sud_feltre", "url": {"1": "http://www.celarda.altervista.org/index.htm", "2": "http://my.meteonetwork.it/station/vnt374/" }, "scanner": scan_cellarda_ws_alike, "scan_time_interval": 60*5 },
   { "location_id": 16, "location": locations_json[16], "to_be_started": True, "name": "cellarda_nord_feltre", "url": "http://www.meteocelarda.altervista.org/index.htm", "scanner": scan_cellarda_nord_ws_alike, "scan_time_interval": 60*5 }, # Wait five minutes
   { "location_id": 17, "location": locations_json[17], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 }, # Wait for half an hour  
-  { "location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100 } # Wait for half an hour  
+  { "location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100 },
+  { "location_id": 19, "location": locations_json[19], "to_be_started": True, "name": "feltre_meteo", "url": "http://www.feltremeteo.it/weather/index.php", "scanner": scan_feltre_meteo_alike, "scan_time_interval": 55*5 } 
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT=50 # Sec

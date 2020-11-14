@@ -20,10 +20,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
       PHANTOMJS_PATH = './utility/phantomjs.exe'
   else:
       PHANTOMJS_PATH = './utility/phantomjs'
-
-  #import os
-  #print(os.getcwd())
-
+      
   try:
 
     user_agent = UserAgent().random 
