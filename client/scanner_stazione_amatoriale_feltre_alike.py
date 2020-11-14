@@ -41,10 +41,6 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, soup is None: "{soup}"!')
       return last_seen_timestamp
 
-  #games = soup.find_all('span', {'id': 'currentPValue'})
-  #print(games[0].text)
-  #print(games.prettify())
-
   timestamp_string=None
   try:
     
@@ -209,15 +205,6 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
-  if log:
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}')
-
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
-    return last_seen_timestamp
-
-  #
   meteo_data_dict={}
   meteo_data_dict["timestamp_string"]=timestamp_string
   meteo_data_dict["timestamp_string_date"]=timestamp_string_date
@@ -236,6 +223,14 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["wind_chill_cels"]=wind_chill_cels
   meteo_data_dict["rain_this_month_mm"]=rain_this_month_mm
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
+
+  if log:
+    utility.log_sample(location_id, server_name, meteo_data_dict)
+
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
+    return last_seen_timestamp
 
   utility.save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string

@@ -12,6 +12,16 @@ import definitions
 #
 #
 #
+def log_sample(location_id, server_name, meteo_data_dict):
+  msg=f'{get_identification_string(location_id, server_name)},'
+  for k, v in meteo_data_dict.items():
+    msg=msg+f' {k}: {v},'
+  msg=msg[:-1]
+  logging.info(msg)  
+
+#
+#
+#
 def add_server_location_if_doesnot_exist(server):
     headers={'Content-Type': 'application/json; charset=utf-8'}
     location_id=server['location_id']

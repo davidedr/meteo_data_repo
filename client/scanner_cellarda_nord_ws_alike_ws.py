@@ -148,11 +148,6 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
-  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
-    return last_seen_timestamp
-
   meteo_data_dict={}
   meteo_data_dict["timestamp_string"]=timestamp_string
   meteo_data_dict["timestamp_string_date"]=timestamp_string_date
@@ -169,6 +164,14 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
+
+  if log:
+    utility.log_sample(location_id, server_name, meteo_data_dict)
+
+  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
+    return last_seen_timestamp
 
   utility.save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string
