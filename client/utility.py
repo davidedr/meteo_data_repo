@@ -43,9 +43,9 @@ def test_starter(location_id, log_level=logging.NOTSET):
   log_filename=f'app/log/meteo_data_repo_{location_id}_{server["name"]}_test.log'
   logging.basicConfig(filename=log_filename, format=log_format, level=log_level, datefmt=log_dateformat)
 
-  logging.info(f'Starting scanner {get_identification_string(location_id, server["name"])}...')
+  logging.info(f'Starting scanner {get_identification_string(location_id, server["name"])} scanning...')
   server["scanner"](None, server, save=True, log=True)
-  logging.info("Scanner ends.")
+  logging.info(f'Starting scanner {get_identification_string(location_id, server["name"])} scanner ends.')
 
 #
 #

@@ -12,7 +12,7 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree, page_text = utility.get_tree(weather_station_url, location_id)
+  tree, page_text = utility.get_tree(weather_station_url, location_id, server_name)
   if tree is None:
     return last_seen_timestamp
 

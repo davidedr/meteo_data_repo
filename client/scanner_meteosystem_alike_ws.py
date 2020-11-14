@@ -12,7 +12,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree, _ = utility.get_tree(weather_station_url, location_id)
+  tree, _ =utility.get_tree(weather_station_url, location_id, server_name)
   if tree is None:
     return last_seen_timestamp
 
@@ -39,12 +39,13 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     # TODO Raise an alert
     return last_seen_timestamp
 
-  wind_speed_knots_elem=None
+  wind_speed_knots=None
   try:
-    wind_speed_knots_elem = tree.xpath("/html/body/div/div[4]/table/tr/td[2]/table[1]/tr[2]/td/table/tr[17]/td[3]/div/strong")
-    wind_speed_knots=wind_speed_knots_elem[0].text.strip()
-    wind_speed_knots=wind_speed_knots.split(" ")[0].strip()
-    wind_speed_knots=float(wind_speed_knots)/1.852
+    wind_speed_elem = tree.xpath("/html/body/div/div[4]/table/tr/td[2]/table[1]/tr[2]/td/table/tr[17]/td[3]/div/strong")
+    wind_speed=wind_speed_elem[0].text.strip()
+    wind_speed=wind_speed.split(" ")[0].strip()
+    if wind_speed:
+      wind_speed_knots=float(wind_speed)/1.852
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
@@ -53,7 +54,8 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   try:
     wind_gust_kmh_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(17) > td.sfondotagmax > div > strong")
     wind_gust_kmh=wind_gust_kmh_ele[0].text.split(" ")[0].strip()
-    wind_gust_knots=float(wind_gust_kmh)/1.852
+    if wind_gust_kmh:
+      wind_gust_knots=float(wind_gust_kmh)/1.852
       
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
@@ -72,32 +74,40 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
 
   barometric_pressure_hPa=None
   try:
-    barometric_pressure_hPa_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
-    barometric_pressure_hPa=float(barometric_pressure_hPa_ele[0].text.split(' ')[0].strip())
+    barometric_pressure_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
+    barometric_pressure=barometric_pressure_ele[0].text.split(' ')[0].strip()    
+    if barometric_pressure:
+      barometric_pressure_hPa=float(barometric_pressure)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
-    rain_today_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
-    rain_today_mm=float(rain_today_mm_ele[0].text.split(' ')[0].strip())
+    rain_today_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmin > div > strong")
+    rain_today=rain_today_ele[0].text.split(' ')[0].strip()
+    if rain_today:
+      rain_today_mm=float(rain_today)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmph=None
   try:
-    rain_rate_mmph_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
-    rain_rate_mmph=float(rain_rate_mmph_ele[0].text.split(' ')[0].strip())
+    rain_rate_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
+    rain_rate=rain_rate_ele[0].text.split(' ')[0].strip()
+    if rain_rate:
+      rain_rate_mmph=float(rain_rate)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
 
   temperature_cels=None
   try:
-    temperature_cels_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(3) > td:nth-child(3) > div > strong")
-    temperature_cels=temperature_cels_ele[0].text.split("°")[0].strip()
+    temperature_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(3) > td:nth-child(3) > div > strong")
+    temperature=temperature_ele[0].text.split("°")[0].strip()
+    if temperature:
+      temperature_cels=float(temperature)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
@@ -105,48 +115,59 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   rel_humidity=None
   try:
     rel_humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
-    rel_humidity=rel_humidity_ele[0].text.split("%")[0].strip()
-    rel_humidity=float(rel_humidity)/100
+    rel_humidity_ele=rel_humidity_ele[0].text.split("%")[0].strip()
+    if rel_humidity_ele:
+      rel_humidity=float(rel_humidity_ele)/100
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   heat_index_cels=None
   try:
-    heat_index_cels_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(6) > td:nth-child(3) > div > strong")
-    heat_index_cels=heat_index_cels_ele[0].text.split("°")[0].strip()
+    heat_index_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(6) > td:nth-child(3) > div > strong")
+    heat_index=heat_index_ele[0].text.split("°")[0].strip()
+    if heat_index:
+      heat_index_cels=float(heat_index)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
   dew_point_cels=None
   try:
-    dew_point_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(5) > td:nth-child(3) > div > strong')
-    dew_point_cels=dew_point_cels_ele[0].text.split('°')[0].strip()
+    dew_point_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(5) > td:nth-child(3) > div > strong')
+    dew_point=dew_point_ele[0].text.split('°')[0].strip()
+    if dew_point:
+      dew_point_cels=float(dew_point)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
   wind_chill_cels=None
   try:
-    wind_chill_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(8) > td:nth-child(3) > div > strong')
-    wind_chill_cels=wind_chill_cels_ele[0].text.split('°')[0].strip()
+    wind_chill_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(8) > td:nth-child(3) > div > strong')
+    wind_chill=wind_chill_ele[0].text.split('°')[0].strip()
+    if wind_chill:
+      wind_chill_cels=float(wind_chill)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_chill_cels: "{e}"!')
 
   ground_temperature_cels=None
   try:
-    ground_temperature_cels_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(11) > td:nth-child(3) > div > strong')
-    ground_temperature_cels=ground_temperature_cels_ele[0].text.split('°')[0].strip()
+    ground_temperature_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(11) > td:nth-child(3) > div > strong')
+    ground_temperature=ground_temperature_ele[0].text.split('°')[0].strip()
+    if ground_temperature:
+      ground_temperature_cels=float(ground_temperature)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting ground_temperature_cels: "{e}"!')
 
   solar_irradiance_wpsm=None # Watts per square meter
   try:
-    solar_irradiance_wpsm_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(13) > td:nth-child(3) > div > strong')
-    solar_irradiance_wpsm=solar_irradiance_wpsm_ele[0].text.split(' ')[0].strip()
+    solar_irradiance_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(13) > td:nth-child(3) > div > strong')
+    solar_irradiance=solar_irradiance_ele[0].text.split(' ')[0].strip()
+    if solar_irradiance:
+      solar_irradiance_wpsm=float(solar_irradiance)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting solar_irradiance_wpsm: "{e}"!')
@@ -155,55 +176,68 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   try:
     leaf_wetness_index_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(14) > td:nth-child(3) > div > strong')
     leaf_wetness_index=leaf_wetness_index_ele[0].text.strip() # Leaf wetness index: 0 (completely dry) to 15 (saturated).
-    rel_leaf_wetness=float(leaf_wetness_index)/15
+    if leaf_wetness_index:
+      rel_leaf_wetness=float(leaf_wetness_index)/15
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_leaf_wetness: "{e}"!')
 
   soil_moisture_cb=None # Centibars
   try:
-    soil_moisture_cb_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(12) > td:nth-child(3) > div > strong')
-    soil_moisture_cb=soil_moisture_cb_ele[0].text.split(' ')[0].strip()
+    soil_moisture_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(12) > td:nth-child(3) > div > strong')
+    soil_moisture=soil_moisture_ele[0].text.split(' ')[0].strip()
+    if soil_moisture:
+      soil_moisture_cb=float(soil_moisture)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting soil_moisture_cb: "{e}"!')
 
   rain_this_month_mm=None
   try:
-    rain_this_month_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(22) > td.sfondotagmin > div > strong")
-    rain_this_month_mm=rain_this_month_mm_ele[0].text.split(' ')[0].strip()
+    rain_this_month_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(22) > td.sfondotagmin > div > strong")
+    rain_this_month=rain_this_month_ele[0].text.split(' ')[0].strip()
+    if rain_this_month:
+      rain_this_month_mm=float(rain_this_month)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception rain_this_month_mm: "{e}"!')
 
   rain_this_year_mm=None
   try:
-    rain_this_year_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(23) > td.sfondotagmin > div > strong")
-    rain_this_year_mm=rain_this_year_mm_ele[0].text.split(' ')[0].strip()
+    rain_this_year_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(23) > td.sfondotagmin > div > strong")
+    rain_this_year=rain_this_year_ele[0].text.split(' ')[0].strip()
+    if rain_this_year:
+      rain_this_year_mm=float(rain_this_year)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception rain_this_year_mm: "{e}"!')
 
   evapotranspiration_today_mm=None
   try:
-    evapotranspiration_today_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmax > div > strong")
-    evapotranspiration_today_mm=evapotranspiration_today_mm_ele[0].text.split(' ')[0].strip()
+    evapotranspiration_today_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td.sfondotagmax > div > strong")
+    evapotranspiration_today=evapotranspiration_today_ele[0].text.split(' ')[0].strip()
+    if evapotranspiration_today:
+      evapotranspiration_today_mm=float(evapotranspiration_today)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception evapotranspiration_today_mm: "{e}"!')
 
   evapotranspiration_this_month_mm=None
   try:
-    evapotranspiration_this_month_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(22) > td.sfondotagmax > div > strong")
-    evapotranspiration_this_month_mm=evapotranspiration_this_month_mm_ele[0].text.split(' ')[0].strip()
+    evapotranspiration_this_month_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(22) > td.sfondotagmax > div > strong")
+    evapotranspiration_this_month=evapotranspiration_this_month_ele[0].text.split(' ')[0].strip()
+    if evapotranspiration_this_month:
+      evapotranspiration_this_month_mm=float(evapotranspiration_this_month)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception evapotranspiration_this_month_mm: "{e}"!')
 
   evapotranspiration_this_year_mm=None
   try:
-    evapotranspiration_this_year_mm_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(23) > td.sfondotagmax > div > strong ")
-    evapotranspiration_this_year_mm=evapotranspiration_this_year_mm_ele[0].text.split(' ')[0].strip()
+    evapotranspiration_this_year_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(23) > td.sfondotagmax > div > strong ")
+    evapotranspiration_this_year=evapotranspiration_this_year_ele[0].text.split(' ')[0].strip()
+    if evapotranspiration_this_year:
+      evapotranspiration_this_year_mm=float(evapotranspiration_this_year)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception evapotranspiration_this_year_mm: "{e}"!')
@@ -246,3 +280,6 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     
   utility.save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string
+
+if __name__=="__main__":
+  utility.test_starter(12) # Location id

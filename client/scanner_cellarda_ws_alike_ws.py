@@ -14,7 +14,7 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
   if isinstance(weather_station_url, dict):
     weather_station_url=weather_station_url.get("1")
 
-  tree, page_text = utility.get_tree(weather_station_url, location_id)
+  tree, page_text = utility.get_tree(weather_station_url, location_id, server_name)
   if tree is None:
     return last_seen_timestamp
 
@@ -81,11 +81,11 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
   rain_this_month_mm=None
   try:
     rain_this_month=tree.xpath("//tr/td")[25].text.split(" ")[0]
-    if rain_this_month_mm:
+    if rain_this_month:
       rain_this_month_mm=float(rain_this_month)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_month: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_month_mm: "{e}"!')
 
   rain_this_year_mm=None
   try:
@@ -144,7 +144,7 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
   else:
     weather_station_url=None
   if weather_station_url is not None:
-    tree, _ = utility.get_tree(weather_station_url, location_id)
+    tree, _ = utility.get_tree(weather_station_url, location_id, server_name)
     if tree is not None:
 
       wind_speed_knots=None
@@ -182,7 +182,7 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
       except Exception as e:
         logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
-  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
+  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
     return last_seen_timestamp
@@ -194,7 +194,7 @@ def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
   meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
   meteo_data_dict["rain_today_mm"]=rain_today_mm
   meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
-  meteo_data_dict["rain_this_month_mm"]=rain_this_month
+  meteo_data_dict["rain_this_month_mm"]=rain_this_month_mm
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
   meteo_data_dict["rel_humidity"]=rel_humidity
   meteo_data_dict["temperature_cels"]=temperature_cels

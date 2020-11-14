@@ -12,7 +12,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  tree, _ =utility.get_tree(weather_station_url, location_id)
+  tree, _ =utility.get_tree(weather_station_url, location_id, server_name)
   if tree is None:
     return last_seen_timestamp
 
