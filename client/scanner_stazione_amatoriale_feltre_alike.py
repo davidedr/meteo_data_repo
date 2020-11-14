@@ -3,6 +3,7 @@ import logging
 import platform
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from fake_useragent import UserAgent
 
 import utility
 
@@ -24,6 +25,10 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   #print(os.getcwd())
 
   try:
+
+    user_agent = UserAgent().random 
+    webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent']=user_agent
+
     browser = webdriver.PhantomJS(PHANTOMJS_PATH)
     browser.get(weather_station_url)
     soup = BeautifulSoup(browser.page_source, "html.parser")
@@ -66,7 +71,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   temperature_cels=None
   try:
     temperature_ele=soup.find('div', id='currentConditionsBigDiv')
-    temperature=temperature_ele[0].text.split("°")[0].strip()
+    temperature=temperature_ele.text.split("°")[0].strip()
     if temperature:
       temperature_cels=float(temperature)
 
@@ -122,7 +127,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
       wind_gust_knots=float(wind_gust_kmh)/1.852
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
   rain_rate_mmph=None
   try:
@@ -144,6 +149,26 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
+  rain_this_month_mm=None
+  try:
+    rain_this_month_ele=soup.findAll('text', {"class": 'liquidFillGaugeText' })[3]
+    rain_this_month=rain_this_month_ele.text.strip().split(" ")[0]
+    if rain_this_month:
+      rain_this_month_mm=float(rain_this_month)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_month_mm: "{e}"!')
+
+  rain_this_year_mm=None
+  try:
+    rain_this_year_ele=soup.findAll('text', {"class": 'liquidFillGaugeText' })[4]
+    rain_this_year=rain_this_year_ele.text.strip().split(" ")[0]
+    if rain_this_year:
+      rain_this_year_mm=float(rain_this_year)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_year_mm: "{e}"!')
+
   dew_point_cels=None
   try:
     dew_point_ele=soup.find('span', id='currentDValue')
@@ -152,23 +177,23 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
       dew_point_cels=float(dew_point)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting uv_index: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
   wind_chill_cels=None
   try:
     wind_chill_ele=soup.find('span', id='currentDetailsValueWCh')
     wind_chill=wind_chill_ele.text.strip()
-    if wind_chill and wind_chill is not "--":
+    if wind_chill and not wind_chill=='--':
       wind_chill_cels=float(wind_chill)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting uv_index: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_chill_cels: "{e}"!')
 
   uv_index=None
   try:
     uv_index_ele=soup.find('span', id='currentDetailsValueUV')
     uv_index_ele=uv_index_ele.text.strip()
-    if uv_index_ele:
+    if uv_index_ele and not uv_index_ele=="--":
       uv_index=float(uv_index_ele)
 
   except Exception as e:
@@ -178,7 +203,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   try:
     heat_index_ele=soup.find('span', id='currentDetailsValueHI')
     heat_index=heat_index_ele.text.strip()
-    if heat_index and heat_index is not "--":
+    if heat_index and not heat_index=="--":
       heat_index_cels=float(heat_index)
 
   except Exception as e:
@@ -189,7 +214,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
     return last_seen_timestamp
 
   #
@@ -198,7 +223,6 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["timestamp_string_date"]=timestamp_string_date
   meteo_data_dict["timestamp_string_time"]=timestamp_string_time
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
-  meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
   meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
   meteo_data_dict["rain_today_mm"]=rain_today_mm
@@ -207,9 +231,12 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["rel_humidity"]=rel_humidity
   meteo_data_dict["uv_index"]=uv_index
   meteo_data_dict["heat_index_cels"]=heat_index_cels
-  meteo_data_dict["dew_point_cels"]=dew_point_cels
+  meteo_data_dict["wind_gust_knots"]=wind_gust_knots
+  meteo_data_dict["dew_point_cels"]=dew_point_cels  
   meteo_data_dict["wind_chill_cels"]=wind_chill_cels
-    
+  meteo_data_dict["rain_this_month_mm"]=rain_this_month_mm
+  meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
+
   utility.save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string
 

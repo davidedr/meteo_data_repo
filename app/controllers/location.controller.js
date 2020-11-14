@@ -45,3 +45,16 @@ exports.findAll = (req, res) => {
         .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
 
 }
+
+exports.findById = (req, res) => {
+    const id = req.param('id')
+    condition = { where: { id: id } }
+    Locations.findAll(condition)
+        .then(data => { res.send(data) })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || `Some error occurred while retrieving Location id: $ { id }!`
+            })
+        })
+
+}

@@ -4,5 +4,6 @@ module.exports = app => {
 
     router.post("/", location.create)
     router.get("/", location.findAll)
+    router.get("/:id", location.findById)
     app.use('/api/location', router);
 }

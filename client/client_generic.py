@@ -5,10 +5,7 @@ import threading
 import time
 
 from definitions import locations_json, servers, SCAN_TIME_INTERVAL_DEFAULT
-from utility import get_identification_string
-
-def add_server_location(server):
-  return
+from utility import get_identification_string, add_server_location_if_doesnot_exist
 
 #
 #
@@ -34,18 +31,17 @@ def main_logger(server, save=True, log=False):
 #
 def add_server_locations(servers):
   for server in servers:
-    location_id=server["location_id"]
-    if location_id==17:
-      add_server_location(server)
+    add_server_location_if_doesnot_exist(server)
 
 #
 #
 #
 if __name__=="__main__":
-  #add_server_locations(servers)
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
   logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.NOTSET, datefmt="%Y-%m-%d %H:%M:%S")
 
+  add_server_locations(servers)
+  
   logging.info('##')
   logging.info("## 'Meteo data repo' data collector clients launcher")
   logging.info('##')
