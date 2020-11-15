@@ -207,8 +207,21 @@ def save_v6(location_id, server_name, meteo_data_dict, save=True):
   # Insert into database
 
   # Convert to PGSQL format
-  timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
-  timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
+  try:
+    timestamp = datetime.strptime(timestamp_string, "%d/%m/%Y %H:%M:%S")
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} parsing: "{timestamp_string}"!')
+    save_to_rest_ok=False
+    return
+
+  try:
+    timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
+
+  except Exception as e:
+    logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} in timestamp.strftime for: "{timestamp}"!')
+    save_to_rest_ok=False
+    return
 
   data_json = {
     "location_id": location_id,   

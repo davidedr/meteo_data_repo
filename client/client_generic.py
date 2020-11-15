@@ -49,7 +49,7 @@ if __name__=="__main__":
   nclients=0
   for server in servers:
     to_be_started=server["to_be_started"]
-    if to_be_started==False:
+    if not to_be_started:
       logging.info(f'Server: {server["location_id"]}, {server["name"]}, url: {server["url"]} starting DISABLED.')
       continue
 
