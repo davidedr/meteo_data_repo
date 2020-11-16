@@ -7,3 +7,5 @@ https://www.loggly.com/blog/exceptional-logging-of-exceptions-in-python/
 https://www.davisinstruments.com/blog/
 
 https://bezkoder.com/sequelize-associate-one-to-many/
+
+https://gist.github.com/Lazza/bbc15561b65c16db8ca8
