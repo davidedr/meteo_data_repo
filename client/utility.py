@@ -8,6 +8,7 @@ from csv import writer
 import json
 
 import definitions
+import proxy_pool
 
 #
 #
@@ -55,12 +56,19 @@ def get_identification_string(location_id, server_name=None):
 #
 #
 #
-def test_starter(location_id, log_level=logging.NOTSET):
-  found_server=None
+def find_server(location_id):
   for server in definitions.servers:
     if server["location_id"]==location_id:
-      found_server=server
-  if not found_server:
+      return server
+  
+  return None
+
+#
+#
+#
+def test_starter(location_id, log_level=logging.NOTSET):
+  found_server=find_server(location_id)
+  if found_server is None:
     return
 
   server=found_server
@@ -137,7 +145,15 @@ def get_tree(weather_station_url, location_id, server_name=None):
   headers = {'User-Agent': user_agent}
 
   try:
-    page = requests.get(weather_station_url, headers=headers)
+
+    proxy=proxy_pool.get_proxy()
+    proxy=None
+    if proxy is None:
+      proxies=None
+    else:
+      proxies={ "http": proxy, "https": proxy }
+
+    page = requests.get(weather_station_url, proxies=proxies, headers=headers)
 
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}, exception in requests.get, {e}, weather_station_url: "{weather_station_url}".')

@@ -15,6 +15,18 @@ proxies_pool={}
 #
 #
 #
+def init_proxy_pool():
+
+  get_proxies_pool()
+  
+  global proxies_pool
+  if proxies_pool is None or proxies_pool.get("len") is None or proxies_pool.get("len")==0:
+    return 0
+  return proxies_pool.get("len")
+
+#
+#
+#
 def get_proxies_pool(location_id=None, server_name=None):
 
   try:
@@ -84,5 +96,11 @@ if __name__=="__main__":
   proxy=get_proxy()
   if proxy:
     print(proxy)
+    import definitions
+    location_id=1
+    server=utility.find_server(location_id)
+    tree, _=utility.get_tree(server["url"], server["location_id"], server["name"])
+    print(tree)
+
   else:
     print("No valid proxy found!")

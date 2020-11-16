@@ -6,6 +6,7 @@ import time
 
 from definitions import locations_json, servers, SCAN_TIME_INTERVAL_DEFAULT
 from utility import get_identification_string, add_server_location_if_doesnot_exist
+import proxy_pool
 
 #
 #
@@ -45,6 +46,9 @@ if __name__=="__main__":
   logging.info('##')
   logging.info("## 'Meteo data repo' data collector clients launcher")
   logging.info('##')
+  logging.info('Starting proxy pool...')
+  nproxy_found=proxy_pool.init_proxy_pool()
+  logging.info(f'Found: {nproxy_found} proxy servers.')
   logging.info('Starting clients...')
   nclients=0
   for server in servers:
