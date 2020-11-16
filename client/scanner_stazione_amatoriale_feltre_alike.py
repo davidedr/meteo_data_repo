@@ -124,7 +124,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   rain_rate_mmph=None
   try:
-    rain_rate_ele=soup.find('span', id='currentDetailsValueRR')
+    rain_rate_ele=soup.find('span', id='currentRRValue')
     rain_rate=rain_rate_ele.text.strip()
     if rain_rate:
       rain_rate_mmph=float(rain_rate)
@@ -134,7 +134,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   rain_today_mm=None
   try:
-    rain_today_ele=soup.find('span', id='currentRRValue')
+    rain_today_ele=soup.find('span', id='currentRValue')
     rain_today=rain_today_ele.text.strip()
     if rain_today:
       rain_today_mm=float(rain_today)

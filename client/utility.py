@@ -217,7 +217,7 @@ def save_v6(location_id, server_name, meteo_data_dict, save=True):
 
   try:
     timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000"
-
+    
   except Exception as e:
     logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} in timestamp.strftime for: "{timestamp}"!')
     save_to_rest_ok=False
