@@ -6,6 +6,7 @@ from selenium import webdriver
 from fake_useragent import UserAgent
 
 import utility
+import proxy_pool
 
 #
 #
@@ -26,7 +27,15 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
     user_agent = UserAgent().random 
     webdriver.DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent']=user_agent
 
-    browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log')
+    service_args=None
+
+    """
+    proxy=proxy_pool.get_proxy(location_id, server_name)
+    if proxy is not None:
+      service_args = [f'--proxy={proxy}', '--proxy-type=https']
+    """
+
+    browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log', service_args=service_args)
     browser.get(weather_station_url)
     soup = BeautifulSoup(browser.page_source, "html.parser")
 

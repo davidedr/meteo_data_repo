@@ -9,3 +9,11 @@ https://www.davisinstruments.com/blog/
 https://bezkoder.com/sequelize-associate-one-to-many/
 
 https://gist.github.com/Lazza/bbc15561b65c16db8ca8
+
+https://httpbin.org/ip
+
+http://www.vpngate.net/api/iphone/
+
+https://www.sslproxies.org/
+
+https://www.youtube.com/watch?v=3OFwxkxN_HI&feature=youtu.be

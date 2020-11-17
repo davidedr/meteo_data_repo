@@ -70,7 +70,7 @@ def test_starter(location_id, log_level=logging.NOTSET):
   found_server=find_server(location_id)
   if found_server is None:
     return
-
+  
   server=found_server
   log_format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
   log_dateformat="%Y-%m-%d %H:%M:%S"
@@ -146,7 +146,7 @@ def get_tree(weather_station_url, location_id, server_name=None):
 
   try:
 
-    proxy=proxy_pool.get_proxy()
+    proxy=proxy_pool.get_proxy(location_id, server_name)
     proxy=None
     if proxy is None:
       proxies=None
