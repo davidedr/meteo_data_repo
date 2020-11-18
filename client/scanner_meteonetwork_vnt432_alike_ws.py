@@ -16,12 +16,26 @@ def scan_meteonetwork_vnt432_alike(last_seen_timestamp, server, save=True, log=T
   if tree is None:
     return last_seen_timestamp
 
+  timestamp_string=None
+  timestamp_string_date=None
+  timestamp_string_time=None
   try:
     timestamp_list = tree.xpath('/html/body/div[3]/div[1]/div/h3[1]')
     timestamp_ele=timestamp_list[0].text
 
-    time_string=timestamp_ele[len('Dati in diretta (aggiornati alle '):len('Dati in diretta (aggiornati alle ')+5]
-    date_string=timestamp_ele[43:43+10]
+    if timestamp_ele.find("Dati in diretta (aggiornati alle ")>=0:
+      time_string=timestamp_ele.split('Dati in diretta (aggiornati alle ')[1].strip().split(" ")
+      time_string[2]=time_string[2].strip().split(")")[0]
+    elif timestamp_ele.find("Ultimo dato disponibile delle ")>=0:
+      time_string=timestamp_ele.split('Ultimo dato disponibile delle ')[1].strip().split(" ")
+    else:
+      logging.info(f'{utility.get_identification_string(location_id, server_name)}, unable to parse timestamp_ele: {timestamp_ele}!')
+      # TODO Raise an alert
+      return last_seen_timestamp
+
+    date_string=time_string[2].strip()
+    time_string=time_string[0].strip()
+
     datetime_string=date_string+" "+time_string
     timestamp_obj=datetime.strptime(datetime_string, "%d/%m/%Y %H:%M")
     timestamp_string=timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
@@ -174,3 +188,6 @@ def scan_meteonetwork_vnt432_alike(last_seen_timestamp, server, save=True, log=T
     
   utility.save_v6(location_id, server_name, meteo_data_dict)
   return timestamp_string
+
+if __name__=="__main__":
+  utility.test_starter(17) # Location id
