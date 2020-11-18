@@ -6,7 +6,7 @@ import utility
 #
 #
 #
-def scan_cellarda_ws_alike(last_seen_timestamp, server, save=True, log=True):
+def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True):
 
   location_id=server["location_id"]
   server_name=server["name"]

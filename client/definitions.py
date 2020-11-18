@@ -3,8 +3,8 @@ from scanner_meteovenezia_alike_ws import scan_meteovenezia_alike
 from scanner_hotelmarcopolo_caorle_alike_ws import scan_hotelmarcopolo_caorle_alike
 from scanner_meteonetwork_vnt336_alike_ws import scan_meteonetwork_vnt336_alike
 from scanner_meteonetwork_vnt432_alike_ws import scan_meteonetwork_vnt432_alike
-from scanner_cellarda_ws_alike_ws import scan_cellarda_ws_alike
-from scanner_cellarda_nord_ws_alike_ws import scan_cellarda_nord_ws_alike
+from scanner_cellarda_sud_alike_ws import scan_cellarda_sud_ws_alike
+from scanner_cellarda_nord_alike_ws import scan_cellarda_nord_ws_alike
 from scanner_stazione_amatoriale_feltre_alike import scan_stazione_amatoriale_feltre_alike
 from scanner_feltre_meteo_alike import scan_feltre_meteo_alike
 
@@ -202,7 +202,7 @@ servers = [
   { "location_id": 10, "location": locations_json[10], "to_be_started": True, "name": "lagunaparkhotel_bibione", "url": "https://www.bibione-meteo.it/", "scanner": scan_meteovenezia_alike, "scan_time_interval":55 },
   { "location_id": 11, "location": locations_json[11], "to_be_started": True, "name": "meteonetwork_feltre", "url": "http://my.meteonetwork.it/station/vnt336/", "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 60*30 }, # Wait for half an hour
   { "location_id": 12, "location": locations_json[12], "to_be_started": True, "name": "agrario_feltre", "url": "http://www.meteosystem.com/dati/feltre/dati.php", "scanner": scan_meteosystem_alike, "scan_time_interval": 55 },
-  { "location_id": 15, "location": locations_json[15], "to_be_started": True, "name": "cellarda_sud_feltre", "url": {"1": "http://www.celarda.altervista.org/index.htm", "2": "http://my.meteonetwork.it/station/vnt374/" }, "scanner": scan_cellarda_ws_alike, "scan_time_interval": 60*5 },
+  { "location_id": 15, "location": locations_json[15], "to_be_started": True, "name": "cellarda_sud_feltre", "url": {"1": "http://www.celarda.altervista.org/index.htm", "2": "http://my.meteonetwork.it/station/vnt374/" }, "scanner": scan_cellarda_sud_ws_alike, "scan_time_interval": 60*5 },
   { "location_id": 16, "location": locations_json[16], "to_be_started": True, "name": "cellarda_nord_feltre", "url": "http://www.meteocelarda.altervista.org/index.htm", "scanner": scan_cellarda_nord_ws_alike, "scan_time_interval": 60*5 }, # Wait five minutes
   { "location_id": 17, "location": locations_json[17], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 }, # Wait for half an hour  
   { "location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100 },
