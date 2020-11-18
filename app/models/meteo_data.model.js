@@ -23,7 +23,17 @@ module.exports = (sequelize, Sequelize) => {
         rain_this_year_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
         evapotranspiration_today_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
         evapotranspiration_this_month_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
-        evapotranspiration_this_year_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } }
+        evapotranspiration_this_year_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        perceived_temperature_cels: { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } },
+        humidex_cels: { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } },
+        wind_Temperature_cels: { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } },
+        current_weather: { type: Sequelize.STRING },
+        wet_bulb_temperature_cels: { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } },
+        absolute_humidity_gm3: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        saturated_vapor_pressure_hPa: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        wind_travel_km: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        ws_level_barometric_pressure_mPa: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        average_wind_speed_knots: { type: Sequelize.DECIMAL, validate: { min: 0 } },
     })
 
     return Meteo_data

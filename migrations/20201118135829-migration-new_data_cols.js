@@ -13,7 +13,7 @@ module.exports = {
                 queryInterface.addColumn('meteo_data', 'perceived_temperature_cels', { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } }, { transaction: t }),
                 queryInterface.addColumn('meteo_data', 'humidex_cels', { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } }, { transaction: t }),
                 queryInterface.addColumn('meteo_data', 'wind_Temperature_cels', { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } }, { transaction: t }),
-                queryInterface.addColumn('meteo_data', 'current_weather', { type: Sequelize.DECIMAL, validate: { min: 0, max: 1 } }, { transaction: t }),
+                queryInterface.addColumn('meteo_data', 'current_weather', { type: Sequelize.STRING }, { transaction: t }),
                 queryInterface.addColumn('meteo_data', 'wet_bulb_temperature_cels', { type: Sequelize.DECIMAL, validate: { min: -273.2, max: 273 } }, { transaction: t }),
                 queryInterface.addColumn('meteo_data', 'absolute_humidity_gm3', { type: Sequelize.DECIMAL, validate: { min: 0 } }, { transaction: t }),
                 queryInterface.addColumn('meteo_data', 'saturated_vapor_pressure_hPa', { type: Sequelize.DECIMAL, validate: { min: 0 } }, { transaction: t }),

@@ -32,7 +32,17 @@ exports.create = (req, res) => {
         rain_this_year_mm: req.body.rain_this_year_mm,
         evapotranspiration_today_mm: req.body.evapotranspiration_today_mm,
         evapotranspiration_this_month_mm: req.body.evapotranspiration_this_month_mm,
-        evapotranspiration_this_year_mm: req.body.evapotranspiration_this_year_mm
+        evapotranspiration_this_year_mm: req.body.evapotranspiration_this_year_mm,
+        perceived_temperature_cels: req.body.perceived_temperature_cels,
+        humidex_cels: req.body.humidex_cels,
+        wind_Temperature_cels: req.body.wind_Temperature_cels,
+        current_weather: req.body.current_weather,
+        wet_bulb_temperature_cels: req.body.wet_bulb_temperature_cels,
+        absolute_humidity_gm3: req.body.absolute_humidity_gm3,
+        saturated_vapor_pressure_hPa: req.body.saturated_vapor_pressure_hPa,
+        wind_travel_km: req.body.wind_travel_km,
+        ws_level_barometric_pressure_mPa: req.body.ws_level_barometric_pressure_mPa,
+        average_wind_speed_knots: req.body.average_wind_speed_knots
     }
 
     Meteo_data.create(meteo_data)
