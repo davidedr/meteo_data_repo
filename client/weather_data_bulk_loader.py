@@ -62,9 +62,9 @@ for ele in csv_data:
     "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S")+".000",
     "wind_speed_knots": float(ele[3])/1.852,
     "wind_direction_deg": wind_direction_deg,
-    "barometric_pressure_hPa": float(ele[5]),
+    "barometric_pressure_ssl_hPa": float(ele[5]),
     "rain_today_mm": float(ele[6]),
-    "rain_rate_mmph": float(ele[7]),
+    "rain_rate_mmh": float(ele[7]),
     "temperature_cels": temperature_cels,
     "rel_humidity": rel_humidity
   }

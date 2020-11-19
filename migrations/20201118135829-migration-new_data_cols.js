@@ -22,7 +22,6 @@ module.exports = {
                 queryInterface.addColumn('meteo_data', 'average_wind_speed_knots', { type: Sequelize.DECIMAL, validate: { min: 0 } }, { transaction: t })
             ])
         })
-
     },
 
     down: async(queryInterface, Sequelize) => {

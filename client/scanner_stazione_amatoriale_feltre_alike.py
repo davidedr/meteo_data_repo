@@ -90,15 +90,15 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
-  barometric_pressure_hPa=None
+  barometric_pressure_ssl_hPa=None
   try:
-    barometric_pressure_ele=soup.find('span', id='currentPValue')
-    barometric_pressure=barometric_pressure_ele.text.strip()
-    if barometric_pressure:
-      barometric_pressure_hPa=float(barometric_pressure)
+    barometric_pressure_ssl_ele=soup.find('span', id='currentPValue')
+    barometric_pressure_ssl=barometric_pressure_ssl_ele.text.strip()
+    if barometric_pressure_ssl:
+      barometric_pressure_ssl_hPa=float(barometric_pressure_ssl)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa: "{e}"!')
 
   wind_speed_knots=None
   try:
@@ -131,15 +131,15 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
 
-  rain_rate_mmph=None
+  rain_rate_mmh=None
   try:
     rain_rate_ele=soup.find('span', id='currentRRValue')
     rain_rate=rain_rate_ele.text.strip()
     if rain_rate:
-      rain_rate_mmph=float(rain_rate)
+      rain_rate_mmh=float(rain_rate)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmh: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -217,9 +217,9 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["timestamp_string_time"]=timestamp_string_time
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
-  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["barometric_pressure_ssl_hPa"]=barometric_pressure_ssl_hPa
   meteo_data_dict["rain_today_mm"]=rain_today_mm
-  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["rain_rate_mmh"]=rain_rate_mmh
   meteo_data_dict["temperature_cels"]=temperature_cels
   meteo_data_dict["rel_humidity"]=rel_humidity
   meteo_data_dict["uv_index"]=uv_index
@@ -233,12 +233,12 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
     return last_seen_timestamp
 
-  utility.save_v6(location_id, server_name, meteo_data_dict)
+  utility.save_v7(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

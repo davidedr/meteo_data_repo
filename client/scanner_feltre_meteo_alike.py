@@ -39,7 +39,7 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
 
   wind_speed_knots=None
   try:
-    wind_speed_kmh_elem = tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[15]/td[2]')
+    wind_speed_kmh_elem=tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[15]/td[2]')
     wind_speed_kmh=wind_speed_kmh_elem[0].text.strip().split(" ")[0].strip().replace(",", ".").strip()
     if wind_speed_kmh:
       wind_speed_knots=float(wind_speed_kmh)/1.852
@@ -57,15 +57,15 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
-  barometric_pressure_hPa=None
+  barometric_pressure_ssl_hPa=None
   try:
-    barometric_pressure_ele = tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[20]/td[2]')
-    barometric_pressure=barometric_pressure_ele[0].text.strip().split(" ")[0].replace(",", ".")
-    if barometric_pressure:
-      barometric_pressure_hPa=float(barometric_pressure)
+    barometric_pressure_ssl_ele=tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[20]/td[2]')
+    barometric_pressure_ssl=barometric_pressure_ssl_ele[0].text.strip().split(" ")[0].replace(",", ".")
+    if barometric_pressure_ssl:
+      barometric_pressure_ssl_hPa=float(barometric_pressure_ssl)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -77,15 +77,15 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
-  rain_rate_mmph=None
+  rain_rate_mmh=None
   try:
     rain_rate_ele = tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[10]/td[2]')
     rain_rate=rain_rate_ele[0].text.strip().split(" ")[0].replace(",", ".")
     if rain_rate:
-      rain_rate_mmph=float(rain_rate)
+      rain_rate_mmh=float(rain_rate)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmh: "{e}"!')
 
   temperature_cels=None
   try:
@@ -183,9 +183,9 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
   meteo_data_dict["timestamp_string_time"]=timestamp_string_time
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
-  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["barometric_pressure_ssl_hPa"]=barometric_pressure_ssl_hPa
   meteo_data_dict["rain_today_mm"]=rain_today_mm
-  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["rain_rate_mmh"]=rain_rate_mmh
   meteo_data_dict["temperature_cels"]=temperature_cels
   meteo_data_dict["rel_humidity"]=rel_humidity
   meteo_data_dict["uv_index"]=uv_index
@@ -196,16 +196,15 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
   meteo_data_dict["evapotranspiration_today_mm"]=evapotranspiration_today_mm
 
-
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or wind_gust_knots)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or wind_gust_knots)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, wind_gust_knots: {wind_gust_knots}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, wind_gust_knots: {wind_gust_knots}')
     return last_seen_timestamp
 
-  utility.save_v6(location_id, server_name, meteo_data_dict)
+  utility.save_v7(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

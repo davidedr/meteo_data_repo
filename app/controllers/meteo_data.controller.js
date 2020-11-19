@@ -14,9 +14,9 @@ exports.create = (req, res) => {
         timestamp_ws: req.body.timestamp_ws,
         wind_speed_knots: req.body.wind_speed_knots,
         wind_direction_deg: req.body.wind_direction_deg,
-        barometric_pressure_hPa: req.body.barometric_pressure_hPa,
+        barometric_pressure_ssl_hPa: req.body.barometric_pressure_ssl_hPa,
         rain_today_mm: req.body.rain_today_mm,
-        rain_rate_mmph: req.body.rain_rate_mmph,
+        rain_rate_mmh: req.body.rain_rate_mmh,
         temperature_cels: req.body.temperature_cels,
         rel_humidity: req.body.rel_humidity,
         uv_index: req.body.uv_index,
@@ -35,13 +35,13 @@ exports.create = (req, res) => {
         evapotranspiration_this_year_mm: req.body.evapotranspiration_this_year_mm,
         perceived_temperature_cels: req.body.perceived_temperature_cels,
         humidex_cels: req.body.humidex_cels,
-        wind_Temperature_cels: req.body.wind_Temperature_cels,
+        wind_temperature_cels: req.body.wind_temperature_cels,
         current_weather: req.body.current_weather,
         wet_bulb_temperature_cels: req.body.wet_bulb_temperature_cels,
         absolute_humidity_gm3: req.body.absolute_humidity_gm3,
         saturated_vapor_pressure_hPa: req.body.saturated_vapor_pressure_hPa,
-        wind_travel_km: req.body.wind_travel_km,
-        ws_level_barometric_pressure_mPa: req.body.ws_level_barometric_pressure_mPa,
+        windrun_km: req.body.windrun_km,
+        barometric_pressure_wsl_hPa: req.body.barometric_pressure_wsl_hPa,
         average_wind_speed_knots: req.body.average_wind_speed_knots
     }
 

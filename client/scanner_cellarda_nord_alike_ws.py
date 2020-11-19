@@ -47,43 +47,47 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
     # TODO Raise an alert
     return last_seen_timestamp
 
-  barometric_pressure_hPa=None
+  barometric_pressure_ssl_hPa=None
   try:
-    barometric_pressure_hPa_ele = tree.xpath("//font[contains(text(),'hPa')]")
-    barometric_pressure_hPa=barometric_pressure_hPa_ele[0].text
-    barometric_pressure_hPa=barometric_pressure_hPa.split('hPa')[0].strip()
+    barometric_pressure_ssl_ele = tree.xpath("//font[contains(text(),'hPa')]")
+    barometric_pressure_ssl=barometric_pressure_ssl_ele[0].text.split('hPa')[0].strip()
+    if barometric_pressure_ssl:
+      barometric_pressure_ssl_hPa=float(barometric_pressure_ssl)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
-    rain_today_mm=tree.xpath("//font")[43].text.split(" ")[0].strip()
-    rain_today_mm=float(rain_today_mm)
+    rain_today=tree.xpath("//font")[43].text.split(" ")[0].strip()
+    rain_today_mm=float(rain_today)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
-  rain_rate_mmph=None
+  rain_rate_mmh=None
   try:
-    rain_rate_mmph=tree.xpath("//tr/td")[21].text.split(" ")[0]
-    rain_rate_mmph=float(rain_rate_mmph)
+    rain_rate=tree.xpath("//tr/td")[21].text.split(" ")[0]
+    if rain_rate:
+      rain_rate_mmh=float(rain_rate)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmh: "{e}"!')
 
   rain_this_month_mm=None
   try:
-    rain_this_month_mm=tree.xpath("//tr/td")[25].text.split(" ")[0]
-    rain_this_month_mm=float(rain_this_month_mm)
+    rain_this_month=tree.xpath("//tr/td")[25].text.split(" ")[0]
+    if rain_this_month:
+      rain_this_month_mm=float(rain_this_month)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_month_mm: "{e}"!')
 
   rain_this_year_mm=None
   try:
-    rain_this_year_mm=tree.xpath("//tr/td")[27].text.split(" ")[0]
-    rain_this_year_mm=float(rain_this_year_mm)
+    rain_this_year=tree.xpath("//tr/td")[27].text.split(" ")[0]
+    if rain_this_year:
+      rain_this_year_mm=float(rain_this_year)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_year_mm: "{e}"!')
@@ -91,16 +95,18 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   rel_humidity=None
   try:
     humidity=tree.xpath("//tr/td")[37].text.split("%")[0].strip()
-    rel_humidity=float(humidity)/100
+    if humidity:
+      rel_humidity=float(humidity)/100
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
   temperature_cels=None
   try:
-    temperature_cels_ele=tree.xpath('//b')
-    temperature_cels=temperature_cels_ele[5].text.split("°")[0]
-    temperature_cels=float(temperature_cels)
+    temperature_ele=tree.xpath('//b')
+    temperature=temperature_ele[5].text.split("°")[0]
+    if temperature:
+      temperature_cels=float(temperature)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
@@ -115,8 +121,9 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
 
   dew_point_cels=None
   try:
-    dew_point_cels=tree.xpath("//font")[56].text.split("°")[0]
-    dew_point_cels=float(dew_point_cels)
+    dew_point=tree.xpath("//font")[56].text.split("°")[0]
+    if dew_point:
+      dew_point_cels=float(dew_point)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
@@ -124,7 +131,8 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   wind_speed_knots=None
   try:
     wind_speed_kmh=tree.xpath("//tr/td")[9].text.split(" ")[0].strip()
-    wind_speed_knots=float(wind_speed_kmh)/1.852
+    if wind_speed_kmh:
+      wind_speed_knots=float(wind_speed_kmh)/1.852
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
@@ -152,9 +160,9 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   meteo_data_dict["timestamp_string"]=timestamp_string
   meteo_data_dict["timestamp_string_date"]=timestamp_string_date
   meteo_data_dict["timestamp_string_time"]=timestamp_string_time
-  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["barometric_pressure_ssl_hPa"]=barometric_pressure_ssl_hPa
   meteo_data_dict["rain_today_mm"]=rain_today_mm
-  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["rain_rate_mmh"]=rain_rate_mmh
   meteo_data_dict["rain_this_month_mm"]=rain_this_month_mm
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
   meteo_data_dict["rel_humidity"]=rel_humidity
@@ -168,10 +176,13 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
+  if not(timestamp_string and (barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}')
     return last_seen_timestamp
 
-  utility.save_v6(location_id, server_name, meteo_data_dict)
+  utility.save_v7(location_id, server_name, meteo_data_dict)
   return timestamp_string
+
+if __name__=="__main__":
+  utility.test_starter(16) # Location id

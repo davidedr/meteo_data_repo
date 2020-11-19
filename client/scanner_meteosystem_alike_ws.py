@@ -42,8 +42,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   wind_speed_knots=None
   try:
     wind_speed_elem = tree.xpath("/html/body/div/div[4]/table/tr/td[2]/table[1]/tr[2]/td/table/tr[17]/td[3]/div/strong")
-    wind_speed=wind_speed_elem[0].text.strip()
-    wind_speed=wind_speed.split(" ")[0].strip()
+    wind_speed=wind_speed_elem[0].text.strip().split(" ")[0].strip()
     if wind_speed:
       wind_speed_knots=float(wind_speed)/1.852
 
@@ -72,15 +71,15 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
 
-  barometric_pressure_hPa=None
+  barometric_pressure_ssl_hPa=None
   try:
-    barometric_pressure_ele = tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
-    barometric_pressure=barometric_pressure_ele[0].text.split(' ')[0].strip()    
-    if barometric_pressure:
-      barometric_pressure_hPa=float(barometric_pressure)
+    barometric_pressure_ssl_ele=tree.cssselect('body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(7) > td:nth-child(3) > div > strong')
+    barometric_pressure_ssl=barometric_pressure_ssl_ele[0].text.split(' ')[0].strip()    
+    if barometric_pressure_ssl:
+      barometric_pressure_ssl_hPa=float(barometric_pressure_ssl)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa: "{e}"!')
 
   rain_today_mm=None
   try:
@@ -92,15 +91,15 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
-  rain_rate_mmph=None
+  rain_rate_mmh=None
   try:
     rain_rate_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(21) > td:nth-child(3) > div > strong")
     rain_rate=rain_rate_ele[0].text.split(' ')[0].strip()
     if rain_rate:
-      rain_rate_mmph=float(rain_rate)
+      rain_rate_mmh=float(rain_rate)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmph: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmh: "{e}"!')
 
   temperature_cels=None
   try:
@@ -115,9 +114,9 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   rel_humidity=None
   try:
     rel_humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
-    rel_humidity_ele=rel_humidity_ele[0].text.split("%")[0].strip()
-    if rel_humidity_ele:
-      rel_humidity=float(rel_humidity_ele)/100
+    rel_humidity=rel_humidity_ele[0].text.split("%")[0].strip()
+    if rel_humidity:
+      rel_humidity=float(rel_humidity)/100
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
@@ -242,20 +241,17 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception evapotranspiration_this_year_mm: "{e}"!')
 
-  uv_index=None
-  
   meteo_data_dict={}
   meteo_data_dict["timestamp_string"]=timestamp_string
   meteo_data_dict["timestamp_string_date"]=timestamp_string_date
   meteo_data_dict["timestamp_string_time"]=timestamp_string_time
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
-  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["barometric_pressure_ssl_hPa"]=barometric_pressure_ssl_hPa
   meteo_data_dict["rain_today_mm"]=rain_today_mm
-  meteo_data_dict["rain_rate_mmph"]=rain_rate_mmph
+  meteo_data_dict["rain_rate_mmh"]=rain_rate_mmh
   meteo_data_dict["temperature_cels"]=temperature_cels
   meteo_data_dict["rel_humidity"]=rel_humidity
-  meteo_data_dict["uv_index"]=uv_index
   meteo_data_dict["heat_index_cels"]=heat_index_cels
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["dew_point_cels"]=dew_point_cels
@@ -274,12 +270,12 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
   # UV-index is not supported by this wather station
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_hPa or rain_today_mm or rain_rate_mmph or temperature_cels or rel_humidity or uv_index or heat_index_cels or wind_gust_knots or dew_point_cels or wind_chill_cels or ground_temperature_cels or solar_irradiance_wpsm or rel_leaf_wetness or soil_moisture_cb or rain_this_month_mm or rain_this_year_mm or evapotranspiration_today_mm or evapotranspiration_this_month_mm or evapotranspiration_this_year_mm)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or heat_index_cels or wind_gust_knots or dew_point_cels or wind_chill_cels or ground_temperature_cels or solar_irradiance_wpsm or rel_leaf_wetness or soil_moisture_cb or rain_this_month_mm or rain_this_year_mm or evapotranspiration_today_mm or evapotranspiration_this_month_mm or evapotranspiration_this_year_mm)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_hPa: {barometric_pressure_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmph: {rain_rate_mmph},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}')
     return last_seen_timestamp
     
-  utility.save_v6(location_id, server_name, meteo_data_dict)
+  utility.save_v7(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

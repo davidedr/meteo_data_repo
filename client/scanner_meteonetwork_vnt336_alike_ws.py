@@ -19,7 +19,7 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   timestamp_string_date=None
   timestamp_string_time=None
   try:
-    timestamp_list = tree.xpath('/html/body/div[3]/div[1]/div/h3[1]')
+    timestamp_list=tree.xpath('/html/body/div[3]/div[1]/div/h3[1]')
     timestamp_ele=timestamp_list[0].text
 
     if timestamp_ele.find("Dati in diretta (aggiornati alle ")>=0:
@@ -55,8 +55,7 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
     not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[1]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
       temperature_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[1]/td[2]/span/text()')
-      temperature_cels=temperature_cels_ele[0].strip().split("°")[0].strip()
-      temperature_cels=temperature_cels.replace(" ","")
+      temperature_cels=temperature_cels_ele[0].strip().split("°")[0].strip().replace(" ","")
       temperature_cels=float(temperature_cels)
 
   except Exception as e:
@@ -73,15 +72,17 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
-  barometric_pressure_hPa=None
+  barometric_pressure_ssl_hPa=None
   try:
     not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[3]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
-      barometric_pressure_hPa_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[3]/td[2]/span/text()')
-      barometric_pressure_hPa=barometric_pressure_hPa_ele[0].strip().split(" ")[0].strip()
+      barometric_pressure_ssl_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[3]/td[2]/span/text()')
+      barometric_pressure_ssl=barometric_pressure_ssl_ele[0].strip().split(" ")[0].strip()
+      if barometric_pressure_ssl:
+        barometric_pressure_ssl_hPa=float(barometric_pressure_ssl)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_hPa: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa: "{e}"!')
 
   wind_speed_knots=None
   try:
@@ -168,7 +169,7 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   meteo_data_dict["timestamp_string_time"]=timestamp_string_time
   meteo_data_dict["temperature_cels"]=temperature_cels
   meteo_data_dict["rel_humidity"]=rel_humidity
-  meteo_data_dict["barometric_pressure_hPa"]=barometric_pressure_hPa
+  meteo_data_dict["barometric_pressure_ssl_hPa"]=barometric_pressure_ssl_hPa
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
@@ -180,12 +181,12 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (temperature_cels or rel_humidity or barometric_pressure_hPa or wind_speed_knots or wind_gust_knots or wind_direction_deg or rain_today_mm or dew_point_cels or heat_index or solar_irradiance_wpsm)):
+  if not(timestamp_string and (temperature_cels or rel_humidity or barometric_pressure_ssl_hPa or wind_speed_knots or wind_gust_knots or wind_direction_deg or rain_today_mm or dew_point_cels or heat_index or solar_irradiance_wpsm)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, barometric_pressure_hPa: {barometric_pressure_hPa}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},  temperature_cels: {temperature_cels}, wind_direction_deg: {wind_direction_deg}, rain_today_mm: {rain_today_mm}, dew_point_cels: {dew_point_cels}, heat_index: {heat_index}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},  temperature_cels: {temperature_cels}, wind_direction_deg: {wind_direction_deg}, rain_today_mm: {rain_today_mm}, dew_point_cels: {dew_point_cels}, heat_index: {heat_index}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
     return last_seen_timestamp
     
-  utility.save_v6(location_id, server_name, meteo_data_dict)
+  utility.save_v7(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":
