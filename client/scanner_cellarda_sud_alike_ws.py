@@ -217,7 +217,7 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}, humidex_cels: {humidex_cels}.')
     return last_seen_timestamp
 
-  utility.save_v7(location_id, server_name, meteo_data_dict)
+  utility.save_v9(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

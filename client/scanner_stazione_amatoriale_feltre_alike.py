@@ -49,7 +49,6 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   timestamp_string=None
   try:
-    
     currentTimestampValue_ele=soup.find('span', id='currentTimestampValue')
     currentTimestampValue=currentTimestampValue_ele.text
     timestamp_obj_time=datetime.strptime(currentTimestampValue, "%H:%M:%S")
@@ -238,7 +237,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
     return last_seen_timestamp
 
-  utility.save_v7(location_id, server_name, meteo_data_dict)
+  utility.save_v9(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":
