@@ -236,7 +236,7 @@ def save_v10(location_id, server_name, meteo_data_dict, save=True):
 
   save_to_csv_ok=True
   save_to_rest_ok=True
-  file_name=f"data/weather_{location_id}_{server_name}_v9.txt"
+  file_name=f"data/weather_{location_id}_{server_name}_v10.txt"
   try:
     with open(file_name, 'a+', newline='') as write_obj:
       csv_writer = writer(write_obj, delimiter=";")
