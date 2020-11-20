@@ -136,13 +136,15 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
-  heat_index_cels=None
+  perceived_temperature_cels=None
   try:
     # Extreme problems, extreme solutions
-    heat_index_cels=page_text.split("temperatura apparente")[1].split("&")[0].strip()
+    perceived_temperature=page_text.split("temperatura apparente")[1].split("&")[0].strip()
+    if perceived_temperature:
+      perceived_temperature_cels=float(perceived_temperature)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting perceived_temperature_cels: "{e}"!')
 
   dew_point_cels=None
   try:
@@ -219,7 +221,7 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
   meteo_data_dict["rel_humidity"]=rel_humidity
   meteo_data_dict["temperature_cels"]=temperature_cels
-  meteo_data_dict["heat_index_cels"]=heat_index_cels
+  meteo_data_dict["perceived_temperature_cels"]=perceived_temperature_cels
   meteo_data_dict["dew_point_cels"]=dew_point_cels
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
