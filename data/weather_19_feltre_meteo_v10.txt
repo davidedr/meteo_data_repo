@@ -1,0 +1,11 @@
+timestamp_string;timestamp_string_date;timestamp_string_time;wind_speed_knots;wind_direction_deg;barometric_pressure_ssl_hPa;rain_today_mm;rain_rate_mmh;temperature_cels;rel_humidity;uv_index;heat_index_cels;wind_gust_knots;dew_point_cels;wind_chill_cels;ground_temperature_cels;solar_irradiance_wpsm;rel_leaf_wetness;soil_moisture_cb;rain_this_month_mm;rain_this_year_mm;evapotranspiration_today_mm;evapotranspiration_this_month_mm;evapotranspiration_this_year_mm;perceived_temperature_cels;humidex_cels;wind_temperature_cels;current_weather;wet_bulb_temperature_cels;absolute_humidity_gm3;saturated_vapor_pressure_hPa;windrun_km;barometric_pressure_wsl_hPa;average_wind_speed_knots;storm_rain_mmm, rain_in_last_storm_event_mm
+20/11/2020 17:10:04;20/11/2020;17:10:04;0.0;90.0;1022.0;4.3;0.0;4.3;0.9;0.0;;0.0;;4.3;;0.0;;;9.4;1301.2;0.0;;;;;;;;;;;;;;
+20/11/2020 17:15:04;20/11/2020;17:15:04;0.0;135.0;1022.0;4.3;0.0;4.2;0.9;0.0;;1.4;;4.2;;0.0;;;9.4;1301.2;0.0;;;;;;;;;;;;;;
+20/11/2020 17:20:04;20/11/2020;17:20:04;0.0;45.0;1022.0;4.3;0.0;4.0;0.89;0.0;;1.4;;4.0;;0.0;;;9.4;1301.2;0.0;;;;;;;;;;;;;;
+20/11/2020 17:25:04;20/11/2020;17:25:04;0.0;338.0;1022.0;4.3;0.0;3.8;0.9;0.0;;0.0;;3.8;;0.0;;;9.4;1301.2;0.0;;;;;;;;;;;;;;
+20/11/2020 17:30:04;20/11/2020;17:30:04;0.0;338.0;1022.0;4.3;0.0;3.9;0.91;0.0;;0.0;;3.8;;0.0;;;9.4;1301.2;0.0;;;;;;;;;;;;;;
+20/11/2020 18:45:04;20/11/2020;18:45:04;0.0;180.0;1025.5;4.3;0.0;2.6;0.94;0.0;;0.0;;2.6;;0.0;;;9.4;1301.2;0.0;;;0.9;;;;2.2;;;;1023.0;;;
+20/11/2020 18:50:04;20/11/2020;18:50:04;0.0;315.0;1025.5;4.3;0.0;2.4;0.94;0.0;;0.0;;2.5;;0.0;;;9.4;1301.2;0.0;;;0.7;;;;2.0;;;;1023.0;;;
+20/11/2020 19:35:05;20/11/2020;19:35:05;0.0;135.0;1026.5;4.3;0.0;2.0;0.96;0.0;;0.0;;2.0;;0.0;;;9.4;1301.2;0.0;;;0.2;;;;1.8;;;;1024.0;;;
+20/11/2020 19:40:05;20/11/2020;19:40:05;0.0;338.0;1026.5;4.3;0.0;2.0;0.96;0.0;;0.0;;2.0;;0.0;;;9.4;1301.2;0.0;;;0.2;;;;1.8;;;;1024.0;0.0;;
+20/11/2020 19:45:04;20/11/2020;19:45:04;0.0;158.0;1026.5;4.3;0.0;1.8;0.95;0.0;;0.0;;1.8;;0.0;;;9.4;1301.2;0.0;;;0.0;;;;1.5;;;;1024.0;0.0;;

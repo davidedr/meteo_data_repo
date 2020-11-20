@@ -79,6 +79,24 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
+  perceived_temperature_cels=None
+  try:
+    perceived_temperature=soup.find('span', id='currentDetailsValueA').text.strip()
+    if perceived_temperature:
+      perceived_temperature_cels=float(perceived_temperature)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting perceived_temperature_cels: "{e}"!')
+
+  humidex_cels=None
+  try:
+    humidex=soup.find('span', id='currentDetailsValueHX').text.strip()
+    if humidex:
+      humidex_cels=float(humidex)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting humidex_cels: "{e}"!')
+
   rel_humidity=None
   try:
     humidity_ele=soup.find('span', id='currentHValue')
@@ -89,6 +107,26 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
 
+  absolute_humidity_gm3=None
+  try:
+    absolute_humidity_ele=soup.find('span', id='currentDetailsValueAH')
+    absolute_humidity=absolute_humidity_ele.text.strip()
+    if absolute_humidity:
+      absolute_humidity_gm3=float(absolute_humidity)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting absolute_humidity_gm3: "{e}"!')
+
+  saturated_vapor_pressure_hPa=None
+  try:
+    saturated_vapor_pressure_ele=soup.find('span', id='currentDetailsValueSVP')
+    saturated_vapor_pressure=saturated_vapor_pressure_ele.text.strip()
+    if saturated_vapor_pressure:
+      saturated_vapor_pressure_hPa=float(saturated_vapor_pressure)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting saturated_vapor_pressure_hPa: "{e}"!')
+
   barometric_pressure_ssl_hPa=None
   try:
     barometric_pressure_ssl_ele=soup.find('span', id='currentPValue')
@@ -98,6 +136,16 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa: "{e}"!')
+
+  barometric_pressure_wsl_hPa=None
+  try:
+    barometric_pressure_wsl_ele=soup.find('span', id='currentDetailsValuePst')
+    barometric_pressure_wsl=barometric_pressure_wsl_ele.text.strip()
+    if barometric_pressure_wsl:
+      barometric_pressure_wsl_hPa=float(barometric_pressure_wsl)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_wsl_hPa: "{e}"!')
 
   wind_speed_knots=None
   try:
@@ -129,6 +177,16 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_gust_knots: "{e}"!')
+
+  windrun_km=None
+  try:
+    windrun_ele=soup.find('span', id='currentDetailsValueWrToday')
+    windrun=windrun_ele.text.strip()
+    if windrun:
+      windrun_km=float(windrun)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting windrun_km: "{e}"!')
 
   rain_rate_mmh=None
   try:
@@ -190,6 +248,16 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_chill_cels: "{e}"!')
 
+  wet_bulb_temperature_cels=None
+  try:
+    wet_bulb_temperature_ele=soup.find('span', id='currentDetailsValueWB')
+    wet_bulb_temperature=wet_bulb_temperature_ele.text
+    if wet_bulb_temperature:
+      wet_bulb_temperature_cels=float(wet_bulb_temperature)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wet_bulb_temperature_cels: "{e}"!')
+
   uv_index=None
   try:
     uv_index_ele=soup.find('span', id='currentDetailsValueUV')
@@ -228,13 +296,20 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["wind_chill_cels"]=wind_chill_cels
   meteo_data_dict["rain_this_month_mm"]=rain_this_month_mm
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
+  meteo_data_dict["perceived_temperature_cels"]=perceived_temperature_cels
+  meteo_data_dict["humidex_cels"]=humidex_cels
+  meteo_data_dict["wet_bulb_temperature_cels"]=wet_bulb_temperature_cels
+  meteo_data_dict["barometric_pressure_wsl_hPa"]=barometric_pressure_wsl_hPa
+  meteo_data_dict["absolute_humidity_gm3"]=absolute_humidity_gm3
+  meteo_data_dict["saturated_vapor_pressure_hPa"]=saturated_vapor_pressure_hPa
+  meteo_data_dict["windrun_km"]=windrun_km
 
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or uv_index or heat_index_cels)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or uv_index or heat_index_cels or perceived_temperature_cels or humidex_cels or wet_bulb_temperature_cels or barometric_pressure_wsl_hPa or absolute_humidity_gm3 or saturated_vapor_pressure_hPa or windrun_km)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, perceived_temperature_cels: {perceived_temperature_cels}, humidex_cels: {humidex_cels}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, barometric_pressure_wsl_hPa: {barometric_pressure_wsl_hPa}, absolute_humidity_gm3: {absolute_humidity_gm3}, saturated_vapor_pressure_hPa: {saturated_vapor_pressure_hPa}, windrun_km: {windrun_km}')
     return last_seen_timestamp
 
   utility.save_v10(location_id, server_name, meteo_data_dict)

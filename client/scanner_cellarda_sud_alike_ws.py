@@ -116,9 +116,9 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
 
   humidex_cels=None
   try:
-    humidex_ele=tree.xpath("//tr/td")[37].text.split("%")[1].strip().split(" ")[2].strip().split("°")[0].strip()
-    if humidex_ele:
-      humidex_cels=float(humidex_ele)
+    humidex=tree.xpath("//tr/td")[37].text.split("%")[1].strip().split(" ")[2].strip().split("°")[0].strip()
+    if humidex:
+      humidex_cels=float(humidex)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting humidex_cels: "{e}"!')
