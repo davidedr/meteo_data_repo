@@ -34,7 +34,8 @@ module.exports = (sequelize, Sequelize) => {
         windrun_km: { type: Sequelize.DECIMAL, validate: { min: 0 } },
         barometric_pressure_wsl_hPa: { type: Sequelize.DECIMAL, validate: { min: 0 } },
         average_wind_speed_knots: { type: Sequelize.DECIMAL, validate: { min: 0 } },
-        storm_rain_mmm: { type: Sequelize.DECIMAL, validate: { min: 0 } }
+        storm_rain_mmm: { type: Sequelize.DECIMAL, validate: { min: 0 } },
+        rain_in_last_storm_event_mm: { type: Sequelize.DECIMAL, validate: { min: 0 } }
     })
 
     return Meteo_data

@@ -43,7 +43,8 @@ exports.create = (req, res) => {
         windrun_km: req.body.windrun_km,
         barometric_pressure_wsl_hPa: req.body.barometric_pressure_wsl_hPa,
         average_wind_speed_knots: req.body.average_wind_speed_knots,
-        storm_rain_mmm: req.body.storm_rain_mmm
+        storm_rain_mmm: req.body.storm_rain_mmm,
+        rain_in_last_storm_event_mm: req.body.rain_in_last_storm_event_mm,
     }
 
     Meteo_data.create(meteo_data)
