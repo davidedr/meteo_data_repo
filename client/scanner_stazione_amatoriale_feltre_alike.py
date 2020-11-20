@@ -312,7 +312,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, uv_index: {uv_index}, heat_index_cels: {heat_index_cels}, perceived_temperature_cels: {perceived_temperature_cels}, humidex_cels: {humidex_cels}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, barometric_pressure_wsl_hPa: {barometric_pressure_wsl_hPa}, absolute_humidity_gm3: {absolute_humidity_gm3}, saturated_vapor_pressure_hPa: {saturated_vapor_pressure_hPa}, windrun_km: {windrun_km}')
     return last_seen_timestamp
 
-  utility.save_v10(location_id, server_name, meteo_data_dict)
+  utility.save_v11(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

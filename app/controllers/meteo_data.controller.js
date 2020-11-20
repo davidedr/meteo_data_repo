@@ -45,6 +45,8 @@ exports.create = (req, res) => {
         average_wind_speed_knots: req.body.average_wind_speed_knots,
         storm_rain_mmm: req.body.storm_rain_mmm,
         rain_in_last_storm_event_mm: req.body.rain_in_last_storm_event_mm,
+        cloud_height_m: req.body.cloud_height_m
+
     }
 
     Meteo_data.create(meteo_data)

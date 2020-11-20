@@ -157,6 +157,16 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting solar_irradiance_wpsm: "{e}"!')
 
+  cloud_height_m=None
+  try:
+    cloud_height_ele=tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[8]/td[2]')
+    cloud_height=cloud_height_ele[0].text.strip().split(" ")[0].replace(",", ".").strip()
+    if cloud_height:
+      cloud_height_m=float(cloud_height)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting cloud_height_m: "{e}"!')
+
   rain_this_month_mm=None
   try:
     rain_this_month_ele = tree.xpath('/html/body/div/div/div[14]/div/div[1]/table/tr[11]/td[4]')
@@ -240,16 +250,17 @@ def scan_feltre_meteo_alike(last_seen_timestamp, server, save=True, log=True):
   meteo_data_dict["wet_bulb_temperature_cels"]=wet_bulb_temperature_cels
   meteo_data_dict["average_wind_speed_knots"]=average_wind_speed_knots
   meteo_data_dict["barometric_pressure_wsl_hPa"]=barometric_pressure_wsl_hPa
+  meteo_data_dict["cloud_height_m"]=cloud_height_m
 
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or wind_gust_knots or perceived_temperature_cels or barometric_pressure_wsl_hPa)):
+  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or wind_gust_knots or perceived_temperature_cels or barometric_pressure_wsl_hPa or cloud_height_m)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, wind_gust_knots: {wind_gust_knots}, perceived_temperature_cels: {perceived_temperature_cels}, barometric_pressure_wsl_hPa: {barometric_pressure_wsl_hPa}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, wind_gust_knots: {wind_gust_knots}, perceived_temperature_cels: {perceived_temperature_cels}, barometric_pressure_wsl_hPa: {barometric_pressure_wsl_hPa}. cloud_height_m: {cloud_height_m}')
     return last_seen_timestamp
 
-  utility.save_v10(location_id, server_name, meteo_data_dict)
+  utility.save_v11(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

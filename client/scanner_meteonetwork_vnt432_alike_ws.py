@@ -189,7 +189,7 @@ def scan_meteonetwork_vnt432_alike(last_seen_timestamp, server, save=True, log=T
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},  temperature_cels: {temperature_cels}, wind_direction_deg: {wind_direction_deg}, rain_today_mm: {rain_today_mm}, dew_point_cels: {dew_point_cels}, heat_index: {heat_index}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
     return last_seen_timestamp
     
-  utility.save_v10(location_id, server_name, meteo_data_dict)
+  utility.save_v11(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":

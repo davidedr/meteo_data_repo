@@ -167,7 +167,7 @@ def scan(last_seen_timestamp, server, save=True, log=True):
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  utility.save_v10(location_id, server_name, meteo_data_dict)
+  utility.save_v11(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":
