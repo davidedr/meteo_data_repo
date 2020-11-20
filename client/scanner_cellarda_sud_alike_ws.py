@@ -96,6 +96,15 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_year: "{e}"!')
 
+  storm_rain_mmm=None
+  try:
+    storm_rain=tree.xpath("//tr/td")[29].text.split(" ")[0].strip()
+    if storm_rain:
+      storm_rain_mmm=float(storm_rain)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting storm_rain_mm: "{e}"!')
+
   rel_humidity=None
   try:
     humidity=tree.xpath("//tr/td")[37].text.split("%")[0].strip()
@@ -114,6 +123,13 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting humidex_cels: "{e}"!')
 
+  current_weather=None
+  try:
+    current_weather=tree.xpath("//tr/td")[1].text.strip()
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting current_weather: "{e}"!')
+
   temperature_cels=None
   try:
     temperature_ele=tree.xpath('//b')
@@ -124,15 +140,15 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels: "{e}"!')
 
-  heat_index_cels=None
+  perceived_temperature_cels=None
   try:
     # Extreme problems, extreme solutions
-    heat_index_ele=page_text.split("temperatura apparente")[1].split("&")[0].strip()
-    if heat_index_ele:
-      heat_index_cels=float(heat_index_ele)
+    perceived_temperature=page_text.split("temperatura apparente")[1].split("&")[0].strip()
+    if perceived_temperature:
+      perceived_temperature_cels=float(perceived_temperature)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting perceived_temperature_cels: "{e}"!')
 
   dew_point_cels=None
   try:
@@ -143,6 +159,33 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
+  wind_temperature_cels=None
+  try:
+    wind_temperature=tree.xpath("//tr/td")[13].text.split("°")[0].strip()
+    if wind_temperature:
+      wind_temperature_cels=float(wind_temperature)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_temperature_cels: "{e}"!')
+
+  average_wind_speed_knots=None
+  try:
+    average_wind_speed=tree.xpath("//tr/td")[9].text.strip().split(" ")[0]
+    if average_wind_speed:
+      average_wind_speed_knots=float(average_wind_speed)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting average_wind_speed_knots: "{e}"!')
+
+  wet_bulb_temperature_cels=None
+  try:
+    wet_bulb_temperature=tree.xpath("//tr/td//font")[46].text.split(":")[1].split("°")[0].strip()
+    if wet_bulb_temperature:
+      wet_bulb_temperature_cels=float(wet_bulb_temperature)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wet_bulb_temperature_cels: "{e}"!')
+
   #
   # From another site
   #
@@ -152,6 +195,7 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
     weather_station_url=weather_station_url.get("2")
   else:
     weather_station_url=None
+
   if weather_station_url is not None:
     tree, _ = utility.get_tree(weather_station_url, location_id, server_name)
     if tree is not None:
@@ -202,19 +246,24 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
   meteo_data_dict["rain_this_year_mm"]=rain_this_year_mm
   meteo_data_dict["rel_humidity"]=rel_humidity
   meteo_data_dict["temperature_cels"]=temperature_cels
-  meteo_data_dict["heat_index_cels"]=heat_index_cels
+  meteo_data_dict["perceived_temperature_cels"]=perceived_temperature_cels
   meteo_data_dict["dew_point_cels"]=dew_point_cels
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_gust_knots"]=wind_gust_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
   meteo_data_dict["humidex_cels"]=humidex_cels
+  meteo_data_dict["current_weather"]=current_weather
+  meteo_data_dict["wind_temperature_cels"]=wind_temperature_cels
+  meteo_data_dict["wet_bulb_temperature_cels"]=wet_bulb_temperature_cels
+  meteo_data_dict["average_wind_speed_knots"]=average_wind_speed_knots
+  meteo_data_dict["storm_rain_mmm"]=storm_rain_mmm
 
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or heat_index_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg or humidex_cels)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)},   Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, heat_index_cels: {heat_index_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}, humidex_cels: {humidex_cels}.')
+  if not(timestamp_string and (barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or perceived_temperature_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg or humidex_cels or wind_temperature_cels or current_weather or wet_bulb_temperature_cels or average_wind_speed_knots or storm_rain_mmm)):
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, perceived_temperature_cels: {perceived_temperature_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}, humidex_cels: {humidex_cels}, wind_temperature_cels: {wind_temperature_cels}, current_weather: {current_weather}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, average_wind_speed_knots: {average_wind_speed_knots}, storm_rain_mmm: {storm_rain_mmm}.')
     return last_seen_timestamp
 
   utility.save_v9(location_id, server_name, meteo_data_dict)

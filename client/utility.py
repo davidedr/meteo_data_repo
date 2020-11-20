@@ -213,7 +213,7 @@ def save_v9(location_id, server_name, meteo_data_dict, save=True):
   windrun_km=meteo_data_dict.get("windrun_km")
   barometric_pressure_wsl_hPa=meteo_data_dict.get("barometric_pressure_wsl_hPa")
   average_wind_speed_knots=meteo_data_dict.get("average_wind_speed_knots")
-  storm_rain_mm=meteo_data_dict.get("storm_rain_mm")
+  storm_rain_mmm=meteo_data_dict.get("storm_rain_mmm")
   
   #
   # Saving to csv backup file and database server
@@ -227,7 +227,7 @@ def save_v9(location_id, server_name, meteo_data_dict, save=True):
     "rel_leaf_wetness", "soil_moisture_cb", "rain_this_month_mm", "rain_this_year_mm", "evapotranspiration_today_mm",
     "evapotranspiration_this_month_mm", "evapotranspiration_this_year_mm", "perceived_temperature_cels", "humidex_cels",
     "wind_temperature_cels", "current_weather", "wet_bulb_temperature_cels", "absolute_humidity_gm3", "saturated_vapor_pressure_hPa",
-    "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mm"
+    "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mmm"
   ]
 
   # csv_file_header_temp=[]
@@ -249,7 +249,7 @@ def save_v9(location_id, server_name, meteo_data_dict, save=True):
         ground_temperature_cels, solar_irradiance_wpsm, rel_leaf_wetness, soil_moisture_cb, rain_this_month_mm, rain_this_year_mm,\
         evapotranspiration_today_mm, evapotranspiration_this_month_mm, evapotranspiration_this_year_mm, perceived_temperature_cels, humidex_cels,
         wind_temperature_cels, current_weather, wet_bulb_temperature_cels, absolute_humidity_gm3, saturated_vapor_pressure_hPa, windrun_km,\
-        barometric_pressure_wsl_hPa, average_wind_speed_knots, storm_rain_mm
+        barometric_pressure_wsl_hPa, average_wind_speed_knots, storm_rain_mmm
       ]
       csv_writer.writerow(weather)
 
@@ -310,7 +310,7 @@ def save_v9(location_id, server_name, meteo_data_dict, save=True):
     "windrun_km": windrun_km,
     "barometric_pressure_wsl_hPa": barometric_pressure_wsl_hPa,
     "average_wind_speed_knots": average_wind_speed_knots,
-    "storm_rain_mm": storm_rain_mm
+    "storm_rain_mmm": storm_rain_mmm
   }
 
   headers={'Content-Type': 'application/json; charset=utf-8'}
