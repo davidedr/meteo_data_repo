@@ -124,9 +124,9 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   rel_humidity=None
   try:
     rel_humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
-    rel_humidity=rel_humidity_ele[0].text.split("%")[0].strip()
-    if rel_humidity:
-      rel_humidity=float(rel_humidity)/100
+    humidity=humidity_ele[0].text.split("%")[0].strip()
+    if humidity:
+      rel_humidity=float(humidity)/100
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
