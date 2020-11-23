@@ -51,6 +51,10 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   try:
     currentTimestampValue_ele=soup.find('span', id='currentTimestampValue')
     currentTimestampValue=currentTimestampValue_ele.text
+    if "OfflineLast update:" in currentTimestampValue:
+      logging.exception(f'{utility.get_identification_string(location_id, server_name)}, ws station is Offline! weather_station_url: {weather_station_url}, currentTimestampValue: {currentTimestampValue}!')
+      return last_seen_timestamp
+
     timestamp_obj_time=datetime.strptime(currentTimestampValue, "%H:%M:%S")
 
     timestamp_obj=datetime.now()

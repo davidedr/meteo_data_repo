@@ -135,6 +135,8 @@ def convert_wind_direction_to_deg(wind_direction, location_id=None, server_name=
     wind_direction_deg=315
   elif wind_direction=="NNO" or wind_direction=="NNW":
     wind_direction_deg=337.5
+  else:
+    logging.info(f'{get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   return wind_direction_deg
 
