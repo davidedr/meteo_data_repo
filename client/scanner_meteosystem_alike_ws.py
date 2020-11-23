@@ -71,12 +71,12 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
 
   wind_direction_deg=None
   try:  
-    wind_direction_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(18) > td:nth-child(3) > div > strong")
+    wind_direction_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(18) > td:nth-child(3) > div > strong")
     wind_direction=wind_direction_ele[0].text
 
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
     if not wind_direction_deg:
-      logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
+      logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}" (wind_direction_deg: {wind_direction_deg})!')
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
@@ -123,7 +123,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
 
   rel_humidity=None
   try:
-    rel_humidity_ele = tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
+    humidity_ele=tree.cssselect("body > div.interno > div:nth-child(4) > table > tr > td:nth-child(2) > table:nth-child(5) > tr:nth-child(2) > td > table > tr:nth-child(4) > td:nth-child(3) > div > strong")
     humidity=humidity_ele[0].text.split("%")[0].strip()
     if humidity:
       rel_humidity=float(humidity)/100

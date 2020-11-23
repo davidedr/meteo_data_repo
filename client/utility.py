@@ -95,7 +95,11 @@ def log_xpath_elem(tree, path="//font"):
 #
 #
 #
-def convert_wind_direction_to_deg(wind_direction):
+def convert_wind_direction_to_deg(wind_direction, location_id=None, server_name=None):
+
+  if not wind_direction or wind_direction=="":
+    logging.error(f'{get_identification_string(location_id, server_name)}: wind_direction is empty (f{wind_direction})!')
+    return None
 
   wind_direction_deg=None
   wind_direction=wind_direction.upper()

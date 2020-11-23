@@ -94,7 +94,7 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
       rain_this_year_mm=float(rain_this_year)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_year: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_this_year_mm: "{e}"!')
 
   storm_rain_mmm=None
   try:
@@ -263,7 +263,7 @@ def scan_cellarda_sud_ws_alike(last_seen_timestamp, server, save=True, log=True)
 
   if not(timestamp_string and (barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or rain_this_month_mm or rain_this_year_mm or rel_humidity or temperature_cels or perceived_temperature_cels or dew_point_cels or wind_speed_knots or wind_gust_knots or wind_direction_deg or humidex_cels or wind_temperature_cels or current_weather or wet_bulb_temperature_cels or average_wind_speed_knots or storm_rain_mmm)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year: {rain_this_year},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, perceived_temperature_cels: {perceived_temperature_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}, humidex_cels: {humidex_cels}, wind_temperature_cels: {wind_temperature_cels}, current_weather: {current_weather}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, average_wind_speed_knots: {average_wind_speed_knots}, storm_rain_mmm: {storm_rain_mmm}.')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, perceived_temperature_cels: {perceived_temperature_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}, humidex_cels: {humidex_cels}, wind_temperature_cels: {wind_temperature_cels}, current_weather: {current_weather}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, average_wind_speed_knots: {average_wind_speed_knots}, storm_rain_mmm: {storm_rain_mmm}.')
     return last_seen_timestamp
 
   utility.save_v11(location_id, server_name, meteo_data_dict)
