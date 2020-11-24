@@ -53,8 +53,41 @@ exports.findById = (req, res) => {
         .then(data => { res.send(data) })
         .catch(err => {
             res.status(500).send({
-                message: err.message || `Some error occurred while retrieving Location id: $ { id }!`
+                message: err.message || `Some error occurred while retrieving Location id: ${ id }!`
             })
         })
 
+}
+
+exports.update = (req, res) => {
+    const id = req.params.id
+    if (!id) {
+        res.status(400).send({ message: "id cannot be empty!" })
+        return
+    }
+    const location = Locations.findByPk(id)
+    if (!location) {
+        console.log("Not found")
+        res.status(404).send(id)
+    } else {
+        console.log("Not found")
+
+        const location_data = {
+            name: req.body.name ? req.body.name : location.name,
+            latitude: req.body.latitude ? req.body.latitude : location.latitude,
+            longitude: req.body.longitude ? req.body.longitude : location.longitude,
+            address_complete: req.body.address_complete ? req.body.address_complete : location.address_complete,
+            street_1: req.body.street_1 ? req.body.street_1 : location.street_1,
+            street_2: req.body.street_2 ? req.body.street_2 : location.street_2,
+            zip: req.body.zip ? req.body.zip : location.zip,
+            province: req.body.province ? req.body.province : location.province,
+            country: req.body.country ? req.body.country : location.country,
+            note: req.body.note ? req.body.note : location.note,
+            height_asl_m: req.body.height_asl_m ? req.body.height_asl_m : location.height_asl_m
+        }
+
+        Locations.update(values = location_data, options = { where: { id: id } })
+            .then(data => { res.status(200).send("Update ok!") })
+            .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
+    }
 }

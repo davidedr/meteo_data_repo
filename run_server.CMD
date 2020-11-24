@@ -1,1 +1,2 @@
+cls
 node server.js

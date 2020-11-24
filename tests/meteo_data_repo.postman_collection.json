@@ -59,6 +59,67 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET location bi id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "html"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:8080/api/location/1",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"location",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH location",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"latitude\": 46.04333\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:8080/api/location/17",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"location",
+						"17"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
