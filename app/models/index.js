@@ -14,5 +14,6 @@ db.Sequelize = Sequelize
 db.sequelize = sequelize
 db.meteo_data = require("./meteo_data.model.js")(sequelize, Sequelize)
 db.locations = require("./location.model.js")(sequelize, Sequelize)
+db.ws_capabilities = require("./ws_capabilities.model.js")(sequelize, Sequelize)
 
 module.exports = db

@@ -1,0 +1,43 @@
+module.exports = (sequelize, Sequelize) => {
+    const Ws_capabilities = sequelize.define("ws_capabilities", {
+        id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+        location_id: { type: Sequelize.INTEGER, allowNull: false, references: { model: 'locations', key: 'id' }, onDelete: 'cascade' },
+        timestamp_ws: { type: Sequelize.DATE, allowNull: false, defaultValue: Sequelize.NOW },
+        wind_speed_knots: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        wind_direction_deg: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        barometric_pressure_ssl_hPa: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rain_today_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rain_rate_mmh: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        temperature_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rel_humidity: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        uv_index: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        heat_index_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        wind_gust_knots: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        dew_point_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        wind_chill_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        ground_temperature_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        solar_irradiance_wpsm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rel_leaf_wetness: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        soil_moisture_cb: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rain_this_month_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rain_this_year_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        evapotranspiration_today_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        evapotranspiration_this_month_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        evapotranspiration_this_year_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        perceived_temperature_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        humidex_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        wind_temperature_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        current_weather: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        wet_bulb_temperature_cels: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        absolute_humidity_gm3: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        saturated_vapor_pressure_hPa: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        windrun_km: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        barometric_pressure_wsl_hPa: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        average_wind_speed_knots: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        storm_rain_mmm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        rain_in_last_storm_event_mm: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+        cloud_height_m: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false }
+    })
+
+    return Ws_capabilities
+}
