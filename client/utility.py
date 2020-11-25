@@ -30,12 +30,17 @@ def add_server_location_if_doesnot_exist(server):
     location_response=requests.get(f'http://localhost:8080/api/location/{location_id}', headers=headers)
     location_json=json.loads(location_response.text)
     if location_json and location_json[0] and location_json[0]["id"]==location_id:
-        logging.info(f'{get_identification_string(location_id, server_name)}: Found in db')
-        return
+        logging.info(f'{get_identification_string(location_id, server_name)}: Found in db. Update...')
+        location_json=server["location"]
+        response=requests.patch(f'http://localhost:8080/api/location/{location_id}', headers=headers, json=location_json)
+        logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
+        return response
+
     logging.info(f'{get_identification_string(location_id, server_name)}: Not found in db. Adding...')
     location_json=server["location"]
     response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
     logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
+    return response
 
 #
 # Return an human-readable server identification string

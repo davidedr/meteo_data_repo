@@ -150,8 +150,8 @@ locations_json[16]={
 
 locations_json[17]={
     "name": 'Stazione meteo di Viale Fusinato, Feltre',
-    "latitude": 46.024,
-    "longitude": 11.912,
+    "latitude": 46.04333,
+    "longitude": 11.91222,
     "address_complete": "Viale Fusinato, 32032 Feltre (BL)",
     "street_1": "Viale Fusinato",
     "street_2": None,
@@ -160,7 +160,7 @@ locations_json[17]={
     "province": "BL",
     "country": "IT",
     "note": "Stazione meteo di Viale Fusinato, Feltre, http://my.meteonetwork.it/station/vnt432/stazione, Model: Davis Vantage pro 2 plus wireless",
-    "height_asl_m": 250
+    "height_asl_m": 320
 }
 
 locations_json[18]={
