@@ -65,3 +65,45 @@ exports.findAllByLocation = (req, res) => {
         .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Meteo_data records (location_id: ${location_id})!` }) })
 
 }
+
+exports.getMeta = (req, res) => {
+    data = {
+        timestamp_ws: "timestamp_ws",
+        wind_speed_knots: "wind_speed_knots",
+        wind_direction_deg: "wind_direction_deg",
+        barometric_pressure_ssl_hPa: "barometric_pressure_ssl_hPa",
+        rain_today_mm: "rain_today_mm",
+        rain_rate_mmh: "rain_rate_mmh",
+        temperature_cels: "temperature_cels",
+        rel_humidity: "rel_humidity",
+        uv_index: "uv_index",
+        heat_index_cels: "heat_index_cels",
+        wind_gust_knots: "wind_gust_knots",
+        dew_point_cels: "dew_point_cels",
+        wind_chill_cels: "wind_chill_cels",
+        ground_temperature_cels: "ground_temperature_cels",
+        solar_irradiance_wpsm: "solar_irradiance_wpsm",
+        rel_leaf_wetness: "rel_leaf_wetness",
+        soil_moisture_cb: "soil_moisture_cb",
+        rain_this_month_mm: "rain_this_month_mm",
+        rain_this_year_mm: "rain_this_year_mm",
+        evapotranspiration_today_mm: "evapotranspiration_today_mm",
+        evapotranspiration_this_month_mm: "evapotranspiration_this_month_mm",
+        evapotranspiration_this_year_mm: "evapotranspiration_this_year_mm",
+        perceived_temperature_cels: "perceived_temperature_cels",
+        humidex_cels: "humidex_cels",
+        wind_temperature_cels: "wind_temperature_cels",
+        current_weather: "current_weather",
+        wet_bulb_temperature_cels: "wet_bulb_temperature_cels",
+        absolute_humidity_gm3: "absolute_humidity_gm3",
+        saturated_vapor_pressure_hPa: "saturated_vapor_pressure_hPa",
+        windrun_km: "windrun_km",
+        barometric_pressure_wsl_hPa: "barometric_pressure_wsl_hPa",
+        average_wind_speed_knots: "req.body.average_wind_speed_kno",
+        storm_rain_mmm: "storm_rain_mmm",
+        rain_in_last_storm_event_mm: "rain_in_last_storm_event_mm",
+        cloud_height_m: "cloud_height_m"
+    }
+    res.status(200).send(data)
+
+}

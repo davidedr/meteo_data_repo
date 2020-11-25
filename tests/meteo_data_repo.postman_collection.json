@@ -24,6 +24,26 @@
 			"response": []
 		},
 		{
+			"name": "GET meta data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:8080/api/meteo_data/meta",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"meteo_data",
+						"meta"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET locations by name",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -61,7 +81,7 @@
 			"response": []
 		},
 		{
-			"name": "GET location bi id",
+			"name": "GET location by id",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
