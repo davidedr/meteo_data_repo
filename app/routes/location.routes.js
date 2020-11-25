@@ -6,5 +6,6 @@ module.exports = app => {
     router.get("/", location.findAll)
     router.get("/:id", location.findById)
     router.patch("/:id", location.update)
+
     app.use('/api/location', router);
 }

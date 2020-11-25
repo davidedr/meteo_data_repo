@@ -5,5 +5,6 @@ module.exports = app => {
     router.post("/", meteo_data.create)
     router.get("/", meteo_data.findAllByLocation)
     router.get("/meta", meteo_data.getMeta)
+
     app.use('/api/meteo_data', router);
 }
