@@ -17,5 +17,9 @@ module.exports = (sequelize, Sequelize) => {
         height_asl_m: { type: Sequelize.DECIMAL, allowNull: true, defaultValue: null, validate: { min: 0 } }
     })
 
+    Location.associate = function(models) {
+        Location.hasOne(models.ws_capabilities, { foreignKey: 'location_id', as: 'ws_capabilities', onDelete: 'CASCADE' });
+    }
+
     return Location
 }

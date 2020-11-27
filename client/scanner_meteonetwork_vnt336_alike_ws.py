@@ -143,14 +143,14 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   heat_index=None
   try:
     # Heat index is computed
-    heat_index_cels_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[7]/td[2]/text()')
-    heat_index_cels=heat_index_cels_ele[0].split("°")[0].strip()
-    if not heat_index_cels:
-      heat_index_cels=0
-    heat_index_cels=float(heat_index_cels)
+    heat_index_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[7]/td[2]/text()')
+    heat_index=heat_index_ele[0].split("°")[0].strip()
+    if not heat_index:
+      heat_index=0
+    heat_index_cels=float(heat_index)
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
 
   solar_irradiance_wpsm=None # Watts per square meter
   try:
@@ -175,15 +175,15 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
   meteo_data_dict["rain_today_mm"]=rain_today_mm
   meteo_data_dict["dew_point_cels"]=dew_point_cels
-  meteo_data_dict["heat_index"]=heat_index
+  meteo_data_dict["heat_index_cels"]=heat_index_cels
   meteo_data_dict["solar_irradiance_wpsm"]=solar_irradiance_wpsm
 
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (temperature_cels or rel_humidity or barometric_pressure_ssl_hPa or wind_speed_knots or wind_gust_knots or wind_direction_deg or rain_today_mm or dew_point_cels or heat_index or solar_irradiance_wpsm)):
+  if not(timestamp_string and (temperature_cels or rel_humidity or barometric_pressure_ssl_hPa or wind_speed_knots or wind_gust_knots or wind_direction_deg or rain_today_mm or dew_point_cels or heat_index_cels or solar_irradiance_wpsm)):
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},  temperature_cels: {temperature_cels}, wind_direction_deg: {wind_direction_deg}, rain_today_mm: {rain_today_mm}, dew_point_cels: {dew_point_cels}, heat_index: {heat_index}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
+    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},  temperature_cels: {temperature_cels}, wind_direction_deg: {wind_direction_deg}, rain_today_mm: {rain_today_mm}, dew_point_cels: {dew_point_cels}, heat_index_cels: {heat_index_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
     return last_seen_timestamp
     
   utility.save_v11(location_id, server_name, meteo_data_dict)
