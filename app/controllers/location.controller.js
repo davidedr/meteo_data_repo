@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
                 }
             }
         }
-    console.log(condition)
+    console.log(condition, { order: ['id'] })
     Locations.findAll(condition)
         .then(data => { res.send(data) })
         .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
@@ -69,9 +69,8 @@ exports.update = (req, res) => {
     if (!location) {
         console.log("Not found")
         res.status(404).send(id)
-    } else {
-        console.log("Not found")
 
+    } else {
         const location_data = {
             name: req.body.name ? req.body.name : location.name,
             latitude: req.body.latitude ? req.body.latitude : location.latitude,
@@ -88,6 +87,6 @@ exports.update = (req, res) => {
 
         Locations.update(values = location_data, options = { where: { id: id } })
             .then(data => { res.status(200).send("Update ok!") })
-            .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while retrieving Location records!` }) })
+            .catch(err => { res.status(500).send({ message: err.message || `Some error occurred while updating Location record: ${ id }!` }) })
     }
 }

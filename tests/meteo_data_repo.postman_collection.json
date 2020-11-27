@@ -24,6 +24,25 @@
 			"response": []
 		},
 		{
+			"name": "GET ws_capabilities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:8080/api/ws_capabilities",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"ws_capabilities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET meta data",
 			"request": {
 				"method": "GET",
@@ -107,6 +126,38 @@
 						"api",
 						"location",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ws_capabilities by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "html"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:8080/api/ws_capabilities/4",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"ws_capabilities",
+						"4"
 					]
 				}
 			},
