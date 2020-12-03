@@ -213,7 +213,7 @@ locations_json[21]={
     "name": 'Osservatorio Meteorologico di Festisei, Pedavena',
     "latitude": 46.042,
     "longitude": 11.869,
-    "address_complete": "Via Festisei, 32034 Pedavena (BL),
+    "address_complete": "Via Festisei, 32034 Pedavena (BL)",
     "street_1": "Via Festisei",
     "street_2": None,
     "zip": "32034",
@@ -249,7 +249,7 @@ ws_capabilities[20]={
     "evapotranspiration_this_month_mm": True,
     "evapotranspiration_this_year_mm": True,
     "perceived_temperature_cels": True,
-    "average_wind_speed_knots": True
+    "average_wind_speed_knots": True,
     "rain_in_last_storm_event_mm": True
 }
 
@@ -293,7 +293,7 @@ servers = [
   { "location_id": 17, "location": locations_json[17], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 }, # Wait for half an hour  
   { "location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100 },
   { "location_id": 19, "location": locations_json[19], "to_be_started": True, "name": "feltre_meteo", "url": "http://www.feltremeteo.it/weather/index.php", "scanner": scan_feltre_meteo_alike, "scan_time_interval": 55*5 },
-  { "location_id": 20, "location": locations_json[20], "to_be_started": True, "name": "stazione_amatoriale_mugnai", "url": "http://www.meteomugnai.it/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[20] }
+  { "location_id": 20, "location": locations_json[20], "to_be_started": True, "name": "stazione_amatoriale_mugnai", "url": "http://www.meteomugnai.it/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[20] },
   { "location_id": 21, "location": locations_json[21], "to_be_started": False, "name": "osservatorio_metereologico_festisei", "url": "http://festisei.meteolodi.net/cam1/meteo/", "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[21] }
 ]
 
