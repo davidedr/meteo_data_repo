@@ -24,23 +24,37 @@ def log_sample(location_id, server_name, meteo_data_dict):
 #
 #
 def add_server_location_if_doesnot_exist(server):
-    headers={'Content-Type': 'application/json; charset=utf-8'}
-    location_id=server['location_id']
-    server_name=server['name']
-    location_response=requests.get(f'http://localhost:8080/api/location/{location_id}', headers=headers)
-    location_json=json.loads(location_response.text)
-    if location_json and location_json[0] and location_json[0]["id"]==location_id:
-        logging.info(f'{get_identification_string(location_id, server_name)}: Found in db. Update...')
-        location_json=server["location"]
-        response=requests.patch(f'http://localhost:8080/api/location/{location_id}', headers=headers, json=location_json)
-        logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
-        return response
+  headers={'Content-Type': 'application/json; charset=utf-8'}
+  location_id=server['location_id']
+  server_name=server['name']
+  location_response=requests.get(f'http://localhost:8080/api/location/{location_id}', headers=headers)
+  location_json=json.loads(location_response.text)
+  if location_json and location_json[0] and location_json[0]["id"]==location_id:
+      logging.info(f'{get_identification_string(location_id, server_name)}: Found in db. Update...')
+      location_json=server["location"]
+      response=requests.patch(f'http://localhost:8080/api/location/{location_id}', headers=headers, json=location_json)
+      logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, PATCH location, response: {response}')
 
+  else:
     logging.info(f'{get_identification_string(location_id, server_name)}: Not found in db. Adding...')
     location_json=server["location"]
     response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
-    logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, response: {response}')
-    return response
+    logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, POST location, response: {response}')
+
+  return response
+  ws_capabilities=server.get("ws_capabilities")
+  if ws_capabilities is not None:
+    ws_capabilities_response=requests.get(f'http://localhost:8080/api/ws_capabilities/{location_id}', headers=headers)
+    ws_capabilities_json=json.loads(ws_capabilities_response.text)
+    if ws_capabilities_json and ws_capabilities_json[0] and ws_capabilities_json[0]["id"]==location_id:
+      ws_capabilities_json=server["ws_capabilities"]
+      response=requests.patch(f'http://localhost:8080/api/ws_capabilities/{location_id}', headers=headers, json=location_json)
+      logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, PATCH ws_capabilities, response: {response}')
+
+    else:
+      ws_capabilities_json=server["ws_capabilities"]
+      response=requests.post(f'http://localhost:8080/api/ws_capabilities/{location_id}', headers=headers, json=location_json)
+      logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, POST ws_capabilities, response: {response}')
 
 #
 # Return an human-readable server identification string

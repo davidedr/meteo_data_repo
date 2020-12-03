@@ -60,11 +60,16 @@ exports.findAll = (req, res) => {
 
 }
 
-exports.findAll = (req, res) => {
+exports.findById = (req, res) => {
     const id = req.param('id')
     condition = { where: { id: id } }
     Ws_capabilities.findAll(condition)
-        .then(data => { res.send(data) })
+        .then(data => {
+            if (data.length == 0)
+                res.status(404)
+            else
+                res.send(data)
+        })
         .catch(err => {
             res.status(500).send({
                 message: err.message || `Some error occurred while retrieving Ws_capability: ${ id }!`

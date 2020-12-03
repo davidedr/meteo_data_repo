@@ -7,11 +7,12 @@ from scanner_cellarda_sud_alike_ws import scan_cellarda_sud_ws_alike
 from scanner_cellarda_nord_alike_ws import scan_cellarda_nord_ws_alike
 from scanner_stazione_amatoriale_feltre_alike import scan_stazione_amatoriale_feltre_alike
 from scanner_feltre_meteo_alike import scan_feltre_meteo_alike
+from scanner_osservatorio_metereologico_festisei_alike import scan_osservatorio_metereologico_festisei_alike
 
 #
 #
 #
-locations_json=[None]*20
+locations_json=[None]*40
 
 locations_json[1]={
     "name": 'Hotel "Marco Polo", Caorle',
@@ -193,6 +194,91 @@ locations_json[19]={
     "height_asl_m": 240
 }
 
+locations_json[20]={
+    "name": 'Stazione meteo amatoriale di Mugnai',
+    "latitude": None,
+    "longitude": None,
+    "address_complete": None,
+    "street_1": None,
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo amatoriale di Feltre, http://www.meteomugnai.it/indexDesktop.php, Model: Ventus w835",
+    "height_asl_m": 250
+}
+
+locations_json[21]={
+    "name": 'Osservatorio Meteorologico di Festisei, Pedavena',
+    "latitude": 46.042,
+    "longitude": 11.869,
+    "address_complete": "Via Festisei, 32034 Pedavena (BL),
+    "street_1": "Via Festisei",
+    "street_2": None,
+    "zip": "32034",
+    "town": "Pedavena",
+    "province": "BL",
+    "country": "IT",
+    "note": "Osservatorio Meteorologico di Festisei, Pedavena, http://festisei.meteolodi.net/cam1/meteo/, Model: Davis Vantage Pro 2",
+    "height_asl_m": 465
+}
+
+ws_capabilities=[None]*40
+ws_capabilities[20]={
+    "location_id": 20,
+    "timestamp_ws": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "barometric_pressure_ssl_hPa": True,
+    "rain_today_mm": True,
+    "rain_rate_mmh": True,
+    "temperature_cels": True,
+    "rel_humidity": True,
+    "heat_index_cels": True,
+    "wind_gust_knots": True,
+    "dew_point_cels": True,
+    "wind_chill_cels": True,
+    "ground_temperature_cels": True,
+    "solar_irradiance_wpsm": True,
+    "rel_leaf_wetness": True,
+    "soil_moisture_cb": True,
+    "rain_this_month_mm": True,
+    "rain_this_year_mm": True,
+    "evapotranspiration_today_mm": True,
+    "evapotranspiration_this_month_mm": True,
+    "evapotranspiration_this_year_mm": True,
+    "perceived_temperature_cels": True,
+    "average_wind_speed_knots": True
+    "rain_in_last_storm_event_mm": True
+}
+
+ws_capabilities[21]={
+    "location_id": 20,
+    "timestamp_ws": True,
+    "temperature_cels": True,
+    "perceived_temperature_cels": True,
+    "humidex_cels": True,
+    "rel_humidity": True,
+    "absolute_humidity_gm3": True,
+    "saturated_vapor_pressure_hPa": True,
+    "barometric_pressure_ssl_hPa": True,
+    "barometric_pressure_wsl_hPa": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "wind_gust_knots": True,
+    "windrun_km": True,
+    "rain_rate_mmh": True,
+    "rain_today_mm": True,
+    "rain_this_month_mm": True,
+    "rain_this_year_mm": True,
+    "dew_point_cels": True,
+    "wind_chill_cels": True,
+    "wet_bulb_temperature_cels": True,
+    "uv_index": True,
+    "heat_index_cels": True
+}
+
 # "scan_time_interval" in seconds
 servers = [
   { "location_id":  1, "location": locations_json[ 1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike, "scan_time_interval": 55 }, # Wait for 50 secs
@@ -206,7 +292,9 @@ servers = [
   { "location_id": 16, "location": locations_json[16], "to_be_started": True, "name": "cellarda_nord_feltre", "url": "http://www.meteocelarda.altervista.org/index.htm", "scanner": scan_cellarda_nord_ws_alike, "scan_time_interval": 60*5 }, # Wait five minutes
   { "location_id": 17, "location": locations_json[17], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/", "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3 }, # Wait for half an hour  
   { "location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100 },
-  { "location_id": 19, "location": locations_json[19], "to_be_started": True, "name": "feltre_meteo", "url": "http://www.feltremeteo.it/weather/index.php", "scanner": scan_feltre_meteo_alike, "scan_time_interval": 55*5 } 
+  { "location_id": 19, "location": locations_json[19], "to_be_started": True, "name": "feltre_meteo", "url": "http://www.feltremeteo.it/weather/index.php", "scanner": scan_feltre_meteo_alike, "scan_time_interval": 55*5 },
+  { "location_id": 20, "location": locations_json[20], "to_be_started": True, "name": "stazione_amatoriale_mugnai", "url": "http://www.meteomugnai.it/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[20] }
+  { "location_id": 21, "location": locations_json[21], "to_be_started": False, "name": "osservatorio_metereologico_festisei", "url": "http://festisei.meteolodi.net/cam1/meteo/", "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[21] }
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT=50 # Sec

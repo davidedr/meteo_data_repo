@@ -29,7 +29,6 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
     const name = req.param('name')
-    console.log(name)
     condition = {}
     if (name)
         condition = {
