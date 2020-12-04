@@ -47,7 +47,7 @@ exports.create = (req, res) => {
         rain_in_last_storm_event_mm: req.body.rain_in_last_storm_event_mm,
         cloud_height_m: req.body.cloud_height_m,
         air_density_kgm3: req.body.air_density_kgm3,
-        equilibrium_moisture_content: req.body.equilibrium_moisture_content
+        rel_equilibrium_moisture_content: req.body.rel_equilibrium_moisture_content
     }
 
     Meteo_data.create(meteo_data)

@@ -45,7 +45,7 @@ exports.create = (req, res) => {
         rain_in_last_storm_event_mm: req.body.rain_in_last_storm_event_mm ? req.body.rain_in_last_storm_event_mm : ws_capabilities_data.rain_in_last_storm_event_mm,
         cloud_height_m: req.body.cloud_height_m ? req.body.cloud_height_m : ws_capabilities_data.cloud_height_m,
         air_density_kgm3: req.body.air_density_kgm3 ? req.body.air_density_kgm3 : ws_capabilities_data.air_density_kgm3,
-        equilibrium_moisture_content: req.body.equilibrium_moisture_content ? req.body.equilibrium_moisture_content : ws_capabilities_data.equilibrium_moisture_content
+        rel_equilibrium_moisture_content: req.body.rel_equilibrium_moisture_content ? req.body.rel_equilibrium_moisture_content : ws_capabilities_data.rel_equilibrium_moisture_content
     }
 
     Ws_capabilities.create(ws_capabilities)

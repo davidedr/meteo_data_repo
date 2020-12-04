@@ -38,7 +38,7 @@ module.exports = (sequelize, Sequelize) => {
         rain_in_last_storm_event_mm: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
         cloud_height_m: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
         air_density_kgm3: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
-        equilibrium_moisture_content: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } }
+        rel_equilibrium_moisture_content: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } }
     })
 
     return Meteo_data

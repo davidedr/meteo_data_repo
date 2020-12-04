@@ -38,7 +38,7 @@ module.exports = (sequelize, Sequelize) => {
         rain_in_last_storm_event_mm: { type: Sequelize.BOOLEAN, defaultValue: false },
         cloud_height_m: { type: Sequelize.BOOLEAN, defaultValue: false },
         air_density_kgm3: { type: Sequelize.BOOLEAN, defaultValue: false },
-        equilibrium_moisture_content: { type: Sequelize.BOOLEAN, defaultValue: false }
+        rel_equilibrium_moisture_content: { type: Sequelize.BOOLEAN, defaultValue: false }
     })
 
     return Ws_capabilities

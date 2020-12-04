@@ -264,6 +264,26 @@ def scan_osservatorio_metereologico_festisei_alike(last_seen_timestamp, server, 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception rain_in_last_storm_event_mm: "{e}"!')
 
+  air_density_kgm3=None
+  try:
+    air_density_ele=tree.xpath("/html/body/div/div/div[2]/table[1]/tr[23]/td[3]/div/strong")
+    air_density=air_density_ele[0].text.split(' ')[0].strip()
+    if air_density:
+      air_density_kgm3=float(air_density)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception air_density_kgm3: "{e}"!')
+
+  rel_equilibrium_moisture_content=None
+  try:
+    equilibrium_moisture_content_ele=tree.xpath("/html/body/div/div/div[2]/table[1]/tr[23]/td[3]/div/strong")
+    equilibrium_moisture_content=equilibrium_moisture_content_ele[0].text.split(' ')[0].strip()
+    if equilibrium_moisture_content:
+      rel_equilibrium_moisture_content=float(equilibrium_moisture_content)/100
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception rel_equilibrium_moisture_content: "{e}"!')
+
   meteo_data_dict={}
   meteo_data_dict["timestamp_string"]=timestamp_string
   meteo_data_dict["timestamp_string_date"]=timestamp_string_date
