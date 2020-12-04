@@ -228,6 +228,32 @@ ws_capabilities=[None]*40
 ws_capabilities[20]={
     "location_id": 20,
     "timestamp_ws": True,
+    "temperature_cels": True,
+    "perceived_temperature_cels": True,
+    "humidex_cels": True,
+    "rel_humidity": True,
+    "absolute_humidity_gm3": True,
+    "saturated_vapor_pressure_hPa": True,
+    "barometric_pressure_ssl_hPa": True,
+    "barometric_pressure_wsl_hPa": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "wind_gust_knots": True,
+    "windrun_km": True,
+    "rain_rate_mmh": True,
+    "rain_today_mm": True,
+    "rain_this_month_mm": True,
+    "rain_this_year_mm": True,
+    "dew_point_cels": True,
+    "wind_chill_cels": True,
+    "wet_bulb_temperature_cels": True,
+    "uv_index": True,
+    "heat_index_cels": True
+}
+
+ws_capabilities[21]={
+    "location_id": 20,
+    "timestamp_ws": True,
     "wind_speed_knots": True,
     "wind_direction_deg": True,
     "barometric_pressure_ssl_hPa": True,
@@ -253,32 +279,6 @@ ws_capabilities[20]={
     "rain_in_last_storm_event_mm": True
 }
 
-ws_capabilities[21]={
-    "location_id": 20,
-    "timestamp_ws": True,
-    "temperature_cels": True,
-    "perceived_temperature_cels": True,
-    "humidex_cels": True,
-    "rel_humidity": True,
-    "absolute_humidity_gm3": True,
-    "saturated_vapor_pressure_hPa": True,
-    "barometric_pressure_ssl_hPa": True,
-    "barometric_pressure_wsl_hPa": True,
-    "wind_speed_knots": True,
-    "wind_direction_deg": True,
-    "wind_gust_knots": True,
-    "windrun_km": True,
-    "rain_rate_mmh": True,
-    "rain_today_mm": True,
-    "rain_this_month_mm": True,
-    "rain_this_year_mm": True,
-    "dew_point_cels": True,
-    "wind_chill_cels": True,
-    "wet_bulb_temperature_cels": True,
-    "uv_index": True,
-    "heat_index_cels": True
-}
-
 # "scan_time_interval" in seconds
 servers = [
   { "location_id":  1, "location": locations_json[ 1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php", "scanner": scan_hotelmarcopolo_caorle_alike, "scan_time_interval": 55 }, # Wait for 50 secs
@@ -294,7 +294,7 @@ servers = [
   { "location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100 },
   { "location_id": 19, "location": locations_json[19], "to_be_started": True, "name": "feltre_meteo", "url": "http://www.feltremeteo.it/weather/index.php", "scanner": scan_feltre_meteo_alike, "scan_time_interval": 55*5 },
   { "location_id": 20, "location": locations_json[20], "to_be_started": True, "name": "stazione_amatoriale_mugnai", "url": "http://www.meteomugnai.it/indexDesktop.php", "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[20] },
-  { "location_id": 21, "location": locations_json[21], "to_be_started": False, "name": "osservatorio_metereologico_festisei", "url": "http://festisei.meteolodi.net/cam1/meteo/", "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[21] }
+  { "location_id": 21, "location": locations_json[21], "to_be_started": True, "name": "osservatorio_metereologico_festisei", "url": "http://festisei.meteolodi.net/cam1/meteo/", "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[21] } # Updated each 10 mins
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT=50 # Sec
