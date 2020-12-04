@@ -5,6 +5,7 @@ module.exports = app => {
     router.post("/", ws_capabilities.create)
     router.get("/", ws_capabilities.findAll)
     router.get("/:id", ws_capabilities.findById)
+    router.get("/location/:location_id", ws_capabilities.findByLocationId)
     router.patch("/:id", ws_capabilities.update)
 
     app.use('/api/ws_capabilities', router);

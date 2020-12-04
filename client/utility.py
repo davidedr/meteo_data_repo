@@ -26,6 +26,7 @@ def log_sample(location_id, server_name, meteo_data_dict):
 def add_server_location_if_doesnot_exist(server):
   headers={'Content-Type': 'application/json; charset=utf-8'}
   location_id=server['location_id']
+
   server_name=server['name']
   location_response=requests.get(f'http://localhost:8080/api/location/{location_id}', headers=headers)
   location_json=json.loads(location_response.text)
@@ -41,19 +42,20 @@ def add_server_location_if_doesnot_exist(server):
     response=requests.post('http://localhost:8080/api/location', headers=headers, json=location_json)
     logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, POST location, response: {response}')
 
-  # ws_capabilities=server.get("ws_capabilities")
-  # if ws_capabilities is not None:
-  #   ws_capabilities_response=requests.get(f'http://localhost:8080/api/ws_capabilities/{location_id}', headers=headers)
-  #   ws_capabilities_json=json.loads(ws_capabilities_response.text)
-  #   if ws_capabilities_json and ws_capabilities_json[0] and ws_capabilities_json[0]["id"]==location_id:
-  #     ws_capabilities_json=server["ws_capabilities"]
-  #     response=requests.patch(f'http://localhost:8080/api/ws_capabilities/{location_id}', headers=headers, json=location_json)
-  #     logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, PATCH ws_capabilities, response: {response}')
-
-  #   else:
-  #     ws_capabilities_json=server["ws_capabilities"]
-  #     response=requests.post(f'http://localhost:8080/api/ws_capabilities/{location_id}', headers=headers, json=location_json)
-  #     logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, POST ws_capabilities, response: {response}')
+  ws_capabilities=server.get("ws_capabilities")
+  if ws_capabilities is not None:
+    ws_capabilities_response=requests.get(f'http://localhost:8080/api/ws_capabilities/location/{location_id}', headers=headers)
+    if ws_capabilities_response.status_code==404:
+      ws_capabilities_json=server["ws_capabilities"]
+      response=requests.post(f'http://localhost:8080/api/ws_capabilities', headers=headers, json=ws_capabilities_json)
+      logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, POST ws_capabilities, response: {response}')
+    else:
+      ws_capabilities_json=json.loads(ws_capabilities_response.text)
+      if ws_capabilities_json and ws_capabilities_json[0] and ws_capabilities_json[0]["location_id"]==location_id:
+        id=ws_capabilities_json[0]["id"]
+        ws_capabilities_json=server["ws_capabilities"]
+        response=requests.patch(f'http://localhost:8080/api/ws_capabilities/{id}', headers=headers, json=ws_capabilities_json)
+        logging.info(f'Location id: {server["location_id"]}, name: {server["name"]}, PATCH ws_capabilities, response: {response}')
 
   return response
   
@@ -171,7 +173,6 @@ def get_tree(weather_station_url, location_id, server_name=None):
   headers = {'User-Agent': user_agent}
 
   try:
-
     proxy=proxy_pool.get_proxy(location_id, server_name)
     proxy=None
     if proxy is None:

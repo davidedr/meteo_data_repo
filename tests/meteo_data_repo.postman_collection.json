@@ -132,6 +132,38 @@
 			"response": []
 		},
 		{
+			"name": "GET location by id Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "html"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:8080/api/location/1",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"location",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET ws_capabilities by id",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -157,6 +189,39 @@
 					"path": [
 						"api",
 						"ws_capabilities",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ws_capabilities by location id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "html"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}:8080/api/ws_capabilities/location/4",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"ws_capabilities",
+						"location",
 						"4"
 					]
 				}

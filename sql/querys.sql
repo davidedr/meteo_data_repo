@@ -5,3 +5,6 @@ UPDATE locations SET height_asl_m=330 WHERE id=12;
 UPDATE locations SET height_asl_m=267 WHERE id=11;
 SELECT * FROM locations;
 
+
+ALTER TABLE ws_capabilities
+RENAME COLUMN equilibrium_moisture_content TO rel_equilibrium_moisture_content;
