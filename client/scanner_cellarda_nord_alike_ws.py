@@ -241,7 +241,7 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
     logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh }, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm},  rel_humidity: {rel_humidity}, temperature_cels: {temperature_cels}, perceived_temperature_cels: {perceived_temperature_cels}, dew_point_cels: {dew_point_cels}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots}, wind_direction_deg: {wind_direction_deg}, humidex_cels: {humidex_cels}, wind_temperature_cels: {wind_temperature_cels}, current_weather: {current_weather}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, average_wind_speed_knots: {average_wind_speed_knots}, storm_rain_mmm: {storm_rain_mmm}.')
     return last_seen_timestamp
 
-  utility.save_v11(location_id, server_name, meteo_data_dict)
+  utility.save(location_id, server_name, meteo_data_dict)
   return timestamp_string
 
 if __name__=="__main__":
