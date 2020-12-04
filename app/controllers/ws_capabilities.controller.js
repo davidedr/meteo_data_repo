@@ -43,8 +43,9 @@ exports.create = (req, res) => {
         average_wind_speed_knots: req.body.average_wind_speed_knots ? req.body.average_wind_speed_knots : ws_capabilities_data.average_wind_speed_knots,
         storm_rain_mmm: req.body.storm_rain_mmm ? req.body.storm_rain_mmm : ws_capabilities_data.storm_rain_mmm,
         rain_in_last_storm_event_mm: req.body.rain_in_last_storm_event_mm ? req.body.rain_in_last_storm_event_mm : ws_capabilities_data.rain_in_last_storm_event_mm,
-        rain_in_last_storm_event_mm: req.body.cloud_height_m ? req.body.cloud_height_m : ws_capabilities_data.cloud_height_m
-
+        cloud_height_m: req.body.cloud_height_m ? req.body.cloud_height_m : ws_capabilities_data.cloud_height_m,
+        air_density_kgm3: req.body.air_density_kgm3 ? req.body.air_density_kgm3 : ws_capabilities_data.air_density_kgm3,
+        equilibrium_moisture_content: req.body.equilibrium_moisture_content ? req.body.equilibrium_moisture_content : ws_capabilities_data.equilibrium_moisture_content
     }
 
     Ws_capabilities.create(ws_capabilities)

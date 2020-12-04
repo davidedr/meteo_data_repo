@@ -45,8 +45,9 @@ exports.create = (req, res) => {
         average_wind_speed_knots: req.body.average_wind_speed_knots,
         storm_rain_mmm: req.body.storm_rain_mmm,
         rain_in_last_storm_event_mm: req.body.rain_in_last_storm_event_mm,
-        cloud_height_m: req.body.cloud_height_m
-
+        cloud_height_m: req.body.cloud_height_m,
+        air_density_kgm3: req.body.air_density_kgm3,
+        equilibrium_moisture_content: req.body.equilibrium_moisture_content
     }
 
     Meteo_data.create(meteo_data)
@@ -102,7 +103,9 @@ exports.getMeta = (req, res) => {
         average_wind_speed_knots: "req.body.average_wind_speed_kno",
         storm_rain_mmm: "storm_rain_mmm",
         rain_in_last_storm_event_mm: "rain_in_last_storm_event_mm",
-        cloud_height_m: "cloud_height_m"
+        cloud_height_m: "cloud_height_m",
+        air_density_kgm3: "air_density_kgm3",
+        equilibrium_moisture_content: "equilibrium_moisture_content"
     }
     res.status(200).send(data)
 
