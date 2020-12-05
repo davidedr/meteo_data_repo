@@ -8,6 +8,7 @@ from scanner_cellarda_nord_alike_ws import scan_cellarda_nord_ws_alike
 from scanner_stazione_amatoriale_feltre_alike import scan_stazione_amatoriale_feltre_alike
 from scanner_feltre_meteo_alike import scan_feltre_meteo_alike
 from scanner_osservatorio_metereologico_festisei_alike import scan_osservatorio_metereologico_festisei_alike
+from scanner_osservatorio_metereologico_monte_avena_alike import scan_osservatorio_metereologico_monte_avena_alike
 
 #
 #
@@ -222,6 +223,21 @@ locations_json[21] = {
     "country": "IT",
     "note": "Osservatorio Meteorologico di Festisei, Pedavena, http://festisei.meteolodi.net/cam1/meteo/, Model: Davis Vantage Pro 2",
     "height_asl_m": 465
+}
+
+locations_json[22] = {
+    "name": 'Osservatorio Meteorologico Monte Avena, Pedavena',
+    "latitude": 46.0325,
+    "longitude": 11.8269,
+    "address_complete": "Malga Campet, Località Campet, 32034 Pedavena BL",
+    "street_1": "Malga Campet, Località Campet",
+    "street_2": None,
+    "zip": "32034",
+    "town": "Pedavena",
+    "province": "BL",
+    "country": "IT",
+    "note": "Osservatorio Meteorologico Monte Avena, Pedavena, http://festisei.meteolodi.net/cam1/meteo/, Model: La Crosse Technology WS-2300",
+    "height_asl_m": 1420
 }
 
 ws_capabilities = [None]*40
@@ -511,6 +527,23 @@ ws_capabilities[21] = {
     "rel_equilibrium_moisture_content": True
 }
 
+ws_capabilities[22] = {
+    "location_id": 22,
+    "timestamp_ws": True,
+    "temperature_cels": True,
+    "dew_point_cels": True,
+    "perceived_temperature_cels": True,
+    "wet_bulb_temperature_cels": True,
+    "rain_rate_mmh": True,
+    "rel_humidity": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "wind_temperature_cels": True,
+    "barometric_pressure_ssl_hPa": True,
+    "rain_today_mm": True,
+    "average_wind_speed_knots": True
+}
+
 # "scan_time_interval" in seconds
 servers = [
     {"location_id":  1, "location": locations_json[1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php",
@@ -554,7 +587,12 @@ servers = [
      "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[20]},
 
     {"location_id": 21, "location": locations_json[21], "to_be_started": True, "name": "osservatorio_metereologico_festisei", "url": "http://festisei.meteolodi.net/cam1/meteo/",
-     "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[21]}  # Updated each 10 mins
+     "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[21]},  # Updated every 10 mins
+
+    {"location_id": 22, "location": locations_json[22], "to_be_started": True, "name": "osservatorio_metereologico_monte_avena",
+     "url": {"1": "http://www.valbellunameteo.it/monteavena/tabella.php", "2": "http://www.valbellunameteo.it/monteavena/9meteo_vento.php"},
+     "scanner": scan_osservatorio_metereologico_monte_avena_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[22]}  # Updated every 10 mins
+
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT = 50  # Sec

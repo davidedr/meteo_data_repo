@@ -54,7 +54,7 @@ def scan_osservatorio_metereologico_festisei_alike(last_seen_timestamp, server, 
 
   wind_direction_deg=None
   try:
-    wind_direction_ele=tree.xpath('/html/body/div/div/div[2]/table[1]/tr[13]/td[3]/div/strong ')
+    wind_direction_ele=tree.xpath('/html/body/div/div/div[2]/table[1]/tr[13]/td[3]/div/strong')
     wind_direction=wind_direction_ele[0].text.strip()
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
     if not wind_direction_deg:
