@@ -240,6 +240,21 @@ locations_json[22] = {
     "height_asl_m": 1420
 }
 
+locations_json[23] = {
+    "name": 'Stazione meteo di Fonzaso',
+    "latitude": 46.013,
+    "longitude": 11.813,
+    "address_complete": "Via Guglielmo Marconi, 32030 Fonzaso BL",
+    "street_1": "Via Guglielmo Marconi",
+    "street_2": None,
+    "zip": "32030",
+    "town": "Fonzaso",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo di Fonzaso, http://my.meteonetwork.it/station/vnt245/, Model: Davias Vantage PRO 2",
+    "height_asl_m": 320
+}
+
 ws_capabilities = [None]*40
 
 ws_capabilities[1] = {
@@ -544,6 +559,9 @@ ws_capabilities[22] = {
     "average_wind_speed_knots": True
 }
 
+ws_capabilities[23] = ws_capabilities[11]
+ws_capabilities[23]["location_id"]=23
+
 # "scan_time_interval" in seconds
 servers = [
     {"location_id":  1, "location": locations_json[1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php",
@@ -591,7 +609,11 @@ servers = [
 
     {"location_id": 22, "location": locations_json[22], "to_be_started": True, "name": "osservatorio_metereologico_monte_avena",
      "url": {"1": "http://www.valbellunameteo.it/monteavena/tabella.php", "2": "http://www.valbellunameteo.it/monteavena/9meteo_vento.php"},
-     "scanner": scan_osservatorio_metereologico_monte_avena_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[22]}  # Updated every 10 mins
+     "scanner": scan_osservatorio_metereologico_monte_avena_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[22]},  # Updated every 10 mins
+
+    {"location_id": 23, "location": locations_json[23], "to_be_started": True, "name": "stazione_meteo_fonzaso",
+     "url": "http://my.meteonetwork.it/station/vnt245/",
+     "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 30*60, "ws_capabilities": ws_capabilities[23]}  # Updated every 30 mins
 
 ]
 

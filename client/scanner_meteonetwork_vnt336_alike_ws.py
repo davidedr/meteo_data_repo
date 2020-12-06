@@ -140,14 +140,13 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting dew_point_cels: "{e}"!')
 
-  heat_index=None
+  heat_index_cels=None
   try:
     # Heat index is computed
     heat_index_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[7]/td[2]/text()')
     heat_index=heat_index_ele[0].split("°")[0].strip()
-    if not heat_index:
-      heat_index=0
-    heat_index_cels=float(heat_index)
+    if heat_index:
+      heat_index_cels=float(heat_index)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting heat_index_cels: "{e}"!')
@@ -190,4 +189,4 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   return timestamp_string
 
 if __name__=="__main__":
-  utility.test_starter(11) # Location id
+  utility.test_starter(23) # Location id
