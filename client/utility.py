@@ -13,6 +13,29 @@ import proxy_pool
 #
 #
 #
+def check_minimum_data(location_id, server_name, meteo_data_dict):
+  timestamp_string=meteo_data_dict.get("timestamp_string")
+  if not timestamp_string:
+    return False
+
+  found=False
+  for col in  definitions.CSV_FILE_HEADER:
+    if col=="timestamp_string" or col=="timestamp_string_date" or col=="timestamp_string_time":
+      continue
+    data=meteo_data_dict.get(col)
+    if data is not None:
+      found=True
+      break
+ 
+  if found:
+    return True
+
+  logging.info(f'{get_identification_string(location_id, server_name)}, No scraped data! Skip saving.')
+  return False
+
+#
+#
+#
 def log_sample(location_id, server_name, meteo_data_dict):
   msg=f'{get_identification_string(location_id, server_name)},'
   for k, v in meteo_data_dict.items():
@@ -256,16 +279,7 @@ def _save_v12(location_id, server_name, meteo_data_dict, save=True):
   #
 
   # Header
-  csv_file_header=[
-    "timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed_knots", "wind_direction_deg",
-    "barometric_pressure_ssl_hPa", "rain_today_mm", "rain_rate_mmh", "temperature_cels", "rel_humidity", "uv_index",
-    "heat_index_cels", "wind_gust_knots", "dew_point_cels", "wind_chill_cels", "ground_temperature_cels", "solar_irradiance_wpsm",
-    "rel_leaf_wetness", "soil_moisture_cb", "rain_this_month_mm", "rain_this_year_mm", "evapotranspiration_today_mm",
-    "evapotranspiration_this_month_mm", "evapotranspiration_this_year_mm", "perceived_temperature_cels", "humidex_cels",
-    "wind_temperature_cels", "current_weather", "wet_bulb_temperature_cels", "absolute_humidity_gm3", "saturated_vapor_pressure_hPa",
-    "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mmm, rain_in_last_storm_event_mm", "cloud_height_m",
-    "air_density_kgm3", "rel_equilibrium_moisture_content"
-  ]
+  csv_file_header=definitions.CSV_FILE_HEADER
 
   # csv_file_header_temp=[]
   # for key in meteo_data_dict:

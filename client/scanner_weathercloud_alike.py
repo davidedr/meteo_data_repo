@@ -196,9 +196,7 @@ def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (temperature_cels or dew_point_cels or perceived_temperature_cels or wet_bulb_temperature_cels or rain_rate_mmh or rel_humidity or wind_speed_knots or wind_direction_deg or wind_temperature_cels or barometric_pressure_ssl_hPa or rain_today_mm or average_wind_speed_knots)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, dew_point_cels: {dew_point_cels}, perceived_temperature_cels: {perceived_temperature_cels}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, rain_rate_mmh: {rain_rate_mmh}, rel_humidity: {rel_humidity}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, wind_temperature_cels: {wind_temperature_cels}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, average_wind_speed_knots: {average_wind_speed_knots}.')
+  if not utility.check_minimum_data(location_id, server_name, meteo_data_dict):
     return last_seen_timestamp
 
   utility.save(location_id, server_name, meteo_data_dict)

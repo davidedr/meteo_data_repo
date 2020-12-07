@@ -312,9 +312,7 @@ def scan_stazione_meteomeano_alike(last_seen_timestamp, server, save=True, log=T
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (current_weather or temperature_cels or perceived_temperature_cels or dew_point_cels or heat_index_cels or humidex_cels or wind_chill_cels or wet_bulb_temperature_cels or rel_humidity or absolute_humidity_gm3 or saturated_vapor_pressure_hPa or rain_rate_mmh or rain_today_mm or wind_gust_knots or wind_direction_deg or windrun_km or barometric_pressure_ssl_hPa  or barometric_pressure_wsl_hPa or solar_irradiance_wpsm or uv_index)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, humidex_cels: {humidex_cels}, wind_chill_cels: {wind_chill_cels}, wet_bulb_temperature_cels: {wet_bulb_temperature_cels}, rel_humidity: {rel_humidity}, absolute_humidity_gm3: {absolute_humidity_gm3}, saturated_vapor_pressure_hPa: {saturated_vapor_pressure_hPa}, rain_rate_mmh: {rain_rate_mmh}, rain_today_mm: {rain_today_mm}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, windrun_km: {windrun_km}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, barometric_pressure_wsl_hPa: {barometric_pressure_wsl_hPa}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, uv_index: {uv_index}.')
+  if not utility.check_minimum_data(location_id, server_name, meteo_data_dict):
     return last_seen_timestamp
 
   utility.save(location_id, server_name, meteo_data_dict)
