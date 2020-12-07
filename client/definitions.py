@@ -9,6 +9,8 @@ from scanner_stazione_amatoriale_feltre_alike import scan_stazione_amatoriale_fe
 from scanner_feltre_meteo_alike import scan_feltre_meteo_alike
 from scanner_osservatorio_metereologico_festisei_alike import scan_osservatorio_metereologico_festisei_alike
 from scanner_osservatorio_metereologico_monte_avena_alike import scan_osservatorio_metereologico_monte_avena_alike
+from scanner_stazione_meteomeano_alike import scan_stazione_meteomeano_alike
+from scanner_weathercloud_alike import scan_weathercloud_alike
 
 #
 #
@@ -251,8 +253,53 @@ locations_json[23] = {
     "town": "Fonzaso",
     "province": "BL",
     "country": "IT",
-    "note": "Stazione meteo di Fonzaso, http://my.meteonetwork.it/station/vnt245/, Model: Davias Vantage PRO 2",
+    "note": "Stazione meteo di Fonzaso, http://my.meteonetwork.it/station/vnt245/, Model: Davis Vantage PRO 2",
     "height_asl_m": 320
+}
+
+locations_json[24] = {
+    "name": 'Stazione meteo di Meano, Santa Giustina',
+    "latitude": 46.106,
+    "longitude": 12.06,
+    "address_complete": "Meano di Santa Giustina",
+    "street_1": "",
+    "street_2": None,
+    "zip": "32035",
+    "town": "Santa Giustina",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo di Fonzaso, https://www.meteomeano.it/template/indexDesktop.php, Model: Davis Vantage Pro2 Plus",
+    "height_asl_m": 364
+}
+
+locations_json[25] = {
+    "name": 'Stazione meteo di Arapè, Alano di Piave',
+    "latitude": 45.904,
+    "longitude": 11.894,
+    "address_complete": "Via Monte Grappa, Arapè, Alano di Piave",
+    "street_1": "Via Monte Grappa",
+    "street_2": "Arapè, Alano di Piave",
+    "zip": "32031",
+    "town": "Alano di Piave",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo di Arapè, Alano di Piave, http://my.meteonetwork.it/station/vnt434/, Model: Davis vantage pro 2 wireless",
+    "height_asl_m": 355
+}
+
+locations_json[26] = {
+    "name": 'Stazione meteo Alvise, Feltre',
+    "latitude": 46.02389,
+    "longitude": 11.93861,
+    "address_complete": "Via Tevere, 32032 Feltre BL",
+    "street_1": "Via Tevere",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo Alvise, Feltre, https://app.weathercloud.net/map#4346019242",
+    "height_asl_m": 336
 }
 
 ws_capabilities = [None]*40
@@ -562,6 +609,62 @@ ws_capabilities[22] = {
 ws_capabilities[23] = ws_capabilities[11]
 ws_capabilities[23]["location_id"]=23
 
+ws_capabilities[24] = {
+    "location_id": 24,
+    "timestamp_ws": True,
+    "current_weather": True,
+    "temperature_cels": True,
+    "perceived_temperature_cels": True,
+    "dew_point_cels": True,
+    "heat_index_cels": True,
+    "humidex_cels": True,
+    "wind_chill_cels": True,
+    "wet_bulb_temperature_cels": True,
+    "rel_humidity": True,
+    "absolute_humidity_gm3": True,
+    "saturated_vapor_pressure_hPa": True,
+    "rain_rate_mmh": True,
+    "rain_today_mm": True,
+    "wind_speed_knots": True,
+    "wind_gust_knots": True,
+    "wind_direction_deg": True,
+    "windrun_km": True,
+    "barometric_pressure_ssl_hPa": True,
+    "barometric_pressure_wsl_hPa": True,
+    "solar_irradiance_wpsm": True,
+    "uv_index": True
+}
+
+ws_capabilities[25] = ws_capabilities[11]
+ws_capabilities[25]["location_id"]=25
+
+ws_capabilities[26] = {
+    "location_id": 26,
+    "timestamp_ws": True,
+    "temperature_cels": True,
+    "perceived_temperature_cels": True,
+    "current_weather": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "rel_humidity": True,
+    "barometric_pressure_ssl_hPa": True,
+
+    "rain_rate_mmh": True,
+    "uv_index": True,
+
+    "dew_point_cels": True,
+    
+    "wet_bulb_temperature_cels": True,
+    
+    
+    
+    
+    "wind_temperature_cels": True,
+    
+    "rain_today_mm": True,
+    "average_wind_speed_knots": True
+}
+
 # "scan_time_interval" in seconds
 servers = [
     {"location_id":  1, "location": locations_json[1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php",
@@ -595,16 +698,19 @@ servers = [
     {"location_id": 17, "location": locations_json[17], "to_be_started": True, "name": "meteonetwork_vialefusinato_feltre", "url": "http://my.meteonetwork.it/station/vnt432/",
      "scanner": scan_meteonetwork_vnt432_alike, "scan_time_interval": 60*3, "ws_capabilities": ws_capabilities[17]},  # Wait for half an hour
 
-    {"location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre", "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php",
+    {"location_id": 18, "location": locations_json[18], "to_be_started": True, "name": "stazione_amatoriale_feltre",
+    "url": "http://stazioni2.soluzionimeteo.it/feltre/indexDesktop.php",
      "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[18]},
 
     {"location_id": 19, "location": locations_json[19], "to_be_started": True, "name": "feltre_meteo", "url": "http://www.feltremeteo.it/weather/index.php",
      "scanner": scan_feltre_meteo_alike, "scan_time_interval": 55*5, "ws_capabilities": ws_capabilities[19]},
 
-    {"location_id": 20, "location": locations_json[20], "to_be_started": True, "name": "stazione_amatoriale_mugnai", "url": "http://www.meteomugnai.it/indexDesktop.php",
+    {"location_id": 20, "location": locations_json[20], "to_be_started": True, "name": "stazione_amatoriale_mugnai",
+    "url": "http://www.meteomugnai.it/indexDesktop.php",
      "scanner": scan_stazione_amatoriale_feltre_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[20]},
 
-    {"location_id": 21, "location": locations_json[21], "to_be_started": True, "name": "osservatorio_metereologico_festisei", "url": "http://festisei.meteolodi.net/cam1/meteo/",
+    {"location_id": 21, "location": locations_json[21], "to_be_started": True, "name": "osservatorio_metereologico_festisei",
+    "url": "http://festisei.meteolodi.net/cam1/meteo/",
      "scanner": scan_osservatorio_metereologico_festisei_alike, "scan_time_interval": 9*60, "ws_capabilities": ws_capabilities[21]},  # Updated every 10 mins
 
     {"location_id": 22, "location": locations_json[22], "to_be_started": True, "name": "osservatorio_metereologico_monte_avena",
@@ -613,7 +719,19 @@ servers = [
 
     {"location_id": 23, "location": locations_json[23], "to_be_started": True, "name": "stazione_meteo_fonzaso",
      "url": "http://my.meteonetwork.it/station/vnt245/",
-     "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 30*60, "ws_capabilities": ws_capabilities[23]}  # Updated every 30 mins
+     "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 30*60, "ws_capabilities": ws_capabilities[23]},  # Updated every 30 mins
+
+    {"location_id": 24, "location": locations_json[24], "to_be_started": True, "name": "stazione_meteo_meano",
+     "url": "https://www.meteomeano.it/template/indexDesktop.php",
+     "scanner": scan_stazione_meteomeano_alike, "scan_time_interval": 100, "ws_capabilities": ws_capabilities[24]},  # Updated every 30 mins
+
+    {"location_id": 25, "location": locations_json[25], "to_be_started": True, "name": "stazione_meteo_arapè",
+     "url": "http://my.meteonetwork.it/station/vnt434/",
+     "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 30*60, "ws_capabilities": ws_capabilities[25]},  # Updated every 30 mins
+
+    {"location_id": 26, "location": locations_json[26], "to_be_started": False, "name": "stazione_meteo_alvise",
+     "url": { "1": "https://app.weathercloud.net/map#4346019242", "2": "https://app.weathercloud.net/d4346019242#current" },
+     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[26]}  # Updated every 10 mins
 
 ]
 
