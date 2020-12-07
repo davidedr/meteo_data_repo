@@ -164,9 +164,7 @@ def scan_meteovenezia_alike(last_seen_timestamp, server, save=True, log=True):
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or perceived_temperature_cels or wind_gust_knots or dew_point_cels)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, perceived_temperature_cels: {perceived_temperature_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}')
+  if not utility.check_minimum_data(location_id, server_name, meteo_data_dict):
     return last_seen_timestamp
 
   utility.save(location_id, server_name, meteo_data_dict)

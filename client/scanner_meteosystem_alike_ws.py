@@ -291,12 +291,9 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  # UV-index is not supported by this wather station
-  if not(timestamp_string and (wind_speed_knots or wind_direction_deg or barometric_pressure_ssl_hPa or rain_today_mm or rain_rate_mmh or temperature_cels or rel_humidity or heat_index_cels or wind_gust_knots or dew_point_cels or wind_chill_cels or ground_temperature_cels or solar_irradiance_wpsm or rel_leaf_wetness or soil_moisture_cb or rain_this_month_mm or rain_this_year_mm or evapotranspiration_today_mm or evapotranspiration_this_month_mm or evapotranspiration_this_year_mm or rain_in_last_storm_event_mm or average_wind_speed_knots)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, wind_speed_knots: {wind_speed_knots}, wind_direction_deg: {wind_direction_deg}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, rain_today_mm: {rain_today_mm}, rain_rate_mmh: {rain_rate_mmh},  temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, heat_index_cels: {heat_index_cels}, wind_gust_knots: {wind_gust_knots}, dew_point_cels: {dew_point_cels}, wind_chill_cels: {wind_chill_cels}, ground_temperature_cels: {ground_temperature_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}, rel_leaf_wetness: {rel_leaf_wetness}, soil_moisture_cb: {soil_moisture_cb}, rain_this_month_mm: {rain_this_month_mm}, rain_this_year_mm: {rain_this_year_mm}, evapotranspiration_today_mm: {evapotranspiration_today_mm}, evapotranspiration_this_month_mm: {evapotranspiration_this_month_mm}, evapotranspiration_this_year_mm: {evapotranspiration_this_year_mm}, rain_in_last_storm_event_mm: {rain_in_last_storm_event_mm}, average_wind_speed_knots: {average_wind_speed_knots}.')
+  if not utility.check_minimum_data(location_id, server_name, meteo_data_dict):
     return last_seen_timestamp
-    
+  
   utility.save(location_id, server_name, meteo_data_dict)
   return timestamp_string
 

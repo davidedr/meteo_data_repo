@@ -180,9 +180,7 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
-  if not(timestamp_string and (temperature_cels or rel_humidity or barometric_pressure_ssl_hPa or wind_speed_knots or wind_gust_knots or wind_direction_deg or rain_today_mm or dew_point_cels or heat_index_cels or solar_irradiance_wpsm)):
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, Not enough scraped data. Skip saving data...')
-    logging.info(f'{utility.get_identification_string(location_id, server_name)}, timestamp_string: {timestamp_string}, temperature_cels: {temperature_cels}, rel_humidity: {rel_humidity}, barometric_pressure_ssl_hPa: {barometric_pressure_ssl_hPa}, wind_speed_knots: {wind_speed_knots}, wind_gust_knots: {wind_gust_knots},  temperature_cels: {temperature_cels}, wind_direction_deg: {wind_direction_deg}, rain_today_mm: {rain_today_mm}, dew_point_cels: {dew_point_cels}, heat_index_cels: {heat_index_cels}, solar_irradiance_wpsm: {solar_irradiance_wpsm}')
+  if not utility.check_minimum_data(location_id, server_name, meteo_data_dict):
     return last_seen_timestamp
     
   utility.save(location_id, server_name, meteo_data_dict)
