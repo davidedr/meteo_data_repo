@@ -15,6 +15,7 @@ def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
   if isinstance(weather_station_url, dict):
     weather_station_url=weather_station_url.get("1")
 
+  weather_station_url="https://app.weathercloud.net/d4346019242#current"
   tree, _ =utility.get_tree(weather_station_url, location_id, server_name)
   if tree is None:
     return last_seen_timestamp
@@ -203,4 +204,4 @@ def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
   return timestamp_string
 
 if __name__=="__main__":
-  utility.test_starter(22) # Location id
+  utility.test_starter(26) # Location id
