@@ -11,6 +11,7 @@ module.exports = (sequelize, Sequelize) => {
         street_1: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         street_2: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         zip: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
+        town: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         province: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         country: { type: Sequelize.STRING, allowNull: true, defaultValue: null },
         note: { type: Sequelize.STRING, allowNull: true, defaultValue: null },

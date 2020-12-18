@@ -11,13 +11,13 @@ C:\"Program Files"\PostgreSQL\11\bin\psql -V
 
 REM Node Initializazion and libraries downloading
 npm init
-npm install express sequelize pg pg-hstore body-parser cors --save
+npm install --save express sequelize pg pg-hstore body-parser cors 
 
 REN Client
-npm install xmlhttprequest
+npm install --save xmlhttprequest
 
 REM
-npm install sequelize-cli --save 
+npm install --save sequelize-cli
 
 REM Remove any previus instance
 C:\"Program Files"\PostgreSQL\11\bin\dropdb.exe --echo --host=localhost --port=5433 --username=postgres meteo_data_repo
@@ -35,4 +35,9 @@ REM
 REM
 REM Download and install Selenium
 REM
-pip install -U selenium
+pip install --save selenium
+
+REM
+REM Install logging library
+REM
+npm install --save winston

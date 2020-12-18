@@ -1,6 +1,7 @@
 const db = require("../models")
 const Meteo_data = db.meteo_data
 const Op = db.Sequelize.Op
+const logger = require('winston')
 
 exports.create = (req, res) => {
     console.log(req.body)
