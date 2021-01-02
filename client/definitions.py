@@ -20,7 +20,7 @@ CSV_FILE_HEADER=[
     "evapotranspiration_this_month_mm", "evapotranspiration_this_year_mm", "perceived_temperature_cels", "humidex_cels",
     "wind_temperature_cels", "current_weather", "wet_bulb_temperature_cels", "absolute_humidity_gm3", "saturated_vapor_pressure_hPa",
     "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mmm, rain_in_last_storm_event_mm", "cloud_height_m",
-    "air_density_kgm3", "rel_equilibrium_moisture_content"
+    "air_density_kgm3", "rel_equilibrium_moisture_content", "wind_force_beaufort_desc"
 ]
 
 #
@@ -300,10 +300,10 @@ locations_json[25] = {
 
 locations_json[26] = {
     "name": 'Stazione meteo Alvise, Feltre',
-    "latitude": 46.02389,
-    "longitude": 11.93861,
-    "address_complete": "Via Tevere, 32032 Feltre BL",
-    "street_1": "Via Tevere",
+    "latitude": 46.023889,
+    "longitude": 11.938611,
+    "address_complete": "Via Tevere, 25 32032 Feltre BL",
+    "street_1": "Via Tevere, 25",
     "street_2": None,
     "zip": "32032",
     "town": "Feltre",
@@ -311,6 +311,51 @@ locations_json[26] = {
     "country": "IT",
     "note": "Stazione meteo Alvise, Feltre, https://app.weathercloud.net/map#4346019242",
     "height_asl_m": 336
+}
+
+locations_json[27] = {
+    "name": 'Stazione meteo Alvise, Feltre',
+    "latitude": 46.000833,
+    "longitude": 11.927778,
+    "address_complete": "Via Vallarghe, 14 32032 Feltre BL",
+    "street_1": "Via Vallarghe, 14",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo Villaga, Feltre, https://app.weathercloud.net/map#6961843656",
+    "height_asl_m": 292
+}
+
+locations_json[28] = {
+    "name": 'Stazione meteo Bresser IK3OUD, Feltre',
+    "latitude": 46.015833,
+    "longitude": 11.899167,
+    "address_complete": "Via Vinigole 32032 Feltre BL",
+    "street_1": "Via Vinigole",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo Bresser, Feltre, https://app.weathercloud.net/map#4888807918",
+    "height_asl_m": 325
+}
+
+locations_json[29] = {
+    "name": 'Stazione meteo Fornaci di Umin, Feltre',
+    "latitude": 46.051389,
+    "longitude": 11.921389,
+    "address_complete": "Via Vette 32032 Feltre BL",
+    "street_1": "Via Vinigole",
+    "street_2": None,
+    "zip": "32032",
+    "town": "Feltre",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo Fornaci di Umin, Feltre, https://app.weathercloud.net/map#7535966656",
+    "height_asl_m": 337
 }
 
 ws_capabilities = [None]*40
@@ -652,29 +697,25 @@ ws_capabilities[25]["location_id"]=25
 ws_capabilities[26] = {
     "location_id": 26,
     "timestamp_ws": True,
+    "current_weather": True,
     "temperature_cels": True,
     "perceived_temperature_cels": True,
-    "current_weather": True,
-    "wind_speed_knots": True,
     "wind_direction_deg": True,
-    "rel_humidity": True,
+    "wind_force_beaufort_desc": True,
     "barometric_pressure_ssl_hPa": True,
+    "cloud_height_m": True
 
-    "rain_rate_mmh": True,
-    "uv_index": True,
-
-    "dew_point_cels": True,
-    
-    "wet_bulb_temperature_cels": True,
-    
-    
-    
-    
-    "wind_temperature_cels": True,
-    
-    "rain_today_mm": True,
-    "average_wind_speed_knots": True
 }
+
+ws_capabilities[27] = ws_capabilities[26]
+ws_capabilities[27]["location_id"]=27
+
+ws_capabilities[28] = ws_capabilities[26]
+ws_capabilities[28]["location_id"]=28
+
+ws_capabilities[29] = ws_capabilities[26]
+ws_capabilities[29]["location_id"]=29
+
 
 # "scan_time_interval" in seconds
 servers = [
@@ -740,9 +781,21 @@ servers = [
      "url": "http://my.meteonetwork.it/station/vnt434/",
      "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 30*60, "ws_capabilities": ws_capabilities[25]},  # Updated every 30 mins
 
-    {"location_id": 26, "location": locations_json[26], "to_be_started": False, "name": "stazione_meteo_alvise",
-     "url": { "1": "https://app.weathercloud.net/map#4346019242", "2": "https://app.weathercloud.net/d4346019242#current" },
-     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[26]}  # Updated every 10 mins
+    {"location_id": 26, "location": locations_json[26], "to_be_started": True, "name": "stazione_meteo_alvise",
+     "url": { "1": "https://app.weathercloud.net/d4346019242#profile" },
+     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[26]},  # Updated every 10 mins
+
+    {"location_id": 27, "location": locations_json[27], "to_be_started": True, "name": "stazione_meteo_villaga",
+     "url": { "1": "https://app.weathercloud.net/d6961843656#profile" },
+     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[27]},  # Updated every 10 mins
+
+    {"location_id": 28, "location": locations_json[28], "to_be_started": True, "name": "stazione_meteo_bresser",
+     "url": { "1": "https://app.weathercloud.net/d4888807918#profile" },
+     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[28]},  # Updated every 10 mins
+
+    {"location_id": 29, "location": locations_json[29], "to_be_started": True, "name": "stazione_meteo_fornaci_umin",
+     "url": { "1": "https://app.weathercloud.net/d7535966656#profile" },
+     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[29]}  # Updated every 10 mins
 
 ]
 

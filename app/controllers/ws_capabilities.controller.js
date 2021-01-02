@@ -46,6 +46,7 @@ exports.create = (req, res) => {
         cloud_height_m: req.body.cloud_height_m,
         air_density_kgm3: req.body.air_density_kgm3,
         rel_equilibrium_moisture_content: req.body.rel_equilibrium_moisture_content,
+        wind_force_beaufort_desc: req.body.wind_force_beaufort_desc
     }
 
     Ws_capabilities.create(ws_capabilities)
@@ -149,6 +150,7 @@ exports.update = (req, res) => {
             cloud_height_m: req.body.cloud_height_m,
             air_density_kgm3: req.body.air_density_kgm3,
             rel_equilibrium_moisture_content: req.body.rel_equilibrium_moisture_content,
+            wind_force_beaufort_desc: req.body.wind_force_beaufort_desc
         }
 
         Ws_capabilities.update(values = ws_capabilities, options = { where: { id: id } })
