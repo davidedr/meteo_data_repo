@@ -1,0 +1,1 @@
+C:\"Program Files (x86)"\Google\Chrome\Application\chrome.exe --headless https://app.weathercloud.net/map#6903598366

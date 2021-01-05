@@ -15,6 +15,8 @@ def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
+  weather_station_url="https://app.weathercloud.net/map#6903598366"
+
   if isinstance(weather_station_url, dict):
     weather_station_url=weather_station_url.get("1")
 
@@ -96,8 +98,13 @@ def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
   try:
     wind_direction_ele=soup.findAll('path', {"class": 'wind' })
     wind_direction=wind_direction_ele[0]["transform"].strip().split("(")[1].split(",")[0]
+    wind_direction=float(wind_direction)
+    if wind_direction>360:
+      wind_direction=wind_direction-360
+    if wind_direction<0:
+      wind_direction=wind_direction+360
     if wind_direction:
-      wind_direction_deg=float(wind_direction)-360
+      wind_direction_deg=wind_direction
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
