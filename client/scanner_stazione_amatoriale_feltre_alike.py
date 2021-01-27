@@ -4,6 +4,7 @@ import platform
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from fake_useragent import UserAgent
+import time
 
 import utility
 import proxy_pool
@@ -37,6 +38,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
     browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log', service_args=service_args)
     browser.get(weather_station_url)
+    time.sleep(15)
     soup = BeautifulSoup(browser.page_source, "html.parser")
 
   except Exception as e:

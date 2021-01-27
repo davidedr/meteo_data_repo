@@ -11,6 +11,7 @@ const winston_options = {
 
 const logger = new winston.createLogger(winston_options)
 
+console.log('Logger initilized!')
 logger.info('Logger initilized!')
 
 const express = require("express")
@@ -24,11 +25,13 @@ app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
+console.log('Init db...')
 logger.info('Init db...')
 const db = require("./app/models")
 db.sequelize.sync({ force: false })
-    .then(() => { logger.log('Db initializated.') })
+    .then(() => { console.log('Db initializated.') })
 
+console.log('Setting up default route...')
 logger.info('Setting up default route...')
 app.get("/", (req, res) => { res.json({ message: "Welcome!" }) })
 
@@ -37,4 +40,5 @@ require("./app/routes/location.routes")(app)
 require("./app/routes/ws_capabilities.routes")(app)
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => { logger.info(`Server listening on port: ${PORT}`) })
+console.log('Server setup finished.')
 logger.info('Server setup finished.')

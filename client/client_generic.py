@@ -41,7 +41,7 @@ if __name__=="__main__":
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
   logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.NOTSET, datefmt="%Y-%m-%d %H:%M:%S")
 
-  add_server_locations(servers)
+  #add_server_locations(servers)
   
   logging.info('##')
   logging.info("## 'Meteo data repo' data collector clients launcher")
@@ -53,6 +53,9 @@ if __name__=="__main__":
   nclients=0
   for server in servers:
     to_be_started=server["to_be_started"]
+    # if server["location_id"]!=26:
+    #   to_be_started=False
+
     if not to_be_started:
       logging.info(f'Server: {server["location_id"]}, {server["name"]}, url: {server["url"]} starting DISABLED.')
       continue

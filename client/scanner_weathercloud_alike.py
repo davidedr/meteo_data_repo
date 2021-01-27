@@ -7,7 +7,7 @@ from fake_useragent import UserAgent
 import utility
 
 #
-# Scanner for MeteoVenezia weather stations alike stations
+# Scanner for Weathercloud weather stations alike stations
 #
 def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
 
@@ -15,7 +15,7 @@ def scan_weathercloud_alike(last_seen_timestamp, server, save=True, log=True):
   server_name=server["name"]
   weather_station_url=server["url"]
 
-  weather_station_url="https://app.weathercloud.net/map#6903598366"
+  #weather_station_url="https://app.weathercloud.net/map#6903598366"
 
   if isinstance(weather_station_url, dict):
     weather_station_url=weather_station_url.get("1")

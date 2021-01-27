@@ -11,6 +11,7 @@ from scanner_osservatorio_metereologico_festisei_alike import scan_osservatorio_
 from scanner_osservatorio_metereologico_monte_avena_alike import scan_osservatorio_metereologico_monte_avena_alike
 from scanner_stazione_meteomeano_alike import scan_stazione_meteomeano_alike
 from scanner_weathercloud_alike import scan_weathercloud_alike
+from scanner_weathercloud_complete_alike import scan_weathercloud_complete_alike
 
 CSV_FILE_HEADER=[
     "timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed_knots", "wind_direction_deg",
@@ -698,13 +699,18 @@ ws_capabilities[26] = {
     "location_id": 26,
     "timestamp_ws": True,
     "current_weather": True,
-    "temperature_cels": True,
     "perceived_temperature_cels": True,
     "wind_direction_deg": True,
-    "wind_force_beaufort_desc": True,
+    "wind_force_beaufort_desc": True,   
+    "cloud_height_m": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "rel_humidity": True,
+    "temperature_cels": True,
     "barometric_pressure_ssl_hPa": True,
-    "cloud_height_m": True
-
+    "rain_today_mm": True,
+    "rain_rate_mmh": True,
+    "uv_index": True
 }
 
 ws_capabilities[27] = ws_capabilities[26]
@@ -782,20 +788,20 @@ servers = [
      "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 30*60, "ws_capabilities": ws_capabilities[25]},  # Updated every 30 mins
 
     {"location_id": 26, "location": locations_json[26], "to_be_started": True, "name": "stazione_meteo_alvise",
-     "url": { "1": "https://app.weathercloud.net/d4346019242#profile" },
-     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[26]},  # Updated every 10 mins
+     "url": { "1": "https://app.weathercloud.net/d4346019242#profile", "2": "https://app.weathercloud.net/map#4346019242" },
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[26]},  # Updated every 10 mins
 
     {"location_id": 27, "location": locations_json[27], "to_be_started": True, "name": "stazione_meteo_villaga",
-     "url": { "1": "https://app.weathercloud.net/d6961843656#profile" },
-     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[27]},  # Updated every 10 mins
+     "url": { "1": "https://app.weathercloud.net/d6961843656#profile", "2": "https://app.weathercloud.net/map#6961843656" }, 
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[27]},  # Updated every 10 mins
 
     {"location_id": 28, "location": locations_json[28], "to_be_started": True, "name": "stazione_meteo_bresser",
-     "url": { "1": "https://app.weathercloud.net/d4888807918#profile" },
-     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[28]},  # Updated every 10 mins
+     "url": { "1": "https://app.weathercloud.net/d4888807918#profile", "2": "https://app.weathercloud.net/map#4888807918" },
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[28]},  # Updated every 10 mins
 
     {"location_id": 29, "location": locations_json[29], "to_be_started": True, "name": "stazione_meteo_fornaci_umin",
-     "url": { "1": "https://app.weathercloud.net/d7535966656#profile" },
-     "scanner": scan_weathercloud_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[29]}  # Updated every 10 mins
+     "url": { "1": "https://app.weathercloud.net/d7535966656#profile", "2": "https://app.weathercloud.net/map#7535966656" },
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[29]}  # Updated every 10 mins
 
 ]
 
