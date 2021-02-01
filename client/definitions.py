@@ -12,6 +12,8 @@ from scanner_osservatorio_metereologico_monte_avena_alike import scan_osservator
 from scanner_stazione_meteomeano_alike import scan_stazione_meteomeano_alike
 from scanner_weathercloud_complete_alike import scan_weathercloud_complete_alike
 
+WEBDRIVER_TIMEOUT_S=60
+
 CSV_FILE_HEADER=[
     "timestamp_string", "timestamp_string_date", "timestamp_string_time", "wind_speed_knots", "wind_direction_deg",
     "barometric_pressure_ssl_hPa", "rain_today_mm", "rain_rate_mmh", "temperature_cels", "rel_humidity", "uv_index",

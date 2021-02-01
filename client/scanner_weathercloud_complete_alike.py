@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 
 import utility
+import definitions
 
 #
 # Scanner for Weathercloud weather stations alike stations
@@ -31,8 +32,8 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       chrome_options.add_argument("--headless")
       driver = webdriver.Chrome('./utility/chromedriver/chromedriver.exe', options=chrome_options)
       driver.get(weather_station_url)
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping 60s...')
-      time.sleep(60)
+      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       page_source=driver.page_source
       driver.quit()
       print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver quit.')
@@ -62,7 +63,8 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
 
       browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log', service_args=service_args)
       browser.get(weather_station_url)
-      time.sleep(60)
+      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       soup = BeautifulSoup(browser.page_source, "html.parser")
 
     except Exception as e:
@@ -184,8 +186,8 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       chrome_options.add_argument("--headless")
       driver = webdriver.Chrome('./utility/chromedriver/chromedriver.exe', options=chrome_options)
       driver.get(weather_station_url)
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 2, Driver sleeping 60s...')
-      time.sleep(60)
+      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       page_source=driver.page_source
       driver.quit()
       print(f'{utility.get_identification_string(location_id, server_name)}, url: 2, Driver quit.')
@@ -215,7 +217,8 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
 
       browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log', service_args=service_args)
       browser.get(weather_station_url)
-      time.sleep(60)
+      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       soup = BeautifulSoup(browser.page_source, "html.parser")
 
     except Exception as e:
