@@ -10,7 +10,6 @@ from scanner_feltre_meteo_alike import scan_feltre_meteo_alike
 from scanner_osservatorio_metereologico_festisei_alike import scan_osservatorio_metereologico_festisei_alike
 from scanner_osservatorio_metereologico_monte_avena_alike import scan_osservatorio_metereologico_monte_avena_alike
 from scanner_stazione_meteomeano_alike import scan_stazione_meteomeano_alike
-from scanner_weathercloud_alike import scan_weathercloud_alike
 from scanner_weathercloud_complete_alike import scan_weathercloud_complete_alike
 
 CSV_FILE_HEADER=[
@@ -315,7 +314,7 @@ locations_json[26] = {
 }
 
 locations_json[27] = {
-    "name": 'Stazione meteo Alvise, Feltre',
+    "name": 'Stazione meteo di Villaga, Feltre',
     "latitude": 46.000833,
     "longitude": 11.927778,
     "address_complete": "Via Vallarghe, 14 32032 Feltre BL",
@@ -715,12 +714,15 @@ ws_capabilities[26] = {
 
 ws_capabilities[27] = ws_capabilities[26]
 ws_capabilities[27]["location_id"]=27
+ws_capabilities[27]["uv_index"]=False
 
 ws_capabilities[28] = ws_capabilities[26]
 ws_capabilities[28]["location_id"]=28
+ws_capabilities[28]["uv_index"]=False
 
 ws_capabilities[29] = ws_capabilities[26]
 ws_capabilities[29]["location_id"]=29
+ws_capabilities[29]["uv_index"]=False
 
 
 # "scan_time_interval" in seconds
@@ -792,7 +794,7 @@ servers = [
      "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[26]},  # Updated every 10 mins
 
     {"location_id": 27, "location": locations_json[27], "to_be_started": True, "name": "stazione_meteo_villaga",
-     "url": { "1": "https://app.weathercloud.net/d6961843656#profile", "2": "https://app.weathercloud.net/map#6961843656" }, 
+     "url": { "1": "https://app.weathercloud.net/d6961843656#profile", "2": "https://app.weathercloud.net/map#6961843656" },
      "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[27]},  # Updated every 10 mins
 
     {"location_id": 28, "location": locations_json[28], "to_be_started": True, "name": "stazione_meteo_bresser",
