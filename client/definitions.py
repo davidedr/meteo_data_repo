@@ -477,7 +477,6 @@ ws_capabilities[12] = {
     "evapotranspiration_this_month_mm": True,
     "evapotranspiration_this_year_mm": True,
     "rain_in_last_storm_event_mm": True,
-
 }
 
 ws_capabilities[15] = {
@@ -664,7 +663,8 @@ ws_capabilities[22] = {
     "average_wind_speed_knots": True
 }
 
-ws_capabilities[23] = ws_capabilities[11]
+import copy
+ws_capabilities[23] = copy.deepcopy(ws_capabilities[11])
 ws_capabilities[23]["location_id"]=23
 
 ws_capabilities[24] = {
@@ -693,7 +693,7 @@ ws_capabilities[24] = {
     "uv_index": True
 }
 
-ws_capabilities[25] = ws_capabilities[11]
+ws_capabilities[25] = copy.deepcopy(ws_capabilities[11])
 ws_capabilities[25]["location_id"]=25
 
 ws_capabilities[26] = {
@@ -714,15 +714,15 @@ ws_capabilities[26] = {
     "uv_index": True
 }
 
-ws_capabilities[27] = ws_capabilities[26]
+ws_capabilities[27] = copy.deepcopy(ws_capabilities[26])
 ws_capabilities[27]["location_id"]=27
 ws_capabilities[27]["uv_index"]=False
 
-ws_capabilities[28] = ws_capabilities[26]
+ws_capabilities[28] = copy.deepcopy(ws_capabilities[26])
 ws_capabilities[28]["location_id"]=28
 ws_capabilities[28]["uv_index"]=False
 
-ws_capabilities[29] = ws_capabilities[26]
+ws_capabilities[29] = copy.deepcopy(ws_capabilities[26])
 ws_capabilities[29]["location_id"]=29
 ws_capabilities[29]["uv_index"]=False
 

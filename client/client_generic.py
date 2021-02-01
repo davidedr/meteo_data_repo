@@ -41,7 +41,7 @@ if __name__=="__main__":
   format = "%(asctime)s %(thread)d %(threadName)s: %(message)s"
   logging.basicConfig(filename="app/log/meteo_data_repo3.log", format=format, level=logging.NOTSET, datefmt="%Y-%m-%d %H:%M:%S")
 
-  #add_server_locations(servers)
+  add_server_locations(servers)
   
   logging.info('##')
   logging.info("## 'Meteo data repo' data collector clients launcher")
