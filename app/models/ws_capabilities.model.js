@@ -40,7 +40,10 @@ module.exports = (sequelize, Sequelize) => {
         air_density_kgm3: { type: Sequelize.BOOLEAN, defaultValue: false },
         rel_equilibrium_moisture_content: { type: Sequelize.BOOLEAN, defaultValue: false },
         barometric_pressure_ssl_hPa: { type: Sequelize.BOOLEAN, defaultValue: false },
-        wind_force_beaufort_desc: { type: Sequelize.BOOLEAN, defaultValue: false }
+        wind_force_beaufort_desc: { type: Sequelize.BOOLEAN, defaultValue: false },
+        moon_phase_desc: { type: Sequelize.BOOLEAN, defaultValue: false },
+        sunrise_timestamp: { type: Sequelize.BOOLEAN, defaultValue: false },
+        sunset_timestamp: { type: Sequelize.BOOLEAN, defaultValue: false }
     })
 
     return Ws_capabilities

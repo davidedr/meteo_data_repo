@@ -49,7 +49,10 @@ exports.create = (req, res) => {
         cloud_height_m: req.body.cloud_height_m,
         air_density_kgm3: req.body.air_density_kgm3,
         rel_equilibrium_moisture_content: req.body.rel_equilibrium_moisture_content,
-        wind_force_beaufort_desc: req.body.wind_force_beaufort_desc
+        wind_force_beaufort_desc: req.body.wind_force_beaufort_desc,
+        moon_phase_desc: req.body.moon_phase_desc,
+        sunrise_timestamp: req.body.sunrise_timestamp,
+        sunset_timestamp: req.body.sunset_timestamp
     }
 
     Meteo_data.create(meteo_data)
@@ -108,7 +111,10 @@ exports.getMeta = (req, res) => {
         cloud_height_m: "cloud_height_m",
         air_density_kgm3: "air_density_kgm3",
         equilibrium_moisture_content: "equilibrium_moisture_content",
-        wind_force_beaufort_desc: "wind_force_beaufort_desc"
+        wind_force_beaufort_desc: "wind_force_beaufort_desc",
+        moon_phase_desc: "moon_phase_desc",
+        sunrise_timestamp: "sunrise_timestamp",
+        sunset_timestamp: "sunset_timestamp"
     }
     res.status(200).send(data)
 

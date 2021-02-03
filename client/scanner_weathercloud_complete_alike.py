@@ -172,6 +172,50 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting cloud_height_m: "{e}"!')
 
+  moon_phase_desc=None
+  try:
+    moon_phase_desc_ele=soup.find('a', id='moon-phase-string')
+    moon_phase=moon_phase_desc_ele["title"]
+    if moon_phase:
+      moon_phase_desc=moon_phase
+      
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting moon_phase_desc: "{e}"!')
+
+  sunrise_timestamp=None
+  try:
+    sunrise_ele=soup.find('span', id='sunrise')
+    sunrise_time_string=sunrise_ele.text
+
+    timestamp_date_string=datetime.today().strftime("%d/%m/%Y")
+  
+    sunrise_datetime_string=timestamp_date_string+" "+sunrise_time_string
+    sunrise_timestamp_obj=datetime.strptime(sunrise_datetime_string, "%d/%m/%Y %I:%M %p")
+    sunrise=sunrise_timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
+
+    if sunrise:
+      sunrise_timestamp=sunrise
+      
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting sunrise_timestamp: "{e}"!')
+
+  sunset_timestamp=None
+  try:
+    sunset_ele=soup.find('span', id='sunset')
+    sunset_time_string=sunset_ele.text
+
+    timestamp_date_string=datetime.today().strftime("%d/%m/%Y")
+  
+    sunset_datetime_string=timestamp_date_string+" "+sunset_time_string
+    sunset_timestamp_obj=datetime.strptime(sunset_datetime_string, "%d/%m/%Y %I:%M %p")
+    sunset=sunset_timestamp_obj.strftime("%d/%m/%Y %H:%M:%S")
+
+    if sunset:
+      sunset_timestamp=sunset
+      
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting sunset_timestamp: "{e}"!')
+
   #
   #
   #
@@ -331,6 +375,9 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   meteo_data_dict["rain_today_mm"]=rain_today_mm
   meteo_data_dict["rain_rate_mmh"]=rain_rate_mmh
   meteo_data_dict["uv_index"]=uv_index
+  meteo_data_dict["moon_phase_desc"]=moon_phase_desc
+  meteo_data_dict["sunrise_timestamp"]=sunrise_timestamp
+  meteo_data_dict["sunset_timestamp"]=sunset_timestamp
   
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)

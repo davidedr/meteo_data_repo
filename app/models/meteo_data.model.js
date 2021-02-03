@@ -39,7 +39,10 @@ module.exports = (sequelize, Sequelize) => {
         cloud_height_m: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
         air_density_kgm3: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
         rel_equilibrium_moisture_content: { type: Sequelize.DECIMAL, defaultValue: null, validate: { min: 0 } },
-        wind_force_beaufort_desc: { type: Sequelize.STRING, defaultValue: null }
+        wind_force_beaufort_desc: { type: Sequelize.STRING, defaultValue: null },
+        moon_phase_desc: { type: Sequelize.STRING, defaultValue: null },
+        sunrise_timestamp: { type: Sequelize.DATE, defaultValue: null },
+        sunset_timestamp: { type: Sequelize.DATE, defaultValue: null }
     })
 
     return Meteo_data

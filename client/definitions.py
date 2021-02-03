@@ -21,8 +21,9 @@ CSV_FILE_HEADER=[
     "rel_leaf_wetness", "soil_moisture_cb", "rain_this_month_mm", "rain_this_year_mm", "evapotranspiration_today_mm",
     "evapotranspiration_this_month_mm", "evapotranspiration_this_year_mm", "perceived_temperature_cels", "humidex_cels",
     "wind_temperature_cels", "current_weather", "wet_bulb_temperature_cels", "absolute_humidity_gm3", "saturated_vapor_pressure_hPa",
-    "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mmm, rain_in_last_storm_event_mm", "cloud_height_m",
-    "air_density_kgm3", "rel_equilibrium_moisture_content", "wind_force_beaufort_desc"
+    "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mmm, rain_in_last_storm_event_mm",
+    "cloud_height_m", "air_density_kgm3", "rel_equilibrium_moisture_content", "wind_force_beaufort_desc", "moon_phase_desc",
+    "sunrise_timestamp", "sunset_timestamp"
 ]
 
 #
@@ -326,7 +327,7 @@ locations_json[27] = {
     "town": "Feltre",
     "province": "BL",
     "country": "IT",
-    "note": "Stazione meteo Villaga, Feltre, https://app.weathercloud.net/map#6961843656",
+    "note": "Stazione meteo Villaga, Feltre, https://app.weathercloud.net/map#6961843656, CCL Electronics WS100",
     "height_asl_m": 292
 }
 
@@ -711,7 +712,10 @@ ws_capabilities[26] = {
     "barometric_pressure_ssl_hPa": True,
     "rain_today_mm": True,
     "rain_rate_mmh": True,
-    "uv_index": True
+    "uv_index": True,
+    "moon_phase_desc": True,
+    "sunrise_timestamp": True,
+    "sunset_timestamp": True
 }
 
 ws_capabilities[27] = copy.deepcopy(ws_capabilities[26])
