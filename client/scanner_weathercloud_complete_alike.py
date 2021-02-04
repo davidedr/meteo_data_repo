@@ -32,15 +32,15 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       chrome_options.add_argument("--headless")
       driver = webdriver.Chrome('./utility/chromedriver/chromedriver.exe', options=chrome_options)
       driver.get(weather_station_url)
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
       time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       page_source=driver.page_source
       driver.quit()
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver quit.')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver quit.')
       soup = BeautifulSoup(page_source, "html.parser")
 
     except Exception as e:
-      logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting getting webpage: "{e}"!')
+      logging.exception(f'{utility.get_identification_string_with_date(location_id, server_name)}, exception getting getting webpage: "{e}"!')
       return last_seen_timestamp
 
   else:
@@ -63,16 +63,16 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
 
       browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log', service_args=service_args)
       browser.get(weather_station_url)
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
       time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       soup = BeautifulSoup(browser.page_source, "html.parser")
 
     except Exception as e:
-      logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting getting webpage: "{e}"!')
+      logging.exception(f'{utility.get_identification_string_with_date(location_id, server_name)}, exception getting getting webpage: "{e}"!')
       return last_seen_timestamp
 
   if soup is None:
-      logging.info(f'{utility.get_identification_string(location_id, server_name)}, soup is None: "{soup}"!')
+      logging.info(f'{utility.get_identification_string_with_date(location_id, server_name)}, soup is None: "{soup}"!')
       return last_seen_timestamp
 
   timestamp_string=None
@@ -230,15 +230,15 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       chrome_options.add_argument("--headless")
       driver = webdriver.Chrome('./utility/chromedriver/chromedriver.exe', options=chrome_options)
       driver.get(weather_station_url)
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
       time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       page_source=driver.page_source
       driver.quit()
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 2, Driver quit.')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 2, Driver quit.')
       soup = BeautifulSoup(page_source, "html.parser")
 
     except Exception as e:
-      logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting getting webpage: "{e}"!')
+      logging.exception(f'{utility.get_identification_string_with_date(location_id, server_name)}, exception getting getting webpage: "{e}"!')
       return last_seen_timestamp
 
   else:
@@ -261,16 +261,16 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
 
       browser = webdriver.PhantomJS(PHANTOMJS_PATH, service_log_path='./app/log/ghostdriver.log', service_args=service_args)
       browser.get(weather_station_url)
-      print(f'{utility.get_identification_string(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
       time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       soup = BeautifulSoup(browser.page_source, "html.parser")
 
     except Exception as e:
-      logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting getting webpage: "{e}"!')
+      logging.exception(f'{utility.get_identification_string_with_date(location_id, server_name)}, exception getting getting webpage: "{e}"!')
       return last_seen_timestamp
 
   if soup is None:
-      logging.info(f'{utility.get_identification_string(location_id, server_name)}, soup is None: "{soup}"!')
+      logging.info(f'{utility.get_identification_string_with_date(location_id, server_name)}, soup is None: "{soup}"!')
       return last_seen_timestamp
 
   wind_speed_knots=None

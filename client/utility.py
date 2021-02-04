@@ -99,6 +99,23 @@ def get_identification_string(location_id, server_name=None):
       return ''
 
 #
+# Return an human-readable server identification string
+#
+def get_identification_string_with_date(location_id, server_name=None):
+
+  timestamp_date_string=datetime.today().strftime("%Y-%m-%d %H:%M:%S.%f")
+  if location_id:
+    if server_name:
+      return f'Server: {location_id}, {server_name}, {timestamp_date_string}'
+    else:
+      return f'Server: {location_id}, {timestamp_date_string}'
+  else:
+    if server_name:
+      return f'Server: {server_name}, {timestamp_date_string}'
+    else:
+      return f'{timestamp_date_string}'
+
+#
 #
 #
 def find_server(location_id):
