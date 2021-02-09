@@ -13,6 +13,14 @@ import proxy_pool
 #
 #
 #
+def check_in_beaufort_scale(force):
+  "".join(force.split())
+  force=force.lower()
+  return force in definitions.BEAUFORT_SCALE_DESC
+
+#
+#
+#
 def check_minimum_data(location_id, server_name, meteo_data_dict):
   timestamp_string=meteo_data_dict.get("timestamp_string")
   if not timestamp_string:

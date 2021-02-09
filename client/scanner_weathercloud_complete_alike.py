@@ -22,8 +22,9 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   server_name=server["name"]
   weather_station_url=server["url"]
 
+  USE_DRIVER="1"
   if isinstance(weather_station_url, dict):
-    weather_station_url=weather_station_url.get("1")
+    weather_station_url=weather_station_url.get(USE_DRIVER)
 
   soup=None
   if use_driver=="Chrome":
@@ -32,11 +33,11 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       chrome_options.add_argument("--headless")
       driver = webdriver.Chrome('./utility/chromedriver/chromedriver.exe', options=chrome_options)
       driver.get(weather_station_url)
-      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: {USE_DRIVER}, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
       time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       page_source=driver.page_source
       driver.quit()
-      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver quit.')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: {USE_DRIVER}, Driver quit.')
       soup = BeautifulSoup(page_source, "html.parser")
 
     except Exception as e:
@@ -79,14 +80,10 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   timestamp_string_date=None
   timestamp_string_time=None
   try:
-    timestamp_time=soup.find('span', id='header-localtime-container')
-    timestamp_time_string=timestamp_time.text
-
-    timestamp_date_string=datetime.today().strftime("%d/%m/%Y")
-  
-    timestamp_datetime_string=timestamp_date_string+" "+timestamp_time_string
-    timestamp_date_obj=datetime.strptime(timestamp_datetime_string, "%d/%m/%Y %I:%M %p")
-    timestamp_string=timestamp_date_obj.strftime("%d/%m/%Y %H:%M:%S")
+    last_modified_epoch_string=soup.findAll("meta")[3]["content"]
+    last_modified_epoch_int=int(last_modified_epoch_string)
+    last_modified_timestamp=datetime.fromtimestamp(last_modified_epoch_int)
+    timestamp_string=last_modified_timestamp.strftime("%d/%m/%Y %H:%M:%S")
 
     if timestamp_string==last_seen_timestamp:
       # Weather station is not updating data
@@ -94,8 +91,8 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       # TODO Raise an alert
       return last_seen_timestamp
 
-    timestamp_string_date=timestamp_date_obj.strftime("%d/%m/%Y")
-    timestamp_string_time=timestamp_date_obj.strftime("%H:%M:%S")
+    timestamp_string_date=last_modified_timestamp.strftime("%d/%m/%Y")
+    timestamp_string_time=last_modified_timestamp.strftime("%H:%M:%S")
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting timestamp: "{e}"!')
@@ -147,11 +144,12 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
     wind_force_beaufort_desc_ele=soup.find('span', id='wdir_cur')
     wind_force_beaufort=wind_force_beaufort_desc_ele.text
     if wind_force_beaufort:
-      wind_force_beaufort_desc=wind_force_beaufort
+      if utility.check_in_beaufort_scale(wind_force_beaufort):
+        wind_force_beaufort_desc=wind_force_beaufort
       
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_force_beaufort_desc: "{e}"!')
-
+  
   barometric_pressure_ssl_hPa=None
   try:
     barometric_pressure_ssl_ele=soup.find('span', id='bar_cur')
@@ -219,9 +217,10 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   #
   #
   #
+  USE_DRIVER="2"
   weather_station_url=server["url"]
   if isinstance(weather_station_url, dict):
-    weather_station_url=weather_station_url.get("2")
+    weather_station_url=weather_station_url.get(USE_DRIVER)
 
   soup=None
   if use_driver=="Chrome":
@@ -230,11 +229,11 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
       chrome_options.add_argument("--headless")
       driver = webdriver.Chrome('./utility/chromedriver/chromedriver.exe', options=chrome_options)
       driver.get(weather_station_url)
-      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 1, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: {USE_DRIVER}, Driver sleeping {definitions.WEBDRIVER_TIMEOUT_S} s...')
       time.sleep(definitions.WEBDRIVER_TIMEOUT_S)
       page_source=driver.page_source
       driver.quit()
-      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: 2, Driver quit.')
+      print(f'{utility.get_identification_string_with_date(location_id, server_name)}, url: {USE_DRIVER}, Driver quit.')
       soup = BeautifulSoup(page_source, "html.parser")
 
     except Exception as e:
@@ -379,6 +378,7 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   meteo_data_dict["sunrise_timestamp"]=sunrise_timestamp
   meteo_data_dict["sunset_timestamp"]=sunset_timestamp
   
+
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
@@ -389,4 +389,4 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   return timestamp_string
 
 if __name__=="__main__":
-  utility.test_starter(26) # Location id
+  utility.test_starter(29) # Location id

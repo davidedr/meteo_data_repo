@@ -718,3 +718,33 @@
   timestamp: '2021-02-03 11:17:41.337',
   label: 'meteo_data_repo_logger'
 }
+{
+  message: 'Logger initilized!',
+  level: 'info',
+  timestamp: '2021-02-03 15:32:27.512',
+  label: 'meteo_data_repo_logger'
+}
+{
+  message: 'Init db...',
+  level: 'info',
+  timestamp: '2021-02-03 15:32:29.194',
+  label: 'meteo_data_repo_logger'
+}
+{
+  message: 'Setting up default route...',
+  level: 'info',
+  timestamp: '2021-02-03 15:32:33.259',
+  label: 'meteo_data_repo_logger'
+}
+{
+  message: 'Server setup finished.',
+  level: 'info',
+  timestamp: '2021-02-03 15:32:33.324',
+  label: 'meteo_data_repo_logger'
+}
+{
+  message: 'Server listening on port: 8080',
+  level: 'info',
+  timestamp: '2021-02-03 15:32:33.327',
+  label: 'meteo_data_repo_logger'
+}

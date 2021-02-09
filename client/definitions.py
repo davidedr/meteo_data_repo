@@ -26,6 +26,9 @@ CSV_FILE_HEADER=[
     "sunrise_timestamp", "sunset_timestamp"
 ]
 
+BEAUFORT_SCALE_DESC=["calm", "lightair", "lightbreeze", "gentlebreeze", "moderatebreeze", "freshbreeze", "strongbreeze", 
+    "neargale", "gale", "stronggale", "storm", "violentstorm", "hurricane"]
+
 #
 #
 #
@@ -703,10 +706,8 @@ ws_capabilities[26] = {
     "current_weather": True,
     "perceived_temperature_cels": True,
     "wind_direction_deg": True,
-    "wind_force_beaufort_desc": True,   
     "cloud_height_m": True,
     "wind_speed_knots": True,
-    "wind_direction_deg": True,
     "rel_humidity": True,
     "temperature_cels": True,
     "barometric_pressure_ssl_hPa": True,
@@ -729,6 +730,7 @@ ws_capabilities[28]["uv_index"]=False
 ws_capabilities[29] = copy.deepcopy(ws_capabilities[26])
 ws_capabilities[29]["location_id"]=29
 ws_capabilities[29]["uv_index"]=False
+ws_capabilities[29]["wind_force_beaufort_desc"]: True
 
 
 # "scan_time_interval" in seconds
@@ -810,7 +812,6 @@ servers = [
     {"location_id": 29, "location": locations_json[29], "to_be_started": True, "name": "stazione_meteo_fornaci_umin",
      "url": { "1": "https://app.weathercloud.net/d7535966656#profile", "2": "https://app.weathercloud.net/map#7535966656" },
      "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[29]}  # Updated every 10 mins
-
 ]
 
 SCAN_TIME_INTERVAL_DEFAULT = 50  # Sec
