@@ -216,8 +216,8 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   rain_this_month_mm=None
   try:
-    rain_this_month_ele=soup.findAll('text', {"class": 'liquidFillGaugeText' })[3]
-    rain_this_month=rain_this_month_ele.text.strip().split(" ")[0]
+    rain_this_month_ele=soup.find('td', id='rainGaugeTD2')
+    rain_this_month=rain_this_month_ele.text.split("Questo mese")[1].split("mm")[0]
     if rain_this_month:
       rain_this_month_mm=float(rain_this_month)
 
@@ -226,8 +226,8 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
 
   rain_this_year_mm=None
   try:
-    rain_this_year_ele=soup.findAll('text', {"class": 'liquidFillGaugeText' })[4]
-    rain_this_year=rain_this_year_ele.text.strip().split(" ")[0]
+    rain_this_year_ele=soup.find('td', id='rainGaugeTD3')
+    rain_this_year=rain_this_year_ele.text.split("Questo anno")[1].split("mm")[0]
     if rain_this_year:
       rain_this_year_mm=float(rain_this_year)
 
