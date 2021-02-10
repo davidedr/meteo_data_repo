@@ -360,21 +360,22 @@ def _save_v15(location_id, server_name, meteo_data_dict, save=True):
     return
 
   #
-  try:
-    last_rain_event_timestamp_obj=datetime.strptime(last_rain_event_timestamp, "%d.%m.%Y %H.%M")
+  if last_rain_event_timestamp:
+    try:
+      last_rain_event_timestamp_obj=datetime.strptime(last_rain_event_timestamp, "%d.%m.%Y %H.%M")
 
-  except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} parsing: "{last_rain_event_timestamp}"!')
-    save_to_rest_ok=False
-    return
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} parsing: "{last_rain_event_timestamp}"!')
+      save_to_rest_ok=False
+      return
 
-  try:
-    last_rain_event_timestamp=last_rain_event_timestamp_obj.strftime("%Y-%m-%d %H:%M:%S")+".000"
+    try:
+      last_rain_event_timestamp=last_rain_event_timestamp_obj.strftime("%Y-%m-%d %H:%M:%S")+".000"
 
-  except Exception as e:
-    logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} in last_rain_event_timestamp.strftime for: "{timestamp}"!')
-    save_to_rest_ok=False
-    return
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} in last_rain_event_timestamp.strftime for: "{timestamp}"!')
+      save_to_rest_ok=False
+      return
 
   data_json = {
     "location_id": location_id,   
