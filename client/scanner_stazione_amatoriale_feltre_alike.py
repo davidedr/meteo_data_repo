@@ -194,6 +194,15 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting windrun_km: "{e}"!')
 
+  current_weather=None
+  try:
+    current_weather_string=soup.find('div', id='rainBlock').select('span[class*="mticon-"]')[0]["class"][0].split("mticon-")[1]
+    if current_weather_string:
+      current_weather=current_weather_string
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting current_weather: "{e}"!')
+
   rain_rate_mmh=None
   try:
     rain_rate_ele=soup.find('span', id='currentRRValue')
@@ -291,6 +300,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["wind_speed_knots"]=wind_speed_knots
   meteo_data_dict["wind_direction_deg"]=wind_direction_deg
   meteo_data_dict["barometric_pressure_ssl_hPa"]=barometric_pressure_ssl_hPa
+  meteo_data_dict["current_weather"]=current_weather
   meteo_data_dict["rain_today_mm"]=rain_today_mm
   meteo_data_dict["rain_rate_mmh"]=rain_rate_mmh
   meteo_data_dict["temperature_cels"]=temperature_cels
