@@ -23,7 +23,7 @@ CSV_FILE_HEADER=[
     "wind_temperature_cels", "current_weather", "wet_bulb_temperature_cels", "absolute_humidity_gm3", "saturated_vapor_pressure_hPa",
     "windrun_km", "barometric_pressure_wsl_hPa", "average_wind_speed_knots", "storm_rain_mmm, rain_in_last_storm_event_mm",
     "cloud_height_m", "air_density_kgm3", "rel_equilibrium_moisture_content", "wind_force_beaufort_desc", "moon_phase_desc",
-    "sunrise_timestamp", "sunset_timestamp"
+    "sunrise_timestamp", "sunset_timestamp", "last_rain_event_timestamp"
 ]
 
 BEAUFORT_SCALE_DESC=["calm", "lightair", "lightbreeze", "gentlebreeze", "moderatebreeze", "freshbreeze", "strongbreeze", 
@@ -569,6 +569,7 @@ ws_capabilities[18] = {
     "wet_bulb_temperature_cels": True,
     "uv_index": True,
     "heat_index_cels": True,
+    "last_rain_event_timestamp": True
 }
 
 ws_capabilities[19] = {
@@ -619,7 +620,8 @@ ws_capabilities[20] = {
     "wind_chill_cels": True,
     "wet_bulb_temperature_cels": True,
     "uv_index": True,
-    "heat_index_cels": True
+    "heat_index_cels": True,
+    "last_rain_event_timestamp": True
 }
 
 ws_capabilities[21] = {

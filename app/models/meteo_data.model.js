@@ -42,7 +42,8 @@ module.exports = (sequelize, Sequelize) => {
         wind_force_beaufort_desc: { type: Sequelize.STRING, defaultValue: null },
         moon_phase_desc: { type: Sequelize.STRING, defaultValue: null },
         sunrise_timestamp: { type: Sequelize.DATE, defaultValue: null },
-        sunset_timestamp: { type: Sequelize.DATE, defaultValue: null }
+        sunset_timestamp: { type: Sequelize.DATE, defaultValue: null },
+        last_rain_event_timestamp: { type: Sequelize.DATE, defaultValue: null }
     })
 
     return Meteo_data

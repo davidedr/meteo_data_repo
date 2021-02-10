@@ -75,6 +75,18 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
     # TODO Raise an alert
     return last_seen_timestamp
 
+  last_rain_event_timestamp=None
+  try:
+    last_rain_event_timestamps_elems=soup.find('div', id='rainBlockDetails').text.split("Ultima pioggia")[1].split(" ")
+    last_rain_event_timestamp_string=last_rain_event_timestamps_elems[0]+" "+last_rain_event_timestamps_elems[1]
+    last_rain_event_timestamp_obj=datetime.strptime(last_rain_event_timestamp_string, "%d.%m.%Y %H.%M")
+    last_rain_event_timestam_string=last_rain_event_timestamp_obj.strftime("%d.%m.%Y %H.%M")
+    if last_rain_event_timestam_string:
+      last_rain_event_timestamp=last_rain_event_timestam_string
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting last_rain_event_timestamp: "{e}"!')
+
   temperature_cels=None
   try:
     temperature_ele=soup.find('div', id='currentConditionsBigDiv')
@@ -319,6 +331,7 @@ def scan_stazione_amatoriale_feltre_alike(last_seen_timestamp, server, save=True
   meteo_data_dict["absolute_humidity_gm3"]=absolute_humidity_gm3
   meteo_data_dict["saturated_vapor_pressure_hPa"]=saturated_vapor_pressure_hPa
   meteo_data_dict["windrun_km"]=windrun_km
+  meteo_data_dict["last_rain_event_timestamp"]=last_rain_event_timestamp
 
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)

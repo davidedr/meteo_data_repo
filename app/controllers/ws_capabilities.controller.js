@@ -49,7 +49,8 @@ exports.create = (req, res) => {
         wind_force_beaufort_desc: req.body.wind_force_beaufort_desc,
         moon_phase_desc: req.body.moon_phase_desc,
         sunrise_timestamp: req.body.sunrise_timestamp,
-        sunset_timestamp: req.body.sunset_timestamp
+        sunset_timestamp: req.body.sunset_timestamp,
+        last_rain_event_timestamp: req.body.last_rain_event_timestamp
     }
 
     Ws_capabilities.create(ws_capabilities)
@@ -156,7 +157,8 @@ exports.update = (req, res) => {
             wind_force_beaufort_desc: req.body.wind_force_beaufort_desc,
             moon_phase_desc: req.body.moon_phase_desc,
             sunrise_timestamp: req.body.sunrise_timestamp,
-            sunset_timestamp: req.body.sunset_timestamp
+            sunset_timestamp: req.body.sunset_timestamp,
+            last_rain_event_timestamp: req.body.last_rain_event_timestamp
         }
 
         Ws_capabilities.update(values = ws_capabilities, options = { where: { id: id } })

@@ -52,7 +52,8 @@ exports.create = (req, res) => {
         wind_force_beaufort_desc: req.body.wind_force_beaufort_desc,
         moon_phase_desc: req.body.moon_phase_desc,
         sunrise_timestamp: req.body.sunrise_timestamp,
-        sunset_timestamp: req.body.sunset_timestamp
+        sunset_timestamp: req.body.sunset_timestamp,
+        last_rain_event_timestamp: req.body.last_rain_event_timestamp
     }
 
     Meteo_data.create(meteo_data)
@@ -114,7 +115,8 @@ exports.getMeta = (req, res) => {
         wind_force_beaufort_desc: "wind_force_beaufort_desc",
         moon_phase_desc: "moon_phase_desc",
         sunrise_timestamp: "sunrise_timestamp",
-        sunset_timestamp: "sunset_timestamp"
+        sunset_timestamp: "sunset_timestamp",
+        last_rain_event_timestamp: "last_rain_event_timestamp"
     }
     res.status(200).send(data)
 

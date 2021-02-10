@@ -43,7 +43,8 @@ module.exports = (sequelize, Sequelize) => {
         wind_force_beaufort_desc: { type: Sequelize.BOOLEAN, defaultValue: false },
         moon_phase_desc: { type: Sequelize.BOOLEAN, defaultValue: false },
         sunrise_timestamp: { type: Sequelize.BOOLEAN, defaultValue: false },
-        sunset_timestamp: { type: Sequelize.BOOLEAN, defaultValue: false }
+        sunset_timestamp: { type: Sequelize.BOOLEAN, defaultValue: false },
+        last_rain_event_timestamp: { type: Sequelize.BOOLEAN, defaultValue: false }
     })
 
     return Ws_capabilities
