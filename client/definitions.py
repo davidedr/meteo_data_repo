@@ -29,6 +29,8 @@ CSV_FILE_HEADER=[
 BEAUFORT_SCALE_DESC=["calm", "lightair", "lightbreeze", "gentlebreeze", "moderatebreeze", "freshbreeze", "strongbreeze", 
     "neargale", "gale", "stronggale", "storm", "violentstorm", "hurricane"]
 
+SCAN_TIME_INTERVAL_DEFAULT = 50  # Sec
+
 #
 #
 #
@@ -362,6 +364,36 @@ locations_json[29] = {
     "country": "IT",
     "note": "Stazione meteo Fornaci di Umin, Feltre, https://app.weathercloud.net/map#7535966656",
     "height_asl_m": 337
+}
+
+locations_json[30] = {
+    "name": 'WH3000Se, Santa Gisutina BL',
+    "latitude": 46.09416667,
+    "longitude": 12.01277778,
+    "address_complete": "Via Careol, 6, 32035, Santa Giustina, BL",
+    "street_1": "Via Careol, 6",
+    "street_2": None,
+    "zip": "32035",
+    "town": "Santa Giustina",
+    "province": "BL",
+    "country": "IT",
+    "note": "Stazione meteo WH3000Se, Santa Gisutina, https://app.weathercloud.net/map#1076328296",
+    "height_asl_m": 426
+}
+
+locations_json[31] = {
+    "name": 'La Casa di Maia, Festisei, Pesavena',
+    "latitude": 46.039764,
+    "longitude": 11.869775,
+    "address_complete": "Via Festisei, 29-2, 32034, Pedavena, BL",
+    "street_1": "Via Festisei, 29-2",
+    "street_2": None,
+    "zip": "32034",
+    "town": "Pedavena",
+    "province": "BL",
+    "country": "IT",
+    "note": "CCL Electronics Model W100, Pedavena, https://app.weathercloud.net/map#6986156306",
+    "height_asl_m": 470
 }
 
 ws_capabilities = [None]*40
@@ -736,6 +768,45 @@ ws_capabilities[29]["location_id"]=29
 ws_capabilities[29]["uv_index"]=False
 ws_capabilities[29]["wind_force_beaufort_desc"]: True
 
+ws_capabilities[30] = {
+    "location_id": 30,
+    "timestamp_ws": True,
+    "current_weather": True,
+    "perceived_temperature_cels": True,
+    "wind_direction_deg": True,
+    "cloud_height_m": True,
+    "wind_speed_knots": True,
+    "rel_humidity": True,
+    "temperature_cels": True,
+    "barometric_pressure_ssl_hPa": True,
+    "rain_today_mm": True,
+    "rain_rate_mmh": True,
+    "uv_index": True,
+    "moon_phase_desc": True,
+    "sunrise_timestamp": True,
+    "sunset_timestamp": True,
+    "solar_irradiance_wpsm": True,
+    "wind_force_beaufort_desc": True
+}
+
+ws_capabilities[31] = {
+    "location_id": 31,
+    "timestamp_ws": True,
+    "current_weather": True,
+    "perceived_temperature_cels": True,
+    "wind_direction_deg": True,
+    "cloud_height_m": True,
+    "wind_speed_knots": True,
+    "rel_humidity": True,
+    "temperature_cels": True,
+    "barometric_pressure_ssl_hPa": True,
+    "rain_today_mm": True,
+    "rain_rate_mmh": True,
+    "moon_phase_desc": True,
+    "sunrise_timestamp": True,
+    "sunset_timestamp": True,
+    "wind_force_beaufort_desc": True
+}
 
 # "scan_time_interval" in seconds
 servers = [
@@ -815,7 +886,14 @@ servers = [
 
     {"location_id": 29, "location": locations_json[29], "to_be_started": True, "name": "stazione_meteo_fornaci_umin",
      "url": { "1": "https://app.weathercloud.net/d7535966656#profile", "2": "https://app.weathercloud.net/map#7535966656" },
-     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[29]}  # Updated every 10 mins
-]
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[29]},  # Updated every 10 mins
 
-SCAN_TIME_INTERVAL_DEFAULT = 50  # Sec
+    {"location_id": 30, "location": locations_json[30], "to_be_started": True, "name": "stazione_meteo_careol_santagiustina",
+     "url": { "1": "https://app.weathercloud.net/d1076328296#profile", "2": "https://app.weathercloud.net/map#1076328296" },
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[30]},  # Updated every 10 mins
+
+    {"location_id": 31, "location": locations_json[31], "to_be_started": True, "name": "stazione_meteo_festisei_pedavena_wc",
+     "url": { "1": "https://app.weathercloud.net/d6986156306#profile", "2": "https://app.weathercloud.net/map#6986156306" },
+     "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[31]},  # Updated every 10 mins
+
+]

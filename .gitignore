@@ -3,3 +3,4 @@ package-lock.json
 app/log/
 log/
 TEST_CURL.CMD
+debug.log

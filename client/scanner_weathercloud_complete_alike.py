@@ -348,12 +348,25 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmh: "{e}"!')
 
+  solar_irradiance_wpsm=None
+  try:
+    solar_irradiance_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-day-sunny' })
+    if solar_irradiance_ele and len(solar_irradiance_ele)>0:
+      solar_irradiance=solar_irradiance_ele[0].find_next('span').text.split(' ')[0].strip()
+      if solar_irradiance:
+        solar_irradiance_wpsm=float(solar_irradiance)
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting solar_irradiance_wpsm: "{e}"!')
+
   uv_index=None
   try:
-    uv_index_ele=soup.findAll('span', {"class": 'pull-right' })[7]
-    uv_index_ele=uv_index_ele.text.strip()
-    if uv_index_ele and not uv_index_ele=="--":
-      uv_index=float(uv_index_ele)
+    #uv_index_ele=soup.findAll('span', { "class": 'pull-right' })[7]
+    uv_index_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-hot' })
+    if uv_index_ele and len(uv_index_ele)>0:
+      uv_index_string=uv_index_ele[0].find_next('span').text.strip().split(" ")[0]
+      if uv_index_string and not uv_index_string=="--":
+        uv_index=float(uv_index_string)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting uv_index: "{e}"!')
@@ -377,8 +390,8 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   meteo_data_dict["moon_phase_desc"]=moon_phase_desc
   meteo_data_dict["sunrise_timestamp"]=sunrise_timestamp
   meteo_data_dict["sunset_timestamp"]=sunset_timestamp
+  meteo_data_dict["solar_irradiance_wpsm"]=solar_irradiance_wpsm
   
-
   if log:
     utility.log_sample(location_id, server_name, meteo_data_dict)
 
