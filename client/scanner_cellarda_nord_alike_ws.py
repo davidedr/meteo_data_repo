@@ -204,7 +204,7 @@ def scan_cellarda_nord_ws_alike(last_seen_timestamp, server, save=True, log=True
   try:  
     wind_direction=tree.xpath("//tr/td")[11].text.split(" ")[0].strip()
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:

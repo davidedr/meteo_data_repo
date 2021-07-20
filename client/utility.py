@@ -377,6 +377,40 @@ def _save_v15(location_id, server_name, meteo_data_dict, save=True):
       save_to_rest_ok=False
       return
 
+  if sunrise_timestamp:
+    try:
+      sunrise_timestamp_obj=datetime.strptime(sunrise_timestamp, "%d/%m/%Y %H:%M:%S")
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} parsing: "{sunrise_timestamp}"!')
+      save_to_rest_ok=False
+      return
+
+    try:
+      sunrise_timestamp=sunrise_timestamp_obj.strftime("%Y-%m-%d %H:%M:%S")+".000"
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} in sunrise_timestamp.strftime for: "{sunrise_timestamp_obj}"!')
+      save_to_rest_ok=False
+      return
+
+  if sunset_timestamp:
+    try:
+      sunset_timestamp_obj=datetime.strptime(sunset_timestamp, "%d/%m/%Y %H:%M:%S")
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} parsing: "{sunset_timestamp}"!')
+      save_to_rest_ok=False
+      return
+
+    try:
+      sunset_timestamp=sunset_timestamp_obj.strftime("%Y-%m-%d %H:%M:%S")+".000"
+
+    except Exception as e:
+      logging.exception(f'{get_identification_string(location_id, server_name)}: exception: {e} in sunset_timestamp.strftime for: "{sunset_timestamp_obj}"!')
+      save_to_rest_ok=False
+      return
+
   data_json = {
     "location_id": location_id,   
     "timestamp_ws": timestamp,

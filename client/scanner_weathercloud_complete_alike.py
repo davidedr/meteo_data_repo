@@ -124,21 +124,6 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting perceived_temperature_cels: "{e}"!')
 
-  wind_direction_deg=None
-  try:
-    wind_direction_ele=soup.findAll('path', {"class": 'wind' })
-    wind_direction=wind_direction_ele[0]["transform"].strip().split("(")[1].split(",")[0]
-    wind_direction=float(wind_direction)
-    if wind_direction>360:
-      wind_direction=wind_direction-360
-    if wind_direction<0:
-      wind_direction=wind_direction+360
-    if wind_direction:
-      wind_direction_deg=wind_direction
-
-  except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
-
   wind_force_beaufort_desc=None
   try:
     wind_force_beaufort_desc_ele=soup.find('span', id='wdir_cur')
@@ -274,43 +259,37 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
 
   wind_speed_knots=None
   try:
-    wind_speed_mps_ele=soup.findAll('span', {"class": 'pull-right' })[1]
-    wind_speed_mps=wind_speed_mps_ele.text.split(" ")[0].strip()
+    #wind_speed_mps_ele=soup.findAll('span', {"class": 'pull-right' })[1]
+    wind_speed_mps_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-strong-wind' })
+    if wind_speed_mps_ele and len(wind_speed_mps_ele)>0:
+      wind_speed_mps=wind_speed_mps_ele[0].find_next('span').text.split(' ')[0].strip()
     if wind_speed_mps:
       wind_speed_knots=float(wind_speed_mps)*1.94384
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_speed_knots: "{e}"!')
 
-  wind_direction_deg_2=None
+  wind_direction_deg=None
   try:  
-    wind_direction_ele_2=soup.findAll('span', {"class": 'pull-right' })[1]
-    wind_direction_2=wind_direction_ele_2.text.split(" ")[2].strip()
-    wind_direction_deg_2=utility.convert_wind_direction_to_deg(wind_direction_2)
-    if not wind_direction_deg_2:
-      logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction_deg_2}"!')
+    #wind_direction_ele_2=soup.findAll('span', {"class": 'pull-right' })[1]
+    wind_direction_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-strong-wind' })
+    if wind_direction_ele and len(wind_direction_ele)>0:
+      wind_direction=wind_direction_ele[0].find_next('span').text.split(' ')[2].strip()
+      wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
+      if wind_direction_deg is None:
+        logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction_deg}"!')
 
   except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg: "{e}"!')
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting wind_direction_deg_2: "{e}"!')
   
-  if wind_direction_deg_2:
-    wind_direction_deg=wind_direction_deg_2
-
-  rel_humidity=None
-  try:
-    humidity=soup.findAll('span', {"class": 'pull-right' })[3].text.split(" ")[0].strip()
-    if humidity:
-      rel_humidity=float(humidity)/100
-
-  except Exception as e:
-    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
-
   temperature_cels_2=None
   try:
-    temperature_ele_2=soup.findAll('span', {"class": 'pull-right' })[2]
-    temperature_2=temperature_ele_2.text.split(" ")[0].strip()
-    if temperature_2:
-      temperature_cels_2=float(temperature_2)
+    #temperature_ele_2=soup.findAll('span', {"class": 'pull-right' })[2]
+    temperature_2_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-thermometer' })
+    if temperature_2_ele and len(temperature_2_ele)>0:
+      temperature_2=temperature_2_ele[0].find_next('span').text.split(' ')[0].strip()
+      if temperature_2:
+        temperature_cels_2=float(temperature_2)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting temperature_cels_2: "{e}"!')
@@ -318,12 +297,26 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   if temperature_cels_2:
     temperature_cels=temperature_cels_2
 
+  rel_humidity=None
+  try:
+    #humidity=soup.findAll('span', {"class": 'pull-right' })[3].text.split(" ")[0].strip()
+    humidity_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-humidity' })
+    if humidity_ele and len(humidity_ele)>0:
+      humidity=humidity_ele[0].find_next('span').text.split(' ')[0].strip()
+      if humidity:
+        rel_humidity=float(humidity)/100
+
+  except Exception as e:
+    logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
+
   barometric_pressure_ssl_hPa_2=None
   try:
-    barometric_pressure_ssl_ele_2=soup.findAll('span', {"class": 'pull-right' })[4]
-    barometric_pressure_ssl_2=barometric_pressure_ssl_ele_2.text.split(" ")[0].strip()
-    if barometric_pressure_ssl_2:
-      barometric_pressure_ssl_hPa_2=float(barometric_pressure_ssl_2)
+    #barometric_pressure_ssl_ele_2=soup.findAll('span', {"class": 'pull-right' })[4]
+    barometric_pressure_ssl_2_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-barometer' })
+    if barometric_pressure_ssl_2_ele and len(barometric_pressure_ssl_2_ele)>0:
+      barometric_pressure_ssl_2=barometric_pressure_ssl_2_ele[0].find_next('span').text.split(' ')[0].strip()
+      if barometric_pressure_ssl_2:
+        barometric_pressure_ssl_hPa_2=float(barometric_pressure_ssl_2)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting barometric_pressure_ssl_hPa_2: "{e}"!')
@@ -333,17 +326,24 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
 
   rain_today_mm=None
   try:
-    rain_today=soup.findAll('span', {"class": 'pull-right' })[5].text.split(" ")[0].strip()
-    rain_today_mm=float(rain_today)
+    #rain_today=soup.findAll('span', {"class": 'pull-right' })[5].text.split(" ")[0].strip()
+    rain_today_mm_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-umbrella' })
+    if rain_today_mm_ele and len(rain_today_mm_ele)>0:
+      rain_today=rain_today_mm_ele[0].find_next('span').text.split(' ')[0].strip()
+      if rain_today:
+        rain_today_mm=float(rain_today)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_today_mm: "{e}"!')
 
   rain_rate_mmh=None
   try:
-    rain_rate=soup.findAll('span', {"class": 'pull-right' })[6].text.split(" ")[0].strip()
-    if rain_rate:
-      rain_rate_mmh=float(rain_rate)
+    #rain_rate=soup.findAll('span', {"class": 'pull-right' })[6].text.split(" ")[0].strip()
+    rain_rate_ele=soup.find('div', id='side-box').findAll('i', { "class": 'wi wi-raindrops' })
+    if rain_rate_ele and len(rain_rate_ele)>0:
+      rain_rate=rain_rate_ele[0].find_next('span').text.split(' ')[0].strip()
+      if rain_rate:
+        rain_rate_mmh=float(rain_rate)
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rain_rate_mmh: "{e}"!')
@@ -402,4 +402,4 @@ def scan_weathercloud_complete_alike(last_seen_timestamp, server, save=True, log
   return timestamp_string
 
 if __name__=="__main__":
-  utility.test_starter(29) # Location id
+  utility.test_starter(30) # Location id

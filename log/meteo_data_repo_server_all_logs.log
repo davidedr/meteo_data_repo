@@ -1,840 +1,120 @@
 {
   message: 'Logger initilized!',
   level: 'info',
-  timestamp: '2020-12-16 18:34:00.312',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-16 18:34:02.984',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-16 18:34:13.053',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-16 18:34:13.178',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-16 18:34:13.186',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-16 18:35:55.911',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-16 18:35:58.360',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-16 18:36:00.892',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-16 18:36:00.930',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-16 18:36:00.938',
-  label: 'meteo_data_repo_server'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-17 11:26:27.582',
+  timestamp: '2021-03-10 17:31:19.194',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Init db...',
   level: 'info',
-  timestamp: '2020-12-17 11:26:30.142',
+  timestamp: '2021-03-10 17:31:19.575',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Setting up default route...',
   level: 'info',
-  timestamp: '2020-12-17 11:26:39.364',
+  timestamp: '2021-03-10 17:31:20.912',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server setup finished.',
   level: 'info',
-  timestamp: '2020-12-17 11:26:39.487',
+  timestamp: '2021-03-10 17:31:20.956',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server listening on port: 8080',
   level: 'info',
-  timestamp: '2020-12-17 11:26:39.522',
+  timestamp: '2021-03-10 17:31:20.967',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Logger initilized!',
   level: 'info',
-  timestamp: '2020-12-17 11:27:18.694',
+  timestamp: '2021-03-23 09:02:16.375',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Init db...',
   level: 'info',
-  timestamp: '2020-12-17 11:27:18.986',
+  timestamp: '2021-03-23 09:02:19.490',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Setting up default route...',
   level: 'info',
-  timestamp: '2020-12-17 11:27:19.777',
+  timestamp: '2021-03-23 09:02:22.040',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server setup finished.',
   level: 'info',
-  timestamp: '2020-12-17 11:27:19.813',
+  timestamp: '2021-03-23 09:02:22.087',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server listening on port: 8080',
   level: 'info',
-  timestamp: '2020-12-17 11:27:19.825',
+  timestamp: '2021-03-23 09:02:22.090',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Logger initilized!',
   level: 'info',
-  timestamp: '2020-12-17 11:29:50.245',
+  timestamp: '2021-04-17 21:33:34.707',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Init db...',
   level: 'info',
-  timestamp: '2020-12-17 11:29:52.042',
+  timestamp: '2021-04-17 21:33:48.625',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Setting up default route...',
   level: 'info',
-  timestamp: '2020-12-17 11:29:57.753',
+  timestamp: '2021-04-17 21:34:20.844',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server setup finished.',
   level: 'info',
-  timestamp: '2020-12-17 11:29:57.830',
+  timestamp: '2021-04-17 21:34:21.754',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server listening on port: 8080',
   level: 'info',
-  timestamp: '2020-12-17 11:29:57.838',
+  timestamp: '2021-04-17 21:34:21.866',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Logger initilized!',
   level: 'info',
-  timestamp: '2020-12-17 11:36:24.465',
+  timestamp: '2021-05-27 14:41:47.968',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Init db...',
   level: 'info',
-  timestamp: '2020-12-17 11:36:24.897',
+  timestamp: '2021-05-27 14:41:48.421',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Setting up default route...',
   level: 'info',
-  timestamp: '2020-12-17 11:36:26.100',
+  timestamp: '2021-05-27 14:41:50.756',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server setup finished.',
   level: 'info',
-  timestamp: '2020-12-17 11:36:26.123',
+  timestamp: '2021-05-27 14:41:50.839',
   label: 'meteo_data_repo_logger'
 }
 {
   message: 'Server listening on port: 8080',
   level: 'info',
-  timestamp: '2020-12-17 11:36:26.130',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-17 11:37:14.855',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-17 11:37:15.138',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-17 11:37:15.851',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-17 11:37:15.876',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-17 11:37:15.882',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-18 11:52:56.842',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-18 11:53:05.509',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-18 11:53:24.673',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-18 11:53:24.920',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-18 11:53:24.956',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-18 16:12:12.163',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-18 16:12:13.444',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-18 16:12:14.277',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-18 16:12:14.336',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-18 16:12:14.345',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-21 09:20:55.222',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-21 09:20:57.727',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-21 09:21:04.703',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-21 09:21:04.859',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-21 09:21:04.864',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2020-12-31 12:48:52.555',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2020-12-31 12:48:55.552',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2020-12-31 12:49:03.853',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2020-12-31 12:49:04.046',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2020-12-31 12:49:04.049',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-01-02 15:05:49.261',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-01-02 15:05:55.354',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-01-02 15:06:20.919',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-01-02 15:06:20.991',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-01-02 15:06:20.999',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-01-02 18:29:59.015',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-01-02 18:30:01.893',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-01-02 18:30:03.796',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-01-02 18:30:03.867',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-01-02 18:30:03.871',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-01-02 19:04:34.153',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-01-02 19:04:37.180',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-01-02 19:04:46.264',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-01-02 19:04:46.443',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-01-02 19:04:46.447',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-01-05 14:53:27.742',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-01-05 14:53:31.368',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-01-05 14:53:41.221',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-01-05 14:53:41.431',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-01-05 14:53:41.434',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-01-27 15:21:55.072',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-01-27 15:21:57.515',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-01-27 15:22:05.126',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-01-27 15:22:05.179',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-01-27 15:22:05.182',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-01-27 15:23:10.341',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-01-27 15:23:11.539',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-01-27 15:23:14.710',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-01-27 15:23:14.772',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-01-27 15:23:14.775',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 09:59:53.293',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 09:59:54.614',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 09:59:55.620',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 09:59:55.685',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 09:59:55.688',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 10:09:01.861',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 10:09:02.379',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 10:09:03.520',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 10:09:03.558',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 10:09:03.561',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 10:12:28.882',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 10:12:29.345',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 10:12:30.461',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 10:12:30.488',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 10:12:30.490',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 10:13:44.999',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 10:13:45.408',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 10:13:46.679',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 10:13:46.724',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 10:13:46.727',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 11:06:12.701',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 11:06:15.064',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 11:06:19.268',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 11:06:19.347',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 11:06:19.350',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 11:12:47.841',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 11:12:48.283',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 11:12:49.441',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 11:12:49.486',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 11:12:49.490',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 11:17:39.616',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 11:17:40.057',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 11:17:41.297',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 11:17:41.334',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 11:17:41.337',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-03 15:32:27.512',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-03 15:32:29.194',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-03 15:32:33.259',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-03 15:32:33.324',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-03 15:32:33.327',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-10 19:40:16.730',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-10 19:40:17.666',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-10 19:40:18.483',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-10 19:40:18.539',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-10 19:40:18.543',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-10 21:21:08.836',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-10 21:21:10.083',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-10 21:21:12.935',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-10 21:21:12.992',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-10 21:21:12.995',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Logger initilized!',
-  level: 'info',
-  timestamp: '2021-02-10 21:33:54.104',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Init db...',
-  level: 'info',
-  timestamp: '2021-02-10 21:33:54.546',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Setting up default route...',
-  level: 'info',
-  timestamp: '2021-02-10 21:33:55.562',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server setup finished.',
-  level: 'info',
-  timestamp: '2021-02-10 21:33:55.587',
-  label: 'meteo_data_repo_logger'
-}
-{
-  message: 'Server listening on port: 8080',
-  level: 'info',
-  timestamp: '2021-02-10 21:33:55.590',
+  timestamp: '2021-05-27 14:41:50.845',
   label: 'meteo_data_repo_logger'
 }

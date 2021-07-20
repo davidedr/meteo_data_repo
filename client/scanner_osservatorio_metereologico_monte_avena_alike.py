@@ -119,7 +119,7 @@ def scan_osservatorio_metereologico_monte_avena_alike(last_seen_timestamp, serve
     wind_direction_ele=tree.xpath('//*[@id="ajaxwinddir"]')
     wind_direction=wind_direction_ele[0].text.strip()
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:

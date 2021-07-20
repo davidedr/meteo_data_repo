@@ -287,7 +287,7 @@ locations_json[24] = {
     "town": "Santa Giustina",
     "province": "BL",
     "country": "IT",
-    "note": "Stazione meteo di Fonzaso, https://www.meteomeano.it/template/indexDesktop.php, Model: Davis Vantage Pro2 Plus",
+    "note": "Stazione meteo di Meano, https://www.meteomeano.it/template/indexDesktop.php, Model: Davis Vantage Pro2 Plus (corrisponde anche a: http://my.meteonetwork.it/station/vnt371/)",
     "height_asl_m": 364
 }
 
@@ -367,7 +367,7 @@ locations_json[29] = {
 }
 
 locations_json[30] = {
-    "name": 'WH3000Se, Santa Gisutina BL',
+    "name": 'WH3000Se, Santa Giustina BL',
     "latitude": 46.09416667,
     "longitude": 12.01277778,
     "address_complete": "Via Careol, 6, 32035, Santa Giustina, BL",
@@ -394,6 +394,36 @@ locations_json[31] = {
     "country": "IT",
     "note": "CCL Electronics Model W100, Pedavena, https://app.weathercloud.net/map#6986156306",
     "height_asl_m": 470
+}
+
+locations_json[32] = {
+    "name": 'Stazione meteo Agriturismo Malga Mariech, Passo Mariech, 31049 Pianezze TV',
+    "latitude": 45.942,
+    "longitude": 12.029,
+    "address_complete": "Passo Mariech, 31049 Valdobbiadene (TV)",
+    "street_1": "Passo Mariech",
+    "street_2": None,
+    "zip": "31049",
+    "town": "Valdobbiadene",
+    "province": "TV",
+    "country": "IT",
+    "note": "Stazione meteo Ripetitore Malga Mariech, Valdobbiadene, http://my.meteonetwork.it/station/vnt233, Model: Davis Pro Vantage",
+    "height_asl_m": 1504
+}
+
+locations_json[33] = {
+    "name": 'Stazione meteo Agriturismo Malga Fossazza, Passo Mariech, 31049 Pianezze TV',
+    "latitude": 45.944,
+    "longitude": 12.022,
+    "address_complete": "Passo Mariech, 31049 Valdobbiadene (TV)",
+    "street_1": "Passo Mariech",
+    "street_2": None,
+    "zip": "31049",
+    "town": "Valdobbiadene",
+    "province": "TV",
+    "country": "IT",
+    "note": "Stazione meteo Ripetitore Monte Cesen, Valdobbiadene, http://my.meteonetwork.it/station/vnt289, Model: MTX",
+    "height_asl_m": 1552
 }
 
 ws_capabilities = [None]*40
@@ -808,6 +838,34 @@ ws_capabilities[31] = {
     "wind_force_beaufort_desc": True
 }
 
+ws_capabilities[32] = {
+    "location_id": 32,
+    "timestamp_ws": True,
+    "temperature_cels": True,
+    "rel_humidity": True,
+    "barometric_pressure_ssl_hPa": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "wind_gust_knots": True,
+    "rain_today_mm": True,
+    "dew_point_cels": True,
+    "heat_index_cels": True
+}
+
+ws_capabilities[33] = {
+    "location_id": 33,
+    "timestamp_ws": True,
+    "temperature_cels": True,
+    "rel_humidity": True,
+    "barometric_pressure_ssl_hPa": True,
+    "wind_speed_knots": True,
+    "wind_direction_deg": True,
+    "wind_gust_knots": True,
+    "rain_today_mm": True,
+    "dew_point_cels": True,
+    "heat_index_cels": True
+}
+
 # "scan_time_interval" in seconds
 servers = [
     {"location_id":  1, "location": locations_json[1], "to_be_started": True, "name": "hotelmarcopolo_caorle", "url": "https://www.hotelmarcopolocaorle.it/meteo/hmpolocaorle.php",
@@ -895,5 +953,13 @@ servers = [
     {"location_id": 31, "location": locations_json[31], "to_be_started": True, "name": "stazione_meteo_festisei_pedavena_wc",
      "url": { "1": "https://app.weathercloud.net/d6986156306#profile", "2": "https://app.weathercloud.net/map#6986156306" },
      "scanner": scan_weathercloud_complete_alike, "scan_time_interval": 10*60, "ws_capabilities": ws_capabilities[31]},  # Updated every 10 mins
+
+    {"location_id": 32, "location": locations_json[32], "to_be_started": True, "name": "meteonetwork_malga_mariech",
+    "url": "http://my.meteonetwork.it/station/vnt233", "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 60*30,
+    "ws_capabilities": ws_capabilities[32]},  # Wait for half an hour
+
+    {"location_id": 33, "location": locations_json[33], "to_be_started": True, "name": "meteonetwork_malga_fossazza",
+    "url": "http://my.meteonetwork.it/station/vnt289", "scanner": scan_meteonetwork_vnt336_alike, "scan_time_interval": 60*30,
+    "ws_capabilities": ws_capabilities[33]},  # Wait for half an hour
 
 ]

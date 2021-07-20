@@ -52,7 +52,7 @@ def scan_hotelmarcopolo_caorle_alike(last_seen_timestamp, server, save=True, log
     wind_direction_ele=tree.xpath('/html/body/table/tbody/tr[2]/td[2]/h4/big/big/span/big/big/text()')
     wind_direction=wind_direction_ele[0]
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:

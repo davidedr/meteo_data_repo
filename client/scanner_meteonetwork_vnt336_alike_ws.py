@@ -66,8 +66,8 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
     not_valid_warning_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[2]/td[2]/span')
     if len(not_valid_warning_ele)==0 or (not_valid_warning_ele[0].attrib.get("class") != 'notvalid cluetips'):
       rel_humidity_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[2]/td[2]/span/text()')
-      rel_humidity=rel_humidity_ele[0].strip().split("%")[0].strip()
-      rel_humidity=float(rel_humidity)/100
+      rel_humidity_value=rel_humidity_ele[0].strip().split("%")[0].strip()
+      rel_humidity=float(rel_humidity_value)/100
 
   except Exception as e:
     logging.exception(f'{utility.get_identification_string(location_id, server_name)}, exception getting rel_humidity: "{e}"!')
@@ -113,7 +113,7 @@ def scan_meteonetwork_vnt336_alike(last_seen_timestamp, server, save=True, log=T
     wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[5]/table/tbody/tr[4]/td[3]/strong')
     wind_direction=wind_direction_ele[0].text.strip()
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:

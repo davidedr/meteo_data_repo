@@ -115,7 +115,7 @@ def scan_meteonetwork_vnt432_alike(last_seen_timestamp, server, save=True, log=T
     wind_direction_ele=tree.xpath('/html/body/div[3]/div[1]/div/div[4]/table/tbody/tr[4]/td[3]/strong')
     wind_direction=wind_direction_ele[0].text.strip()
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:

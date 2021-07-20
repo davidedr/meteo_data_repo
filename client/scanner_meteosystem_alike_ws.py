@@ -75,7 +75,7 @@ def scan_meteosystem_alike(last_seen_timestamp, server, save=True, log=True):
     wind_direction=wind_direction_ele[0].text
 
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}" (wind_direction_deg: {wind_direction_deg})!')
 
   except Exception as e:

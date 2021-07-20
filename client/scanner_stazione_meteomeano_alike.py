@@ -227,7 +227,7 @@ def scan_stazione_meteomeano_alike(last_seen_timestamp, server, save=True, log=T
     wind_direction_ele=soup.find('span', id='currentDetailsValueBDir')
     wind_direction=wind_direction_ele.text.strip()
     wind_direction_deg=utility.convert_wind_direction_to_deg(wind_direction)
-    if not wind_direction_deg:
+    if wind_direction_deg is None:
       logging.info(f'{utility.get_identification_string(location_id, server_name)}, Unknown wind_direction: "{wind_direction}"!')
 
   except Exception as e:
